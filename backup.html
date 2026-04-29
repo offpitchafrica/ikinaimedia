@@ -1,0 +1,108 @@
+<!-- Dynamic Content Loader -->
+<script>
+// Load all content from localStorage (saved by admin panel)
+function loadWebsiteContent() {
+    // Load settings
+    const settings = JSON.parse(localStorage.getItem('ikinai_settings') || '{}');
+    if (settings.heroTitle) {
+        const heroH1 = document.querySelector('.hero h1');
+        if (heroH1) heroH1.textContent = settings.heroTitle;
+    }
+    if (settings.heroSubtitle) {
+        const heroP = document.querySelector('.hero p');
+        if (heroP) heroP.textContent = settings.heroSubtitle;
+    }
+    
+    // Update contact info
+    if (settings.phone) {
+        const phoneElements = document.querySelectorAll('[data-field="phone"]');
+        phoneElements.forEach(el => el.textContent = settings.phone);
+    }
+    if (settings.email) {
+        const emailElements = document.querySelectorAll('[data-field="email"]');
+        emailElements.forEach(el => el.textContent = settings.email);
+    }
+    
+    // Load blog posts
+    const blogs = JSON.parse(localStorage.getItem('ikinai_blog_posts') || '[]');
+    const publishedBlogs = blogs.filter(b => b.status === 'published');
+    const blogGrid = document.querySelector('.blog-grid');
+    if (blogGrid && publishedBlogs.length) {
+        blogGrid.innerHTML = publishedBlogs.map(blog => `
+            <article class="blog-card">
+                <div class="blog-image"><img src="${blog.image}" alt="${blog.title}" loading="lazy"></div>
+                <div class="blog-content">
+                    <span class="blog-category">${blog.category}</span>
+                    <h3><a href="#" data-blog="${blog.id}">${blog.title}</a></h3>
+                    <p>${blog.excerpt.substring(0, 120)}...</p>
+                    <div class="blog-meta">
+                        <span class="blog-date">${blog.date}</span>
+                        <span class="blog-read-time">${blog.readTime}</span>
+                    </div>
+                </div>
+            </article>
+        `).join('');
+    }
+    
+    // Load portfolio items
+    const portfolio = JSON.parse(localStorage.getItem('ikinai_portfolio') || '[]');
+    const portfolioGrid = document.querySelector('.portfolio-grid');
+    if (portfolioGrid && portfolio.length) {
+        portfolioGrid.innerHTML = portfolio.map(item => `
+            <div class="portfolio-item" data-category="${item.category}">
+                <img src="${item.image}" alt="${item.title}" class="portfolio-image" loading="lazy">
+                <div class="portfolio-overlay">
+                    <h3>${item.title}</h3>
+                    <p>${item.description.substring(0, 80)}...</p>
+                    <button class="btn btn-outline view-project" data-project="${item.id}">View Details</button>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    // Load testimonials
+    const testimonials = JSON.parse(localStorage.getItem('ikinai_testimonials') || '[]');
+    const testimonialSlider = document.querySelector('.testimonial-slider');
+    if (testimonialSlider && testimonials.length) {
+        const stars = (rating) => '★'.repeat(rating) + '☆'.repeat(5-rating);
+        testimonialSlider.innerHTML = testimonials.map((t, i) => `
+            <div class="testimonial ${i === 0 ? 'active' : ''}" style="display: ${i === 0 ? 'block' : 'none'}">
+                <div style="color: #F9DE1F; margin-bottom: 15px; font-size: 18px;">${stars(t.rating)}</div>
+                <p class="testimonial-text">"${t.text}"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">${t.name.charAt(0)}</div>
+                    <div class="author-info">
+                        <h4>${t.name}</h4>
+                        <p>${t.position}</p>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        
+        // Re-initialize testimonial dots
+        const dotsContainer = document.querySelector('.testimonial-nav');
+        if (dotsContainer) {
+            dotsContainer.innerHTML = testimonials.map((_, i) => `<span class="testimonial-dot ${i === 0 ? 'active' : ''}"></span>`).join('');
+        }
+    }
+    
+    // Load team members
+    const team = JSON.parse(localStorage.getItem('ikinai_team') || '[]');
+    const teamGrid = document.querySelector('.team-grid');
+    if (teamGrid && team.length) {
+        teamGrid.innerHTML = team.map(member => `
+            <div class="team-member">
+                <div class="member-photo">
+                    ${member.photo ? `<img src="${member.photo}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">` : `<i class="fas fa-user"></i>`}
+                </div>
+                <h3>${member.name}</h3>
+                <p style="color: #F9DE1F; font-weight: 500;">${member.title}</p>
+                <p>${member.bio}</p>
+            </div>
+        `).join('');
+    }
+}
+
+// Load content when page loads
+document.addEventListener('DOMContentLoaded', loadWebsiteContent);
+</script>
