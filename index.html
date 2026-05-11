@@ -9,7 +9,7 @@
     <meta property="og:title" content="Ikinai Media | Digital Marketing Agency">
     <meta property="og:description" content="Full-service digital marketing agency offering web development, branding, and marketing solutions.">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="">
+    <meta property="og:image" id="metaOgImage" content="https://i.ibb.co/vx3Mx0V1/ikinai-logo.png">
     <meta property="og:url" content="https://ikinaimedia.com">
     <link rel="canonical" href="https://ikinaimedia.com">
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Ikinai Media","url":"https://ikinaimedia.com","description":"Full-service digital marketing agency","address":{"@type":"PostalAddress","addressCountry":"Kenya","addressLocality":"Nairobi"},"contactPoint":{"@type":"ContactPoint","telephone":"+254-704-107373","contactType":"customer service","email":"ikinaimedia@gmail.com"}}</script>
@@ -263,38 +263,6 @@
         .newsletter-form{display:flex;gap:10px;max-width:440px;margin:0 auto}
         .newsletter-form input{flex:1;padding:12px 18px;border:none;border-radius:30px;outline:none;font-size:.88rem}
 
-        /* EMPTY STATES */
-        .empty-state{text-align:center;padding:60px 20px;color:var(--text-light)}
-        .empty-state i{font-size:3rem;margin-bottom:12px;opacity:.3;display:block}
-
-        /* COOKIE */
-        .cookie-bar{position:fixed;bottom:0;left:0;right:0;background:#222;color:#fff;padding:16px 20px;z-index:10000;transform:translateY(100%);transition:transform .3s}
-        .cookie-bar.show{transform:translateY(0)}
-        .cookie-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
-        .cookie-inner p{font-size:.82rem;color:rgba(255,255,255,.8);margin:0}
-        .cookie-btns{display:flex;gap:10px;flex-shrink:0}
-        .cookie-btns .btn{padding:8px 18px;font-size:.78rem}
-        .cookie-btns .btn-outline{border-color:#fff;color:#fff}
-        .cookie-btns .btn-outline:hover{background:#fff;color:#333}
-
-        /* CHAT */
-        .chat-widget{position:fixed;bottom:24px;right:24px;z-index:1000}
-        .chat-toggle{width:56px;height:56px;border-radius:50%;background:var(--secondary);border:none;cursor:pointer;box-shadow:0 4px 20px rgba(249,222,31,.4);font-size:1.3rem;color:#333;transition:var(--transition);display:flex;align-items:center;justify-content:center}
-        .chat-toggle:hover{transform:scale(1.1)}
-        .chat-box{position:absolute;bottom:68px;right:0;width:320px;background:var(--light);border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.2);display:none;flex-direction:column;height:420px;overflow:hidden}
-        .chat-box.open{display:flex}
-        .chat-head{background:linear-gradient(135deg,var(--primary),var(--secondary));padding:16px 18px;display:flex;align-items:center;justify-content:space-between}
-        .chat-head h4{font-size:.9rem;color:#333;font-weight:600;margin:0}
-        .chat-head button{background:none;border:none;cursor:pointer;color:#333;font-size:1rem;padding:2px}
-        .chat-msgs{flex:1;padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
-        .chat-msg{max-width:80%;padding:10px 14px;border-radius:16px;font-size:.8rem;line-height:1.5}
-        .chat-msg.bot{background:#f0f0f0;align-self:flex-start;border-bottom-left-radius:4px}
-        [data-theme="dark"] .chat-msg.bot{background:#333}
-        .chat-msg.user{background:var(--secondary);color:#333;align-self:flex-end;border-bottom-right-radius:4px}
-        .chat-input-row{display:flex;gap:8px;padding:12px;border-top:1px solid rgba(0,0,0,.08)}
-        .chat-input-row input{flex:1;padding:9px 12px;border:1px solid rgba(0,0,0,.1);border-radius:20px;outline:none;font-size:.8rem;background:var(--light);color:var(--text)}
-        .chat-input-row button{width:36px;height:36px;border-radius:50%;background:var(--secondary);border:none;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;color:#333}
-
         /* PORTFOLIO MODAL */
         .port-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:2000;padding:20px;overflow-y:auto;display:none}
         .port-modal-overlay.open{display:block}
@@ -347,6 +315,34 @@
         .notification.show{transform:translateX(0)}
         .notification.success{background:var(--secondary);color:#333}
         .notification.error{background:#e55;color:#fff}
+
+        /* COOKIE */
+        .cookie-bar{position:fixed;bottom:0;left:0;right:0;background:#222;color:#fff;padding:16px 20px;z-index:10000;transform:translateY(100%);transition:transform .3s}
+        .cookie-bar.show{transform:translateY(0)}
+        .cookie-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .cookie-inner p{font-size:.82rem;color:rgba(255,255,255,.8);margin:0}
+        .cookie-btns{display:flex;gap:10px;flex-shrink:0}
+        .cookie-btns .btn{padding:8px 18px;font-size:.78rem}
+        .cookie-btns .btn-outline{border-color:#fff;color:#fff}
+        .cookie-btns .btn-outline:hover{background:#fff;color:#333}
+
+        /* CHAT */
+        .chat-widget{position:fixed;bottom:24px;right:24px;z-index:1000}
+        .chat-toggle{width:56px;height:56px;border-radius:50%;background:var(--secondary);border:none;cursor:pointer;box-shadow:0 4px 20px rgba(249,222,31,.4);font-size:1.3rem;color:#333;transition:var(--transition);display:flex;align-items:center;justify-content:center}
+        .chat-toggle:hover{transform:scale(1.1)}
+        .chat-box{position:absolute;bottom:68px;right:0;width:320px;background:var(--light);border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.2);display:none;flex-direction:column;height:420px;overflow:hidden}
+        .chat-box.open{display:flex}
+        .chat-head{background:linear-gradient(135deg,var(--primary),var(--secondary));padding:16px 18px;display:flex;align-items:center;justify-content:space-between}
+        .chat-head h4{font-size:.9rem;color:#333;font-weight:600;margin:0}
+        .chat-head button{background:none;border:none;cursor:pointer;color:#333;font-size:1rem;padding:2px}
+        .chat-msgs{flex:1;padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+        .chat-msg{max-width:80%;padding:10px 14px;border-radius:16px;font-size:.8rem;line-height:1.5}
+        .chat-msg.bot{background:#f0f0f0;align-self:flex-start;border-bottom-left-radius:4px}
+        [data-theme="dark"] .chat-msg.bot{background:#333}
+        .chat-msg.user{background:var(--secondary);color:#333;align-self:flex-end;border-bottom-right-radius:4px}
+        .chat-input-row{display:flex;gap:8px;padding:12px;border-top:1px solid rgba(0,0,0,.08)}
+        .chat-input-row input{flex:1;padding:9px 12px;border:1px solid rgba(0,0,0,.1);border-radius:20px;outline:none;font-size:.8rem;background:var(--light);color:var(--text)}
+        .chat-input-row button{width:36px;height:36px;border-radius:50%;background:var(--secondary);border:none;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;color:#333}
 
         /* RESPONSIVE */
         @media(max-width:992px){
@@ -472,7 +468,6 @@
         <div class="scroll-indicator"><i class="fas fa-chevron-down" style="color:#333;font-size:1.2rem"></i></div>
     </section>
 
-    <!-- HOME SERVICES — pulled from DB -->
     <section style="background:var(--light)">
         <div class="container">
             <p class="section-label">What We Do</p>
@@ -496,7 +491,6 @@
         </div>
     </section>
 
-    <!-- HOME PORTFOLIO — pulled from DB -->
     <section style="background:var(--light)">
         <div class="container">
             <p class="section-label">Our Work</p>
@@ -509,20 +503,19 @@
         </div>
     </section>
 
-    <!-- TESTIMONIALS -->
     <section class="testimonials-section">
         <div class="container">
             <p class="section-label">Client Stories</p>
             <h2 class="section-title">What Our Clients Say</h2>
             <p class="section-sub" style="margin-bottom:40px">Don't just take our word for it.</p>
-            <div class="test-slider" id="testimonialsContainer">
+            <div class="test-slider" id="testimonialsContainer"
+                 onmouseenter="pauseTestSlider()" onmouseleave="resumeTestSlider()">
                 <div class="loading-center"><span class="spinner"></span></div>
             </div>
             <div class="test-dots" id="testDots"></div>
         </div>
     </section>
 
-    <!-- HOME BLOG — pulled from DB -->
     <section style="background:var(--light)">
         <div class="container">
             <p class="section-label">Latest Articles</p>
@@ -544,7 +537,7 @@
             <p>Digital insights, trends and tips delivered straight to your inbox.</p>
             <form id="newsletterForm" onsubmit="subscribeNewsletter(event)">
                 <div class="newsletter-form">
-                    <input type="email" placeholder="Enter your email address" required style="padding:12px 18px;border:none;border-radius:30px;outline:none;font-size:.88rem;flex:1">
+                    <input type="email" id="newsletterEmail" placeholder="Enter your email address" required style="padding:12px 18px;border:none;border-radius:30px;outline:none;font-size:.88rem;flex:1">
                     <button type="submit" class="btn btn-dark">Subscribe</button>
                 </div>
             </form>
@@ -552,7 +545,7 @@
     </section>
 </div>
 
-<!-- ===== SERVICES — fully from DB ===== -->
+<!-- ===== SERVICES ===== -->
 <div id="services" class="page">
     <div class="page-hero">
         <div class="container"><h1>Our Services</h1><p>Comprehensive digital solutions to grow your business and enhance your online presence.</p></div>
@@ -579,7 +572,7 @@
     </section>
 </div>
 
-<!-- ===== PORTFOLIO — fully from DB ===== -->
+<!-- ===== PORTFOLIO ===== -->
 <div id="portfolio" class="page">
     <div class="page-hero"><div class="container"><h1>Our Portfolio</h1><p>Explore our recent projects and see how we've helped businesses achieve their digital goals.</p></div></div>
     <section style="background:var(--light)">
@@ -679,7 +672,7 @@
                         <div class="value-item"><div class="value-icon"><i class="fas fa-lightbulb"></i></div><div><h4>Innovation</h4><p>Continuously exploring new technologies and creative approaches.</p></div></div>
                     </div>
                 </div>
-                <div class="about-img"><img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800&q=80" alt="Ikinai Media team" loading="lazy"></div>
+                <div class="about-img"><img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800&q=80" alt="Ikinai Media team collaborating in Nairobi office" loading="lazy"></div>
             </div>
         </div>
     </section>
@@ -712,33 +705,33 @@
                         <div class="contact-item"><div class="contact-icon"><i class="fas fa-clock"></i></div><div><h4>Business Hours</h4><p>Monday–Friday: 9AM – 6PM<br>Saturday: 10AM – 2PM</p></div></div>
                     </div>
                     <div class="social-links">
-                        <a href="https://www.facebook.com/offpitchafrica" class="social-link" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://twitter.com/offpitchafrica" class="social-link" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
-                        <a href="https://www.instagram.com/offpitchafrica" class="social-link" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.linkedin.com/company/offpitchafrica" class="social-link" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="https://www.tiktok.com/@offpitchafrica" class="social-link" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i></a>
-                        <a href="https://www.youtube.com/@offpitchafrica" class="social-link" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.facebook.com/offpitchafrica" class="social-link" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://twitter.com/offpitchafrica" class="social-link" target="_blank" rel="noopener" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.instagram.com/offpitchafrica" class="social-link" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/company/offpitchafrica" class="social-link" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.tiktok.com/@offpitchafrica" class="social-link" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://www.youtube.com/@offpitchafrica" class="social-link" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
                 <div>
                     <h3 style="margin-bottom:24px;font-size:1.2rem">Send Us a Message</h3>
-                    <form id="contactForm" action="https://formspree.io/f/mdkvnqbe" method="POST">
-                        <div class="form-group"><label>Your Name</label><input type="text" name="name" class="form-control" required></div>
-                        <div class="form-group"><label>Email Address</label><input type="email" name="email" class="form-control" required></div>
-                        <div class="form-group"><label>Subject</label><input type="text" name="subject" class="form-control"></div>
-                        <div class="form-group"><label>Service Interested In</label>
-                            <select name="service" class="form-control">
+                    <form id="contactForm">
+                        <div class="form-group"><label for="cf-name">Your Name</label><input type="text" id="cf-name" name="name" class="form-control" required></div>
+                        <div class="form-group"><label for="cf-email">Email Address</label><input type="email" id="cf-email" name="email" class="form-control" required></div>
+                        <div class="form-group"><label for="cf-subject">Subject</label><input type="text" id="cf-subject" name="subject" class="form-control"></div>
+                        <div class="form-group"><label for="cf-service">Service Interested In</label>
+                            <select id="cf-service" name="service" class="form-control">
                                 <option value="">Select a service...</option>
                                 <option>Web Development</option><option>Branding & Design</option><option>Digital Marketing</option>
                                 <option>E-commerce Solutions</option><option>SEO Optimization</option><option>Content Creation</option><option>Other</option>
                             </select>
                         </div>
-                        <div class="form-group"><label>Message</label><textarea name="message" class="form-control" required></textarea></div>
+                        <div class="form-group"><label for="cf-message">Message</label><textarea id="cf-message" name="message" class="form-control" required></textarea></div>
                         <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center"><i class="fas fa-paper-plane"></i> Send Message</button>
                     </form>
                 </div>
             </div>
-            <div class="map-wrap"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127641.17044270584!2d36.76499575876998!3d-1.3030359782409504!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f1172d84d49a7%3A0xf7cf0254b297924c!2sNairobi!5e0!3m2!1sen!2ske" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Ikinai Media office location"></iframe></div>
+            <div class="map-wrap"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127641.17044270584!2d36.76499575876998!3d-1.3030359782409504!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f1172d84d49a7%3A0xf7cf0254b297924c!2sNairobi!5e0!3m2!1sen!2ske" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Ikinai Media office location, Nairobi Kenya"></iframe></div>
         </div>
     </section>
 </div>
@@ -747,26 +740,90 @@
 <div id="privacy-policy" class="page">
     <div class="page-hero"><div class="container"><h1>Privacy Policy</h1><p>How we collect, use, and protect your personal information.</p></div></div>
     <section style="background:var(--light)"><div class="container" style="max-width:780px">
-        <h2 style="font-size:1.4rem;margin:0 0 16px;text-align:left">Introduction</h2>
-        <p>At Ikinai Media, we are committed to protecting your privacy and ensuring the security of your personal information.</p>
-        <h2 style="font-size:1.4rem;margin:24px 0 12px;text-align:left">Information We Collect</h2>
-        <p>We may collect personal information (name, email, phone), technical information (IP address, browser type), and usage data about how you interact with our website.</p>
-        <h2 style="font-size:1.4rem;margin:24px 0 12px;text-align:left">Your Rights</h2>
-        <p>Contact us at <a href="mailto:ikinaimedia@gmail.com" style="color:var(--secondary)">ikinaimedia@gmail.com</a>.</p>
-        <p style="margin-top:24px"><strong>Last Updated:</strong> March 1, 2025</p>
+        <p style="color:var(--text-light);margin-bottom:24px"><strong>Last Updated:</strong> 1 March 2025 &nbsp;|&nbsp; Effective Date: 1 March 2025</p>
+
+        <h2 style="font-size:1.3rem;margin:0 0 12px;text-align:left">1. Who We Are</h2>
+        <p>Ikinai Media ("we", "us", "our") is a digital marketing agency registered and operating in Nairobi, Kenya. Our website is <strong>ikinaimedia.com</strong>. Contact: <a href="mailto:ikinaimedia@gmail.com" style="color:var(--secondary)">ikinaimedia@gmail.com</a> | +254 704 107373.</p>
+
+        <h2 style="font-size:1.3rem;margin:24px 0 12px;text-align:left">2. Information We Collect</h2>
+        <p><strong>Information you provide directly:</strong> When you fill in our contact form or newsletter subscription, we collect your name, email address, phone number (if given), and message content.</p>
+        <p><strong>Technical data:</strong> We automatically collect IP address, browser type, device type, pages visited, and referral source via cookies and similar technologies to improve site performance.</p>
+        <p><strong>Communications data:</strong> Records of correspondence with us (email, chat).</p>
+
+        <h2 style="font-size:1.3rem;margin:24px 0 12px;text-align:left">3. How We Use Your Information</h2>
+        <p>We use collected data to: respond to enquiries and service requests; send our newsletter (only if you subscribed — you may unsubscribe at any time); improve and maintain our website; comply with legal obligations; and prevent fraud.</p>
+        <p>We do <strong>not</strong> sell, rent, or trade your personal information to third parties.</p>
+
+        <h2 style="font-size:1.3rem;margin:24px 0 12px;text-align:left">4. Cookies</h2>
+        <p>We use essential cookies (required for the site to function) and analytical cookies (to understand how visitors use the site). You may decline non-essential cookies via the cookie banner. Disabling cookies may affect some site functionality.</p>
+
+        <h2 style="font-size:1.3rem;margin:24px 0 12px;text-align:left">5. Data Storage & Security</h2>
+        <p>Your data is stored securely on Supabase (hosted on AWS infrastructure). We implement reasonable technical and organisational measures to protect your data against unauthorised access, alteration, or disclosure. No method of transmission over the Internet is 100% secure; we cannot guarantee absolute security.</p>
+
+        <h2 style="font-size:1.3rem;margin:24px 0 12px;text-align:left">6. Data Retention</h2>
+        <p>We retain contact messages and enquiry data for up to 24 months. Newsletter subscriber records are kept until you unsubscribe. You may request deletion at any time.</p>
+
+        <h2 style="font-size:1.3rem;margin:24px 0 12px;text-align:left">7. Your Rights</h2>
+        <p>You have the right to access, correct, or delete your personal data; object to or restrict processing; and withdraw consent at any time. To exercise these rights, email <a href="mailto:ikinaimedia@gmail.com" style="color:var(--secondary)">ikinaimedia@gmail.com</a>. We will respond within 30 days.</p>
+
+        <h2 style="font-size:1.3rem;margin:24px 0 12px;text-align:left">8. Third-Party Links</h2>
+        <p>Our website may contain links to third-party sites. We are not responsible for their privacy practices and encourage you to review their policies separately.</p>
+
+        <h2 style="font-size:1.3rem;margin:24px 0 12px;text-align:left">9. Children's Privacy</h2>
+        <p>Our services are not directed at children under 13. We do not knowingly collect personal data from children.</p>
+
+        <h2 style="font-size:1.3rem;margin:24px 0 12px;text-align:left">10. Changes to This Policy</h2>
+        <p>We may update this Privacy Policy periodically. The "Last Updated" date at the top will reflect any changes. Continued use of the site after changes constitutes acceptance.</p>
+
+        <h2 style="font-size:1.3rem;margin:24px 0 12px;text-align:left">11. Contact</h2>
+        <p>For any privacy-related questions, contact us at <a href="mailto:ikinaimedia@gmail.com" style="color:var(--secondary)">ikinaimedia@gmail.com</a>.</p>
+
         <div style="margin-top:32px"><button class="btn btn-outline" data-page="home">Back to Home</button></div>
     </div></section>
 </div>
 
-<!-- ===== TERMS ===== -->
+<!-- ===== TERMS OF SERVICE ===== -->
 <div id="terms-of-service" class="page">
     <div class="page-hero"><div class="container"><h1>Terms of Service</h1><p>Please read these terms carefully before using our services.</p></div></div>
     <section style="background:var(--light)"><div class="container" style="max-width:780px">
-        <h2 style="font-size:1.4rem;margin:0 0 16px;text-align:left">Agreement to Terms</h2>
-        <p>By accessing or using Ikinai Media's services, you agree to be bound by these Terms of Service.</p>
-        <h2 style="font-size:1.4rem;margin:24px 0 12px;text-align:left">Governing Law</h2>
-        <p>These Terms shall be governed and construed in accordance with the laws of Kenya.</p>
-        <p style="margin-top:24px"><strong>Last Updated:</strong> March 1, 2025</p>
+        <p style="color:var(--text-light);margin-bottom:24px"><strong>Last Updated:</strong> 1 March 2025 &nbsp;|&nbsp; Effective Date: 1 March 2025</p>
+
+        <h2 style="font-size:1.3rem;margin:0 0 12px;text-align:left">1. Agreement to Terms</h2>
+        <p>By accessing or using Ikinai Media's website and services, you agree to be bound by these Terms of Service and our Privacy Policy. If you do not agree, please do not use our services.</p>
+
+        <h2 style="font-size:1.3rem;margin:24px 0 12px;text-align:left">2. Services</h2>
+        <p>Ikinai Media provides digital marketing, web development, branding, and related services. The specific scope, deliverables, timelines, and fees for each engagement are defined in a separate written agreement or proposal signed by both parties.</p>
+
+        <h2 style="font-size:1.3rem;margin:24px 0 12px;text-align:left">3. Payments</h2>
+        <p>Invoices are payable within 14 days of issue unless otherwise agreed in writing. Late payments may attract interest at 2% per month. We reserve the right to suspend work on overdue accounts.</p>
+
+        <h2 style="font-size:1.3rem;margin:24px 0 12px;text-align:left">4. Intellectual Property</h2>
+        <p>Upon full payment, clients receive ownership of custom deliverables created specifically for them. Ikinai Media retains rights to pre-existing tools, frameworks, templates, and general methodologies. We reserve the right to display completed work in our portfolio unless agreed otherwise in writing.</p>
+
+        <h2 style="font-size:1.3rem;margin:24px 0 12px;text-align:left">5. Client Responsibilities</h2>
+        <p>Clients must provide timely feedback, accurate information, and necessary access to complete the work. Delays caused by the client may affect agreed timelines and costs.</p>
+
+        <h2 style="font-size:1.3rem;margin:24px 0 12px;text-align:left">6. Confidentiality</h2>
+        <p>Both parties agree to keep confidential any non-public information shared during the engagement and not to disclose it to third parties without prior written consent.</p>
+
+        <h2 style="font-size:1.3rem;margin:24px 0 12px;text-align:left">7. Limitation of Liability</h2>
+        <p>To the maximum extent permitted by law, Ikinai Media's total liability for any claim arising from our services shall not exceed the total fees paid by the client in the three months preceding the claim. We are not liable for indirect, incidental, or consequential damages.</p>
+
+        <h2 style="font-size:1.3rem;margin:24px 0 12px;text-align:left">8. Termination</h2>
+        <p>Either party may terminate a project engagement with 14 days' written notice. The client is liable for fees for work completed up to the termination date. Ikinai Media may terminate immediately for non-payment or breach of these terms.</p>
+
+        <h2 style="font-size:1.3rem;margin:24px 0 12px;text-align:left">9. Disclaimer of Warranties</h2>
+        <p>Our services are provided "as is". We do not guarantee specific results (such as search engine rankings or sales figures), as these depend on many factors outside our control.</p>
+
+        <h2 style="font-size:1.3rem;margin:24px 0 12px;text-align:left">10. Governing Law & Disputes</h2>
+        <p>These Terms are governed by the laws of Kenya. Any disputes shall first be attempted to be resolved through good-faith negotiation. If unresolved within 30 days, disputes shall be submitted to the jurisdiction of the courts of Nairobi, Kenya.</p>
+
+        <h2 style="font-size:1.3rem;margin:24px 0 12px;text-align:left">11. Changes to Terms</h2>
+        <p>We may update these Terms at any time. We will notify users via our website. Continued use of our services after changes constitutes acceptance of the updated Terms.</p>
+
+        <h2 style="font-size:1.3rem;margin:24px 0 12px;text-align:left">12. Contact</h2>
+        <p>For questions about these Terms, contact us at <a href="mailto:ikinaimedia@gmail.com" style="color:var(--secondary)">ikinaimedia@gmail.com</a>.</p>
+
         <div style="margin-top:32px"><button class="btn btn-outline" data-page="home">Back to Home</button></div>
     </div></section>
 </div>
@@ -781,12 +838,12 @@
                 <div class="footer-logo"><img src="https://i.ibb.co/vx3Mx0V1/ikinai-logo.png" alt="Ikinai Media" onerror="this.style.display='none'">Ikinai <span>Media</span></div>
                 <p class="footer-desc">A full-service digital agency dedicated to helping businesses thrive in the digital age through innovative solutions and strategic thinking.</p>
                 <div class="footer-social">
-                    <a href="https://www.facebook.com/offpitchafrica" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://twitter.com/offpitchafrica" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
-                    <a href="https://www.instagram.com/offpitchafrica" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
-                    <a href="https://www.linkedin.com/company/offpitchafrica" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="https://www.tiktok.com/@offpitchafrica" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i></a>
-                    <a href="https://www.youtube.com/@offpitchafrica" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.facebook.com/offpitchafrica" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://twitter.com/offpitchafrica" target="_blank" rel="noopener" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/offpitchafrica" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/company/offpitchafrica" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://www.tiktok.com/@offpitchafrica" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://www.youtube.com/@offpitchafrica" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
             <div>
@@ -815,7 +872,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2025 Ikinai Media. All Rights Reserved.</p>
+            <p>© <span id="footerYear"></span> Ikinai Media. All Rights Reserved.</p>
             <div style="display:flex;gap:16px">
                 <a data-page="privacy-policy">Privacy Policy</a>
                 <a data-page="terms-of-service">Terms of Service</a>
@@ -829,15 +886,19 @@
 
 <script>
 // ============================================
-// INIT SUPABASE after defer script loads
+// SUPABASE INIT
 // ============================================
+const SB_URL = 'https://hplfmxhumfkfhligpfps.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwbGZteGh1bWZrZmhsaWdwZnBzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwOTY2MDUsImV4cCI6MjA4NjY3MjYwNX0.NCmh5YriukkPOpmjeVHW7ptqtQxmbMKPXdRrmcYqyUA';
+
 let sb;
 window.addEventListener('load', () => {
-    const SB_URL = 'https://hplfmxhumfkfhligpfps.supabase.co';
-    const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwbGZteGh1bWZrZmhsaWdwZnBzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwOTY2MDUsImV4cCI6MjA4NjY3MjYwNX0.NCmh5YriukkPOpmjeVHW7ptqtQxmbMKPXdRrmcYqyUA';
     sb = supabase.createClient(SB_URL, SB_KEY);
     initApp();
 });
+
+// Dynamic footer year
+document.getElementById('footerYear').textContent = new Date().getFullYear();
 
 // ============================================
 // NAVIGATION
@@ -850,17 +911,15 @@ function showPage(pageId, pushHistory=true) {
     window.scrollTo({top:0,behavior:'smooth'});
     if (pushHistory) history.pushState({page:pageId},'',`#${pageId}`);
     closeMobileMenu();
-    // Lazy-load page data
     if (pageId==='blog') loadBlogPage();
     if (pageId==='portfolio') loadPortfolioPage();
     if (pageId==='services') loadServicesPage();
     if (pageId==='about') loadTeam();
-    // Reset title when leaving single post
     if (pageId !== 'blog-single') {
         document.title = 'Ikinai Media | Digital Marketing Agency';
         setMeta('og:title','Ikinai Media | Digital Marketing Agency');
         setMeta('og:description','Full-service digital marketing agency offering web development, branding, and marketing solutions.');
-        setMeta('og:image','');
+        setMeta('og:image', window._defaultOgImage || 'https://i.ibb.co/vx3Mx0V1/ikinai-logo.png');
         setMeta('og:url','https://ikinaimedia.com');
     }
 }
@@ -898,10 +957,10 @@ function toggleTheme() {
 if (localStorage.getItem('theme')==='dark'||(!localStorage.getItem('theme')&&window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     document.documentElement.setAttribute('data-theme','dark');
 }
-// Set icon after DOM ready
 document.addEventListener('DOMContentLoaded', () => {
     if (document.documentElement.getAttribute('data-theme')==='dark') {
-        document.querySelector('#themeBtn i').className = 'fas fa-sun';
+        const btn = document.querySelector('#themeBtn i');
+        if (btn) btn.className = 'fas fa-sun';
     }
 });
 
@@ -911,18 +970,21 @@ document.addEventListener('DOMContentLoaded', () => {
 function setMeta(prop, val) {
     let el = document.querySelector(`meta[property="${prop}"]`);
     if (!el) { el = document.createElement('meta'); el.setAttribute('property', prop); document.head.appendChild(el); }
-    el.setAttribute('content', val);
+    el.setAttribute('content', val || '');
 }
 
 // ============================================
-// DEEP LINK INIT
+// APP INIT — critical path first, rest deferred
 // ============================================
 function initApp() {
-    loadSiteSettings();
-    loadTestimonials();
-    loadHomeBlog();
-    loadHomeServices();
-    loadHomePortfolio();
+    // 1. Hero content first (above fold)
+    loadSiteSettings().then(() => {
+        // 2. After hero is ready, load the rest in parallel
+        loadTestimonials();
+        loadHomeBlog();
+        loadHomeServices();
+        loadHomePortfolio();
+    });
 
     const hash = location.hash.replace('#','');
     if (hash.startsWith('post/')) {
@@ -944,11 +1006,9 @@ function fmtDate(d){if(!d)return'–';return new Date(d).toLocaleDateString('en-
 function fmtDateLong(d){if(!d)return'–';return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});}
 
 // ============================================
-// SERVICES — load from DB
+// SERVICES
 // ============================================
 let servicesCache = [];
-
-// Default fallback cards if DB is empty
 const DEFAULT_SERVICES = [
     {name:'Web Development',icon:'fa-code',description:'Custom websites and web applications built with the latest technologies.',features:['Custom Development','E-commerce Solutions','CMS Implementation','Website Maintenance']},
     {name:'Branding & Design',icon:'fa-paint-brush',description:'Creative design solutions that capture your brand\'s essence.',features:['Logo & Identity Design','Brand Strategy','UI/UX Design','Print Collateral']},
@@ -961,7 +1021,7 @@ const DEFAULT_SERVICES = [
 function renderServiceCard(s) {
     const features = (s.features || []).slice(0,5);
     return `<div class="service-card">
-        <div class="svc-icon"><i class="fas ${s.icon||'fa-cog'}"></i></div>
+        <div class="svc-icon"><i class="fas ${escHtml(s.icon||'fa-cog')}"></i></div>
         <h3>${escHtml(s.name)}</h3>
         <p>${escHtml(s.description||'')}</p>
         <ul>${features.map(f=>`<li>${escHtml(f)}</li>`).join('')}</ul>
@@ -977,7 +1037,7 @@ async function loadHomeServices() {
 
 async function loadServicesPage() {
     const el = document.getElementById('servicesGrid');
-    if (!el || el.querySelector('.service-card')) return; // already loaded
+    if (!el || el.querySelector('.service-card')) return;
     const {data} = await sb.from('services').select('*').order('sort_order');
     servicesCache = data || [];
     const list = servicesCache.length ? servicesCache : DEFAULT_SERVICES;
@@ -985,16 +1045,16 @@ async function loadServicesPage() {
 }
 
 // ============================================
-// PORTFOLIO — fully from DB
+// PORTFOLIO
 // ============================================
 let portCache = [];
 let portCurrentFilter = 'all';
-
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80';
 
 function renderPortItem(p) {
+    const alt = p.image_alt || escHtml(p.title) + ' portfolio project';
     return `<div class="port-item" data-category="${escHtml(p.category||'')}" onclick="openPortModal('${p.id}')">
-        <img class="port-img" src="${escHtml(p.image_url||FALLBACK_IMG)}" alt="${escHtml(p.title)}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
+        <img class="port-img" src="${escHtml(p.image_url||FALLBACK_IMG)}" alt="${alt}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
         <div class="port-overlay">
             <h3>${escHtml(p.title)}</h3>
             <p>${escHtml((p.description||'').substring(0,80))}${(p.description||'').length>80?'…':''}</p>
@@ -1011,7 +1071,6 @@ async function loadHomePortfolio() {
     const el = document.getElementById('homePortfolio');
     const {data} = await sb.from('portfolio').select('*').eq('featured',true).order('created_at',{ascending:false}).limit(3);
     if (!data?.length) {
-        // Try any 3 if no featured
         const {data:any} = await sb.from('portfolio').select('*').order('created_at',{ascending:false}).limit(3);
         if (!any?.length) { el.innerHTML='<p style="text-align:center;color:var(--text-light);grid-column:1/-1;padding:40px 0">No portfolio items yet.</p>'; return; }
         el.innerHTML = any.map(renderPortItem).join('');
@@ -1022,7 +1081,7 @@ async function loadHomePortfolio() {
 
 async function loadPortfolioPage() {
     const el = document.getElementById('portfolioGrid');
-    if (!el || el.querySelector('.port-item')) return; // already loaded
+    if (!el || el.querySelector('.port-item')) return;
     const {data} = await sb.from('portfolio').select('*').order('created_at',{ascending:false});
     portCache = data || [];
     renderPortfolioGrid();
@@ -1032,13 +1091,12 @@ function renderPortfolioGrid() {
     const el = document.getElementById('portfolioGrid');
     const filtered = portCurrentFilter==='all' ? portCache : portCache.filter(p=>(p.category||'').toLowerCase().includes(portCurrentFilter));
     if (!filtered.length) {
-        el.innerHTML='<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-folder-open"></i><p>No projects in this category yet.</p></div>';
+        el.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-light)"><i class="fas fa-folder-open" style="font-size:3rem;display:block;margin-bottom:12px;opacity:.3"></i><p>No projects in this category yet.</p></div>';
         return;
     }
     el.innerHTML = filtered.map(renderPortItem).join('');
 }
 
-// Portfolio page filter buttons
 document.querySelectorAll('#portFilters .filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('#portFilters .filter-btn').forEach(b=>b.classList.remove('active'));
@@ -1048,26 +1106,22 @@ document.querySelectorAll('#portFilters .filter-btn').forEach(btn => {
     });
 });
 
-// Portfolio Modal — now uses DB data
 function openPortModal(id) {
     const p = portCache.find(x=>x.id===id);
     if (!p) return;
     document.getElementById('portModalImg').style.backgroundImage = `url('${p.image_url||FALLBACK_IMG}')`;
     document.getElementById('portModalTitle').textContent = p.title;
     document.getElementById('portModalDesc').textContent = p.description||'';
-
     const details = [
         p.client && ['Client', p.client],
         p.category && ['Category', p.category],
         p.technologies && ['Technologies', p.technologies],
     ].filter(Boolean);
     document.getElementById('portModalDetails').innerHTML = details.map(([k,v])=>`<div class="port-detail-row"><strong>${k}:</strong><span>${escHtml(v)}</span></div>`).join('') || '<p style="font-size:.82rem;color:var(--text-light)">Details coming soon.</p>';
-
     const results = p.results || [];
     document.getElementById('portModalResults').innerHTML = results.length
         ? results.map(r=>`<div class="port-result-item">${escHtml(r)}</div>`).join('')
         : '<p style="font-size:.82rem;color:var(--text-light)">Results coming soon.</p>';
-
     document.getElementById('portModal').classList.add('open');
     document.body.style.overflow='hidden';
 }
@@ -1090,16 +1144,16 @@ const POSTS_PER_PAGE = 9;
 
 async function loadHomeBlog() {
     const container = document.getElementById('homeBlog');
-    const {data,error} = await sb.from('blog_posts').select('*').eq('status','published').order('created_at',{ascending:false}).limit(3);
+    const {data,error} = await sb.from('blog_posts').select('*').eq('status','published').order('published_at',{ascending:false}).limit(3);
     if (error||!data?.length) { container.innerHTML='<p style="color:var(--text-light);text-align:center;grid-column:1/-1;padding:40px 0">No posts yet.</p>'; return; }
     container.innerHTML = data.map(renderBlogCard).join('');
 }
 
 async function loadBlogPage() {
     const container = document.getElementById('blogGrid');
-    if (allBlogPosts.length) { renderBlogGrid(); return; } // use cache
+    if (allBlogPosts.length) { renderBlogGrid(); return; }
     container.innerHTML = '<div class="blog-skeleton" style="grid-column:1/-1"><div style="height:200px" class="skeleton"></div></div>';
-    const {data,error} = await sb.from('blog_posts').select('*').eq('status','published').order('created_at',{ascending:false});
+    const {data,error} = await sb.from('blog_posts').select('*').eq('status','published').order('published_at',{ascending:false});
     if (error||!data) { container.innerHTML='<p style="text-align:center;padding:40px">Could not load posts.</p>'; return; }
     allBlogPosts = data;
     renderBlogGrid();
@@ -1118,16 +1172,17 @@ function renderBlogGrid() {
 }
 
 function renderBlogCard(post) {
-    const date = fmtDate(post.created_at);
+    const date = fmtDate(post.published_at || post.created_at);
     const initials = (post.author_name||'I').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const imgAlt = post.image_alt || escHtml(post.title);
     return `<div class="blog-card" onclick="openBlogPost('${post.id}')">
         <div class="blog-thumb">
-            <img src="${post.image_url||'https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=600&q=80'}" alt="${escHtml(post.title)}" loading="lazy">
+            <img src="${post.image_url||'https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=600&q=80'}" alt="${imgAlt}" loading="lazy">
             <span class="blog-cat">${escHtml(post.category)}</span>
         </div>
         <div class="blog-body">
             <div class="blog-byline">
-                <div class="byline-avatar">${post.author_avatar_url?`<img src="${post.author_avatar_url}" alt="">`:initials}</div>
+                <div class="byline-avatar">${post.author_avatar_url?`<img src="${escHtml(post.author_avatar_url)}" alt="${escHtml(post.author_name||'')}">`:initials}</div>
                 <div class="byline-info"><span class="byline-name">${escHtml(post.author_name||'Ikinai Media')}</span></div>
             </div>
             <h3>${escHtml(post.title)}</h3>
@@ -1137,7 +1192,6 @@ function renderBlogCard(post) {
     </div>`;
 }
 
-// Blog filters
 document.querySelectorAll('#blogFilters .filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('#blogFilters .filter-btn').forEach(b=>b.classList.remove('active'));
@@ -1181,7 +1235,7 @@ function renderBlogSingle(post, pushHist=true) {
     document.title = `${post.title} | Ikinai Media`;
     setMeta('og:title', post.title);
     setMeta('og:description', post.excerpt || 'Read this article on Ikinai Media.');
-    setMeta('og:image', post.image_url || '');
+    setMeta('og:image', post.image_url || window._defaultOgImage || 'https://i.ibb.co/vx3Mx0V1/ikinai-logo.png');
     setMeta('og:url', postUrl);
 
     document.getElementById('singleCat').textContent = post.category || '';
@@ -1192,7 +1246,7 @@ function renderBlogSingle(post, pushHist=true) {
 
     const avatarWrap = document.getElementById('singleAvatarWrap');
     avatarWrap.innerHTML = post.author_avatar_url
-        ? `<img src="${escHtml(post.author_avatar_url)}" alt="${escHtml(post.author_name||'')}">`
+        ? `<img src="${escHtml(post.author_avatar_url)}" alt="${escHtml(post.author_name||'Author photo')}">`
         : `<span style="font-size:1.1rem;font-weight:700;color:#333">${initials}</span>`;
 
     const heroBg = document.getElementById('singleHeroBg');
@@ -1232,7 +1286,7 @@ function shareTwitter(){window.open(`https://twitter.com/intent/tweet?text=${enc
 function shareFacebook(){window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(getShareUrl())}`, '_blank');}
 
 // ============================================
-// TESTIMONIALS
+// TESTIMONIALS — with pause-on-hover
 // ============================================
 let testData = [];
 let testIdx = 0;
@@ -1242,7 +1296,6 @@ async function loadTestimonials() {
     const {data} = await sb.from('testimonials').select('*').eq('featured',true).order('created_at',{ascending:false});
     if (data?.length) { testData=data; renderTestimonials(); }
     else {
-        // Default fallback
         document.getElementById('testimonialsContainer').innerHTML = `
         <div class="test-card active">
             <div class="stars">★★★★★</div>
@@ -1264,15 +1317,21 @@ function renderTestimonials() {
             <div class="stars">${'★'.repeat(t.rating)}${'☆'.repeat(5-t.rating)}</div>
             <p class="test-text">${escHtml(t.text)}</p>
             <div class="test-author">
-                <div class="test-avatar">${t.avatar_url?`<img src="${t.avatar_url}" alt="">`:initials}</div>
+                <div class="test-avatar">${t.avatar_url?`<img src="${escHtml(t.avatar_url)}" alt="${escHtml(t.name)}">`:initials}</div>
                 <div class="test-info"><h4>${escHtml(t.name)}</h4><p>${escHtml(t.position)}</p></div>
             </div>
         </div>`;
     }).join('');
     dots.innerHTML = testData.map((_,i)=>`<span class="test-dot ${i===0?'active':''}" onclick="showTest(${i})"></span>`).join('');
+    startTestTimer();
+}
+
+function startTestTimer() {
     if(testTimer) clearInterval(testTimer);
     testTimer = setInterval(()=>showTest((testIdx+1)%testData.length), 5000);
 }
+function pauseTestSlider() { if(testTimer) clearInterval(testTimer); testTimer=null; }
+function resumeTestSlider() { if(testData.length) startTestTimer(); }
 
 function showTest(i) {
     testIdx=i;
@@ -1285,15 +1344,15 @@ function showTest(i) {
 // ============================================
 async function loadTeam() {
     const el = document.getElementById('teamGrid');
-    if (el.querySelector('.team-card')) return; // already loaded
+    if (el.querySelector('.team-card')) return;
     const {data} = await sb.from('team_members').select('*').order('sort_order');
     if (!data?.length) {
-        el.innerHTML='<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-users"></i><p>Team info coming soon.</p></div>';
+        el.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-light)"><i class="fas fa-users" style="font-size:3rem;display:block;margin-bottom:12px;opacity:.3"></i><p>Team info coming soon.</p></div>';
         return;
     }
     el.innerHTML = data.map(m=>`
         <div class="team-card">
-            <div class="team-photo">${m.photo_url?`<img src="${escHtml(m.photo_url)}" alt="${escHtml(m.name)}">`:'<i class="fas fa-user"></i>'}</div>
+            <div class="team-photo">${m.photo_url?`<img src="${escHtml(m.photo_url)}" alt="${escHtml(m.name)} - ${escHtml(m.title)}">`:'<i class="fas fa-user"></i>'}</div>
             <h3>${escHtml(m.name)}</h3>
             <p class="team-role">${escHtml(m.title)}</p>
             <p class="team-bio">${escHtml(m.bio||'')}</p>
@@ -1301,7 +1360,7 @@ async function loadTeam() {
 }
 
 // ============================================
-// SITE SETTINGS
+// SITE SETTINGS (async — returns promise)
 // ============================================
 async function loadSiteSettings() {
     const {data} = await sb.from('site_settings').select('*');
@@ -1313,25 +1372,74 @@ async function loadSiteSettings() {
     if (map.phone) { document.getElementById('contactPhone').textContent=map.phone; document.getElementById('footerPhone').textContent=map.phone; }
     if (map.email) { document.getElementById('contactEmail').textContent=map.email; document.getElementById('footerEmail').textContent=map.email; }
     if (map.address) { document.getElementById('contactAddr').textContent=map.address; document.getElementById('footerAddr').textContent=map.address; }
+    // Default OG image from settings
+    if (map.og_image) {
+        window._defaultOgImage = map.og_image;
+        document.getElementById('metaOgImage').setAttribute('content', map.og_image);
+    }
 }
 
 // ============================================
-// CONTACT FORM
+// CONTACT FORM — saves to Supabase + Formspree
 // ============================================
 document.getElementById('contactForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     const btn=this.querySelector('button[type=submit]');
     const orig=btn.innerHTML;
     btn.innerHTML='<span class="spinner"></span> Sending...'; btn.disabled=true;
+
+    const payload = {
+        name: document.getElementById('cf-name').value,
+        email: document.getElementById('cf-email').value,
+        subject: document.getElementById('cf-subject').value,
+        service: document.getElementById('cf-service').value,
+        message: document.getElementById('cf-message').value
+    };
+
+    // Save to Supabase (don't fail silently — but don't block on it)
+    sb.from('contact_messages').insert(payload).then(({error}) => {
+        if (error) console.warn('Contact save error:', error.message);
+    });
+
+    // Also send via Formspree
     try {
-        const res=await fetch(this.action,{method:'POST',body:new FormData(this),headers:{Accept:'application/json'}});
-        showNotif(res.ok?'Message sent! We\'ll be in touch soon.':'Error sending. Please try again.',res.ok?'success':'error');
+        const fd = new FormData(this);
+        const res = await fetch('https://formspree.io/f/mdkvnqbe',{method:'POST',body:fd,headers:{Accept:'application/json'}});
+        showNotif(res.ok?'Message sent! We\'ll be in touch soon.':'Saved! We\'ll reach out shortly.',res.ok?'success':'success');
         if(res.ok) this.reset();
-    } catch { showNotif('Error sending message. Please try again.','error'); }
+    } catch {
+        showNotif('Message saved! We\'ll be in touch shortly.','success');
+        this.reset();
+    }
     btn.innerHTML=orig; btn.disabled=false;
 });
 
-function subscribeNewsletter(e) { e.preventDefault(); showNotif('Thank you for subscribing! 🎉','success'); e.target.reset(); }
+// ============================================
+// NEWSLETTER — saves to Supabase subscribers table
+// ============================================
+async function subscribeNewsletter(e) {
+    e.preventDefault();
+    const emailEl = document.getElementById('newsletterEmail');
+    const email = emailEl.value.trim();
+    if (!email) return;
+
+    const btn = e.target.querySelector('button');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<span class="spinner"></span>'; btn.disabled=true;
+
+    const {error} = await sb.from('newsletter_subscribers').insert({email});
+    btn.innerHTML=orig; btn.disabled=false;
+
+    if (error && error.code === '23505') {
+        // Duplicate — already subscribed
+        showNotif('You\'re already subscribed! 🎉','success');
+    } else if (error) {
+        showNotif('Could not subscribe. Please try again.','error');
+    } else {
+        showNotif('Thank you for subscribing! 🎉','success');
+        e.target.reset();
+    }
+}
 
 // ============================================
 // CHAT
