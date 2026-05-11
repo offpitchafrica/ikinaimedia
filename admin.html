@@ -109,13 +109,10 @@
         .rich-toolbar button{padding:5px 10px;background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--text-muted);cursor:pointer;font-size:.78rem;transition:var(--transition)}
         .rich-toolbar button:hover{background:rgba(255,255,255,.07);color:var(--text)}
         .rich-content{min-height:220px;padding:14px;outline:none;font-size:.88rem;line-height:1.7;color:var(--text)}
-        .rich-content:focus{border-color:var(--primary)}
         .rich-content h1,.rich-content h2,.rich-content h3{color:var(--text);margin:12px 0 8px}
-        .rich-content p{margin-bottom:10px;color:var(--text)}
+        .rich-content p{margin-bottom:10px}
         .rich-content ul,.rich-content ol{padding-left:20px;margin-bottom:10px}
-        .rich-content li{margin-bottom:4px}
         .rich-content blockquote{border-left:3px solid var(--primary);padding-left:16px;color:var(--text-muted);font-style:italic}
-        .rich-content a{color:var(--primary)}
 
         /* IMAGE UPLOAD */
         .img-upload-zone{border:2px dashed var(--border);border-radius:8px;padding:32px;text-align:center;cursor:pointer;transition:var(--transition);position:relative;overflow:hidden}
@@ -138,7 +135,7 @@
         .modal-body{padding:24px}
         .modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;position:sticky;bottom:0;background:var(--card)}
 
-        /* ALERT */
+        /* TOAST */
         #toast{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:10px}
         .toast-item{padding:12px 20px;border-radius:8px;font-size:.85rem;font-weight:500;animation:slideUp .3s ease;display:flex;align-items:center;gap:10px;max-width:340px;box-shadow:0 4px 20px rgba(0,0,0,.4)}
         .toast-success{background:#1a3a25;border:1px solid #4caf69;color:#4caf69}
@@ -146,24 +143,19 @@
         .toast-info{background:#1a1a3a;border:1px solid #6677ff;color:#99aaff}
         @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-        /* RESPONSIVE */
-        @media(max-width:768px){
-            .sidebar{width:60px}
-            .sb-logo span,.nav-item span,.sb-logo small,.nav-section,.sb-bottom .logout-text{display:none}
-            .main{margin-left:60px}
-            .form-grid{grid-template-columns:1fr}
-        }
-        /* LOADING */
+        /* MISC */
         .loader{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.2);border-top-color:var(--primary);border-radius:50%;animation:spin .6s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
         .loading-row td{text-align:center;padding:40px;color:var(--text-muted)}
         .empty-state{text-align:center;padding:60px 20px;color:var(--text-muted)}
         .empty-state i{font-size:3rem;margin-bottom:12px;opacity:.3}
 
-        /* AUTHOR SECTION */
-        .author-grid{display:grid;grid-template-columns:80px 1fr;gap:16px;align-items:start}
-        .author-avatar-preview{width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--border);display:none}
-        .author-avatar-placeholder{width:80px;height:80px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:1.5rem}
+        @media(max-width:768px){
+            .sidebar{width:60px}
+            .sb-logo span,.nav-item span,.sb-logo small,.nav-section,.sb-bottom .logout-text{display:none}
+            .main{margin-left:60px}
+            .form-grid{grid-template-columns:1fr}
+        }
     </style>
 </head>
 <body>
@@ -182,12 +174,8 @@
 <!-- ADMIN APP -->
 <div id="appWrap">
 <div class="layout">
-    <!-- SIDEBAR -->
     <div class="sidebar">
-        <div class="sb-logo">
-            <span>⚡ Ikinai Media</span>
-            <small>Admin Dashboard</small>
-        </div>
+        <div class="sb-logo"><span>⚡ Ikinai Media</span><small>Admin Dashboard</small></div>
         <div class="sb-nav">
             <div class="nav-section">Main</div>
             <div class="nav-item active" data-panel="dashboard"><i class="fas fa-chart-pie"></i><span>Dashboard</span></div>
@@ -206,11 +194,10 @@
         </div>
     </div>
 
-    <!-- MAIN -->
     <div class="main">
         <div class="topbar">
             <h2 id="panelTitle">Dashboard</h2>
-            <div class="supabase-badge"><div class="dot" id="dbDot"></div><span id="dbStatus">Connecting...</span></div>
+            <div class="supabase-badge"><div class="dot" id="dbDot" style="background:#4caf69"></div><span id="dbStatus">Connected</span></div>
         </div>
         <div class="content">
 
@@ -224,14 +211,14 @@
                 </div>
                 <div class="card">
                     <div class="card-header"><h3>Recent Blog Posts</h3><button class="btn btn-primary btn-sm" onclick="switchPanel('blog')">View All</button></div>
-                    <table class="data-table" id="dashRecentTable">
+                    <table class="data-table">
                         <thead><tr><th>Title</th><th>Category</th><th>Status</th><th>Date</th></tr></thead>
                         <tbody id="dashRecentBody"><tr class="loading-row"><td colspan="4"><span class="loader"></span></td></tr></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- BLOG PANEL -->
+            <!-- BLOG -->
             <div id="blogPanel" class="panel">
                 <div class="card">
                     <div class="card-header"><h3>Blog Posts</h3><button class="btn btn-primary" onclick="openBlogModal()"><i class="fas fa-plus"></i> New Post</button></div>
@@ -242,7 +229,7 @@
                 </div>
             </div>
 
-            <!-- PORTFOLIO PANEL -->
+            <!-- PORTFOLIO -->
             <div id="portfolioPanel" class="panel">
                 <div class="card">
                     <div class="card-header"><h3>Portfolio Projects</h3><button class="btn btn-primary" onclick="openPortfolioModal()"><i class="fas fa-plus"></i> New Project</button></div>
@@ -253,7 +240,7 @@
                 </div>
             </div>
 
-            <!-- SERVICES PANEL -->
+            <!-- SERVICES -->
             <div id="servicesPanel" class="panel">
                 <div class="card">
                     <div class="card-header"><h3>Services</h3><button class="btn btn-primary" onclick="openServiceModal()"><i class="fas fa-plus"></i> New Service</button></div>
@@ -264,7 +251,7 @@
                 </div>
             </div>
 
-            <!-- TESTIMONIALS PANEL -->
+            <!-- TESTIMONIALS -->
             <div id="testimonialsPanel" class="panel">
                 <div class="card">
                     <div class="card-header"><h3>Testimonials</h3><button class="btn btn-primary" onclick="openTestimonialModal()"><i class="fas fa-plus"></i> Add Testimonial</button></div>
@@ -275,7 +262,7 @@
                 </div>
             </div>
 
-            <!-- TEAM PANEL -->
+            <!-- TEAM -->
             <div id="teamPanel" class="panel">
                 <div class="card">
                     <div class="card-header"><h3>Team Members</h3><button class="btn btn-primary" onclick="openTeamModal()"><i class="fas fa-plus"></i> Add Member</button></div>
@@ -286,7 +273,7 @@
                 </div>
             </div>
 
-            <!-- SETTINGS PANEL -->
+            <!-- SETTINGS -->
             <div id="settingsPanel" class="panel">
                 <div class="card">
                     <div class="card-header"><h3>Site Settings</h3></div>
@@ -309,22 +296,21 @@
                     </div>
                     <button class="btn btn-primary" onclick="changePassword()"><i class="fas fa-key"></i> Update Password</button>
                 </div>
-                <div class="card" style="margin-top:20px">
-                    <div class="card-header"><h3>Supabase Configuration</h3></div>
-                    <div class="form-group"><label>Supabase URL</label><input type="text" id="cfg-url" placeholder="https://xxxx.supabase.co"></div>
-                    <div class="form-group"><label>Supabase Anon Key</label><input type="text" id="cfg-key" placeholder="eyJhbGciOiJIUzI1NiIs..."></div>
-                    <button class="btn btn-primary" onclick="saveSupabaseConfig()"><i class="fas fa-plug"></i> Save & Reconnect</button>
+                <div class="card" style="margin-top:20px;padding:20px">
+                    <div class="card-header"><h3>Supabase Connection</h3></div>
+                    <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:12px">Project: <strong style="color:var(--primary)">hplfmxhumfkfhligpfps.supabase.co</strong></p>
+                    <p style="font-size:.82rem;color:var(--success)"><i class="fas fa-check-circle"></i> Credentials are hardcoded in the source files.</p>
                 </div>
             </div>
-        </div><!-- end content -->
-    </div><!-- end main -->
-</div><!-- end layout -->
-</div><!-- end appWrap -->
 
-<!-- TOAST -->
+        </div>
+    </div>
+</div>
+</div>
+
 <div id="toast"></div>
 
-<!-- ===== BLOG MODAL ===== -->
+<!-- BLOG MODAL -->
 <div class="modal-overlay" id="blogModal">
 <div class="modal">
     <div class="modal-hd">
@@ -356,18 +342,16 @@
                 </select>
             </div>
         </div>
-
-        <!-- AUTHOR SECTION -->
         <div class="card" style="margin-bottom:20px;padding:16px">
-            <div style="font-size:.88rem;font-weight:600;margin-bottom:14px;color:var(--text-muted)">✍️ BY LINE / AUTHOR</div>
+            <div style="font-size:.88rem;font-weight:600;margin-bottom:14px;color:var(--text-muted)">✍️ AUTHOR / BY LINE</div>
             <div class="form-grid">
-                <div class="form-group"><label>Author Name *</label><input type="text" id="b-author-name" placeholder="e.g. John Smith" value="Ikinai Media"></div>
+                <div class="form-group"><label>Author Name *</label><input type="text" id="b-author-name" value="Ikinai Media"></div>
                 <div class="form-group"><label>Author Email</label><input type="email" id="b-author-email" placeholder="author@example.com"></div>
-                <div class="form-group full"><label>Author Bio / Desk</label><input type="text" id="b-author-bio" placeholder="e.g. Sports Correspondent, Tech Desk, Senior Reporter..."></div>
+                <div class="form-group full"><label>Author Bio / Desk</label><input type="text" id="b-author-bio" placeholder="e.g. Sports Correspondent, Tech Desk..."></div>
             </div>
             <label>Author Avatar</label>
-            <div class="img-upload-zone" id="avatarZone" onclick="triggerUpload('avatarFile')">
-                <input type="file" id="avatarFile" accept="image/*" onchange="handleImageUpload(this,'avatarPreview','avatarZone','b-author-avatar')">
+            <div class="img-upload-zone" onclick="triggerUpload('avatarFile')">
+                <input type="file" id="avatarFile" accept="image/*" onchange="handleImageUpload(this,'avatarPreview','b-author-avatar')">
                 <i class="fas fa-user-circle"></i>
                 <p>Click to upload author photo</p>
                 <img id="avatarPreview" class="img-preview">
@@ -375,12 +359,10 @@
             <div class="url-or">or paste URL</div>
             <input type="url" id="b-author-avatar" placeholder="https://..." oninput="previewFromUrl(this.value,'avatarPreview')">
         </div>
-
-        <!-- FEATURED IMAGE -->
         <div class="form-group">
             <label>Featured Image</label>
-            <div class="img-upload-zone" id="blogImgZone" onclick="triggerUpload('blogImgFile')">
-                <input type="file" id="blogImgFile" accept="image/*" onchange="handleImageUpload(this,'blogImgPreview','blogImgZone','b-image')">
+            <div class="img-upload-zone" onclick="triggerUpload('blogImgFile')">
+                <input type="file" id="blogImgFile" accept="image/*" onchange="handleImageUpload(this,'blogImgPreview','b-image')">
                 <i class="fas fa-image"></i>
                 <p>Click or drag & drop an image here</p>
                 <img id="blogImgPreview" class="img-preview">
@@ -388,10 +370,7 @@
             <div class="url-or">or paste URL</div>
             <input type="url" id="b-image" placeholder="https://images.unsplash.com/..." oninput="previewFromUrl(this.value,'blogImgPreview')">
         </div>
-
         <div class="form-group"><label>Excerpt (short description)</label><textarea id="b-excerpt" rows="3" placeholder="Brief description for the card preview..."></textarea></div>
-
-        <!-- RICH TEXT EDITOR -->
         <div class="form-group">
             <label>Full Content</label>
             <div class="rich-editor">
@@ -402,13 +381,13 @@
                     <button type="button" onclick="fmtBlock('h2')">H2</button>
                     <button type="button" onclick="fmtBlock('h3')">H3</button>
                     <button type="button" onclick="fmtBlock('p')">P</button>
-                    <button type="button" onclick="fmtBlock('blockquote')" title="Blockquote">❝</button>
+                    <button type="button" onclick="fmtBlock('blockquote')">❝</button>
                     <button type="button" onclick="fmt('insertUnorderedList')">• List</button>
                     <button type="button" onclick="fmt('insertOrderedList')">1. List</button>
                     <button type="button" onclick="insertLink()">🔗 Link</button>
                     <button type="button" onclick="clearFormatting()">✕ Clear</button>
                 </div>
-                <div class="rich-content" id="b-content" contenteditable="true" data-placeholder="Start writing your article..."></div>
+                <div class="rich-content" id="b-content" contenteditable="true"></div>
             </div>
         </div>
     </div>
@@ -419,7 +398,7 @@
 </div>
 </div>
 
-<!-- ===== PORTFOLIO MODAL ===== -->
+<!-- PORTFOLIO MODAL -->
 <div class="modal-overlay" id="portfolioModal">
 <div class="modal">
     <div class="modal-hd">
@@ -441,21 +420,20 @@
         </div>
         <div class="form-group">
             <label>Project Image</label>
-            <div class="img-upload-zone" id="portImgZone" onclick="triggerUpload('portImgFile')">
-                <input type="file" id="portImgFile" accept="image/*" onchange="handleImageUpload(this,'portImgPreview','portImgZone','p-image','portfolio-images')">
-                <i class="fas fa-image"></i>
-                <p>Click or drag & drop an image here</p>
+            <div class="img-upload-zone" onclick="triggerUpload('portImgFile')">
+                <input type="file" id="portImgFile" accept="image/*" onchange="handleImageUpload(this,'portImgPreview','p-image','portfolio-images')">
+                <i class="fas fa-image"></i><p>Click or drag & drop</p>
                 <img id="portImgPreview" class="img-preview">
             </div>
             <div class="url-or">or paste URL</div>
             <input type="url" id="p-image" placeholder="https://..." oninput="previewFromUrl(this.value,'portImgPreview')">
         </div>
         <div class="form-grid">
-            <div class="form-group"><label>Client</label><input type="text" id="p-client" placeholder="Client name"></div>
-            <div class="form-group"><label>Technologies</label><input type="text" id="p-tech" placeholder="React, Node.js, ..."></div>
+            <div class="form-group"><label>Client</label><input type="text" id="p-client"></div>
+            <div class="form-group"><label>Technologies</label><input type="text" id="p-tech" placeholder="React, Node.js..."></div>
             <div class="form-group full"><label>Description *</label><textarea id="p-desc" rows="3" required></textarea></div>
             <div class="form-group full"><label>Key Results (one per line)</label><textarea id="p-results" rows="4" placeholder="Increased sales by 45%&#10;Improved engagement by 60%"></textarea></div>
-            <div class="form-group"><label><input type="checkbox" id="p-featured" style="width:auto;margin-right:6px">Featured Project</label></div>
+            <div class="form-group"><label><input type="checkbox" id="p-featured" style="width:auto;margin-right:6px"> Featured Project</label></div>
         </div>
     </div>
     <div class="modal-footer">
@@ -476,7 +454,7 @@
             <div class="form-group"><label>Position / Company *</label><input type="text" id="t-pos" required></div>
             <div class="form-group full"><label>Testimonial Text *</label><textarea id="t-text" rows="4" required></textarea></div>
             <div class="form-group"><label>Rating</label><select id="t-rating"><option value="5">★★★★★ (5)</option><option value="4">★★★★☆ (4)</option><option value="3">★★★☆☆ (3)</option><option value="2">★★☆☆☆ (2)</option><option value="1">★☆☆☆☆ (1)</option></select></div>
-            <div class="form-group"><label><input type="checkbox" id="t-featured" style="width:auto;margin-right:6px" checked>Featured on Homepage</label></div>
+            <div class="form-group"><label><input type="checkbox" id="t-featured" style="width:auto;margin-right:6px" checked> Featured on Homepage</label></div>
         </div>
     </div>
     <div class="modal-footer">
@@ -495,9 +473,8 @@
         <div class="form-group">
             <label>Member Photo</label>
             <div class="img-upload-zone" onclick="triggerUpload('memberPhotoFile')">
-                <input type="file" id="memberPhotoFile" accept="image/*" onchange="handleImageUpload(this,'memberPhotoPreview',null,'m-photo','team-photos')">
-                <i class="fas fa-user-circle"></i>
-                <p>Upload team member photo</p>
+                <input type="file" id="memberPhotoFile" accept="image/*" onchange="handleImageUpload(this,'memberPhotoPreview','m-photo','team-photos')">
+                <i class="fas fa-user-circle"></i><p>Upload photo</p>
                 <img id="memberPhotoPreview" class="img-preview">
             </div>
             <div class="url-or">or paste URL</div>
@@ -507,7 +484,7 @@
             <div class="form-group"><label>Full Name *</label><input type="text" id="m-name" required></div>
             <div class="form-group"><label>Title / Role *</label><input type="text" id="m-title" required></div>
             <div class="form-group full"><label>Bio</label><textarea id="m-bio" rows="3"></textarea></div>
-            <div class="form-group"><label>Sort Order</label><input type="text" id="m-order" placeholder="1, 2, 3..." value="0"></div>
+            <div class="form-group"><label>Sort Order</label><input type="text" id="m-order" value="0"></div>
         </div>
     </div>
     <div class="modal-footer">
@@ -539,49 +516,24 @@
 
 <script>
 // ============================================
-// CONFIGURATION
+// SUPABASE — hardcoded credentials
 // ============================================
-const CONFIG = {
-    ADMIN_PASSWORD: localStorage.getItem('ikinai_admin_pass') || 'ikinai2025admin',
-    SUPABASE_URL: localStorage.getItem('ikinai_sb_url') || '',
-    SUPABASE_KEY: localStorage.getItem('ikinai_sb_key') || ''
-};
+const SB_URL = 'https://hplfmxhumfkfhligpfps.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwbGZteGh1bWZrZmhsaWdwZnBzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwOTY2MDUsImV4cCI6MjA4NjY3MjYwNX0.NCmh5YriukkPOpmjeVHW7ptqtQxmbMKPXdRrmcYqyUA';
+const sb = supabase.createClient(SB_URL, SB_KEY);
 
-let sb = null;
-
-function initSupabase() {
-    if (!CONFIG.SUPABASE_URL || !CONFIG.SUPABASE_KEY) {
-        setDbStatus('Not Configured', false);
-        return false;
-    }
-    try {
-        sb = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
-        setDbStatus('Connected', true);
-        return true;
-    } catch(e) {
-        setDbStatus('Error', false);
-        return false;
-    }
-}
-
-function setDbStatus(msg, ok) {
-    document.getElementById('dbStatus').textContent = msg;
-    document.getElementById('dbDot').style.background = ok ? '#4caf69' : '#e55';
-}
+const ADMIN_PASSWORD = localStorage.getItem('ikinai_admin_pass') || 'ikinai2025admin';
 
 // ============================================
 // LOGIN
 // ============================================
 function doLogin() {
     const pass = document.getElementById('adminPass').value;
-    if (pass === CONFIG.ADMIN_PASSWORD) {
+    const stored = localStorage.getItem('ikinai_admin_pass') || 'ikinai2025admin';
+    if (pass === stored) {
         document.getElementById('loginWrap').style.display = 'none';
         document.getElementById('appWrap').style.display = 'block';
-        initSupabase();
         loadAll();
-        // Prefill config fields
-        document.getElementById('cfg-url').value = CONFIG.SUPABASE_URL;
-        document.getElementById('cfg-key').value = CONFIG.SUPABASE_KEY;
     } else {
         document.getElementById('loginErr').style.display = 'block';
     }
@@ -598,29 +550,12 @@ function logout() {
 function changePassword() {
     const np = document.getElementById('newPassword').value;
     const cp = document.getElementById('confirmPassword').value;
-    if (!np) return toast('Enter a new password', 'error');
-    if (np !== cp) return toast('Passwords do not match', 'error');
+    if (!np) return toast('Enter a new password','error');
+    if (np!==cp) return toast('Passwords do not match','error');
     localStorage.setItem('ikinai_admin_pass', np);
-    CONFIG.ADMIN_PASSWORD = np;
     document.getElementById('newPassword').value = '';
     document.getElementById('confirmPassword').value = '';
-    toast('Password updated successfully!', 'success');
-}
-
-function saveSupabaseConfig() {
-    const url = document.getElementById('cfg-url').value.trim();
-    const key = document.getElementById('cfg-key').value.trim();
-    if (!url || !key) return toast('Enter both URL and Key', 'error');
-    localStorage.setItem('ikinai_sb_url', url);
-    localStorage.setItem('ikinai_sb_key', key);
-    CONFIG.SUPABASE_URL = url;
-    CONFIG.SUPABASE_KEY = key;
-    if (initSupabase()) {
-        toast('Supabase connected!', 'success');
-        loadAll();
-    } else {
-        toast('Connection failed. Check credentials.', 'error');
-    }
+    toast('Password updated!','success');
 }
 
 // ============================================
@@ -630,29 +565,23 @@ document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', function() {
         const panel = this.getAttribute('data-panel');
         switchPanel(panel);
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        this.classList.add('active');
-        const titles = {dashboard:'Dashboard',blog:'Blog Posts',portfolio:'Portfolio',services:'Services',testimonials:'Testimonials',team:'Team Members',settings:'Settings'};
-        document.getElementById('panelTitle').textContent = titles[panel] || panel;
     });
 });
 
 function switchPanel(name) {
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
     document.getElementById(name+'Panel').classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(n => {
-        n.classList.toggle('active', n.getAttribute('data-panel') === name);
-    });
-    const titles = {dashboard:'Dashboard',blog:'Blog Posts',portfolio:'Portfolio',services:'Services',testimonials:'Testimonials',team:'Team Members',settings:'Settings'};
-    document.getElementById('panelTitle').textContent = titles[name] || name;
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.getAttribute('data-panel')===name));
+    const titles={dashboard:'Dashboard',blog:'Blog Posts',portfolio:'Portfolio',services:'Services',testimonials:'Testimonials',team:'Team Members',settings:'Settings'};
+    document.getElementById('panelTitle').textContent = titles[name]||name;
 }
 
 // ============================================
 // LOAD ALL
 // ============================================
 async function loadAll() {
-    await Promise.all([loadBlog(), loadPortfolio(), loadServices(), loadTestimonials(), loadTeam(), loadSettings()]);
-    await updateDashStats();
+    await Promise.all([loadBlog(),loadPortfolio(),loadServices(),loadTestimonials(),loadTeam(),loadSettings()]);
+    updateDashStats();
 }
 
 // ============================================
@@ -661,22 +590,21 @@ async function loadAll() {
 let blogCache = [];
 
 async function loadBlog() {
-    if (!sb) { document.getElementById('blogBody').innerHTML = '<tr><td colspan="6" class="loading-row">Configure Supabase first</td></tr>'; return; }
     const {data,error} = await sb.from('blog_posts').select('*').order('created_at',{ascending:false});
     if (error) { toast('Error loading posts: '+error.message,'error'); return; }
-    blogCache = data || [];
+    blogCache = data||[];
     renderBlogTable(blogCache);
     renderDashRecent(blogCache.slice(0,5));
 }
 
 function renderBlogTable(posts) {
     const tbody = document.getElementById('blogBody');
-    if (!posts.length) { tbody.innerHTML = '<tr><td colspan="6" class="loading-row"><div class="empty-state"><i class="fas fa-newspaper"></i><p>No posts yet</p></div></td></tr>'; return; }
-    tbody.innerHTML = posts.map(p => `
+    if (!posts.length) { tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted)">No posts yet</td></tr>'; return; }
+    tbody.innerHTML = posts.map(p=>`
         <tr>
             <td style="max-width:300px"><b>${p.title}</b></td>
             <td><span class="badge" style="background:rgba(249,222,31,.12);color:#F9DE1F">${p.category}</span></td>
-            <td style="font-size:.8rem">${p.author_name || '–'}</td>
+            <td style="font-size:.8rem">${p.author_name||'–'}</td>
             <td><span class="badge badge-${p.status==='published'?'pub':p.status==='draft'?'draft':'arch'}">${p.status}</span></td>
             <td style="font-size:.78rem;color:var(--text-muted)">${fmtDate(p.created_at)}</td>
             <td><div class="actions">
@@ -688,8 +616,8 @@ function renderBlogTable(posts) {
 
 function renderDashRecent(posts) {
     const tbody = document.getElementById('dashRecentBody');
-    if (!posts.length) { tbody.innerHTML = '<tr class="loading-row"><td colspan="4">No posts yet</td></tr>'; return; }
-    tbody.innerHTML = posts.map(p => `
+    if (!posts.length) { tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text-muted)">No posts yet</td></tr>'; return; }
+    tbody.innerHTML = posts.map(p=>`
         <tr>
             <td><b>${p.title}</b></td>
             <td>${p.category}</td>
@@ -699,64 +627,55 @@ function renderDashRecent(posts) {
 }
 
 function openBlogModal(post=null) {
-    document.getElementById('blogModalTitle').textContent = post ? 'Edit Post' : 'New Blog Post';
-    document.getElementById('blogId').value = post?.id || '';
-    document.getElementById('b-title').value = post?.title || '';
-    document.getElementById('b-category').value = post?.category || 'News';
-    document.getElementById('b-status').value = post?.status || 'draft';
-    document.getElementById('b-author-name').value = post?.author_name || 'Ikinai Media';
-    document.getElementById('b-author-email').value = post?.author_email || '';
-    document.getElementById('b-author-bio').value = post?.author_bio || '';
-    document.getElementById('b-author-avatar').value = post?.author_avatar_url || '';
-    document.getElementById('b-image').value = post?.image_url || '';
-    document.getElementById('b-excerpt').value = post?.excerpt || '';
-    document.getElementById('b-content').innerHTML = post?.content || '';
-    previewFromUrl(post?.author_avatar_url || '', 'avatarPreview');
-    previewFromUrl(post?.image_url || '', 'blogImgPreview');
+    document.getElementById('blogModalTitle').textContent = post?'Edit Post':'New Blog Post';
+    document.getElementById('blogId').value = post?.id||'';
+    document.getElementById('b-title').value = post?.title||'';
+    document.getElementById('b-category').value = post?.category||'News';
+    document.getElementById('b-status').value = post?.status||'draft';
+    document.getElementById('b-author-name').value = post?.author_name||'Ikinai Media';
+    document.getElementById('b-author-email').value = post?.author_email||'';
+    document.getElementById('b-author-bio').value = post?.author_bio||'';
+    document.getElementById('b-author-avatar').value = post?.author_avatar_url||'';
+    document.getElementById('b-image').value = post?.image_url||'';
+    document.getElementById('b-excerpt').value = post?.excerpt||'';
+    document.getElementById('b-content').innerHTML = post?.content||'';
+    previewFromUrl(post?.author_avatar_url||'','avatarPreview');
+    previewFromUrl(post?.image_url||'','blogImgPreview');
     document.getElementById('blogModal').classList.add('open');
 }
-
-function editBlog(id) { const p = blogCache.find(b=>b.id===id); openBlogModal(p); }
+function editBlog(id) { openBlogModal(blogCache.find(b=>b.id===id)); }
 
 async function saveBlog() {
-    if (!sb) return toast('Connect Supabase first','error');
     const id = document.getElementById('blogId').value;
     const title = document.getElementById('b-title').value.trim();
     if (!title) return toast('Title is required','error');
     const content = document.getElementById('b-content').innerHTML;
     const wordCount = document.getElementById('b-content').innerText.split(/\s+/).filter(Boolean).length;
-    const readTime = Math.max(1, Math.ceil(wordCount/200)) + ' min read';
-    const slug = generateSlug(title) + (id ? '' : '-' + Date.now().toString(36));
+    const readTime = Math.max(1,Math.ceil(wordCount/200))+' min read';
+    const slug = title.toLowerCase().replace(/[^a-z0-9\s-]/g,'').replace(/\s+/g,'-')+(id?'':'-'+Date.now().toString(36));
     const data = {
-        title, slug,
-        category: document.getElementById('b-category').value,
-        status: document.getElementById('b-status').value,
-        author_name: document.getElementById('b-author-name').value || 'Ikinai Media',
-        author_email: document.getElementById('b-author-email').value,
-        author_bio: document.getElementById('b-author-bio').value,
-        author_avatar_url: document.getElementById('b-author-avatar').value,
-        image_url: document.getElementById('b-image').value,
-        excerpt: document.getElementById('b-excerpt').value,
-        content, read_time: readTime,
-        updated_at: new Date().toISOString()
+        title,slug,
+        category:document.getElementById('b-category').value,
+        status:document.getElementById('b-status').value,
+        author_name:document.getElementById('b-author-name').value||'Ikinai Media',
+        author_email:document.getElementById('b-author-email').value,
+        author_bio:document.getElementById('b-author-bio').value,
+        author_avatar_url:document.getElementById('b-author-avatar').value,
+        image_url:document.getElementById('b-image').value,
+        excerpt:document.getElementById('b-excerpt').value,
+        content,read_time:readTime,
+        updated_at:new Date().toISOString()
     };
-    if (document.getElementById('b-status').value === 'published' && !blogCache.find(b=>b.id===id)?.published_at) {
+    if (document.getElementById('b-status').value==='published'&&!blogCache.find(b=>b.id===id)?.published_at) {
         data.published_at = new Date().toISOString();
     }
-
     let err;
-    if (id) {
-        const res = await sb.from('blog_posts').update(data).eq('id',id);
-        err = res.error;
-    } else {
-        const res = await sb.from('blog_posts').insert(data);
-        err = res.error;
-    }
+    if (id) { const r=await sb.from('blog_posts').update(data).eq('id',id); err=r.error; }
+    else { const r=await sb.from('blog_posts').insert(data); err=r.error; }
     if (err) return toast('Error: '+err.message,'error');
     toast('Post saved!','success');
     closeModal('blogModal');
-    loadBlog();
-    updateDashStats();
+    loadBlog(); updateDashStats();
 }
 
 async function deleteBlog(id) {
@@ -764,8 +683,7 @@ async function deleteBlog(id) {
     const {error} = await sb.from('blog_posts').delete().eq('id',id);
     if (error) return toast('Error: '+error.message,'error');
     toast('Post deleted','success');
-    loadBlog();
-    updateDashStats();
+    loadBlog(); updateDashStats();
 }
 
 // ============================================
@@ -774,13 +692,11 @@ async function deleteBlog(id) {
 let portCache = [];
 
 async function loadPortfolio() {
-    if (!sb) return;
-    const {data,error} = await sb.from('portfolio').select('*').order('created_at',{ascending:false});
-    if (error) { toast('Error loading portfolio','error'); return; }
-    portCache = data || [];
+    const {data} = await sb.from('portfolio').select('*').order('created_at',{ascending:false});
+    portCache = data||[];
     const tbody = document.getElementById('portfolioBody');
-    if (!portCache.length) { tbody.innerHTML = '<tr class="loading-row"><td colspan="5">No projects yet</td></tr>'; return; }
-    tbody.innerHTML = portCache.map(p => `
+    if (!portCache.length) { tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted)">No projects yet</td></tr>'; return; }
+    tbody.innerHTML = portCache.map(p=>`
         <tr>
             <td><img src="${p.image_url||''}" style="width:60px;height:45px;object-fit:cover;border-radius:6px;background:var(--border)" onerror="this.style.display='none'"></td>
             <td><b>${p.title}</b>${p.featured?'<span class="badge" style="margin-left:6px;background:rgba(249,222,31,.12);color:#F9DE1F">Featured</span>':''}</td>
@@ -794,54 +710,37 @@ async function loadPortfolio() {
 }
 
 function openPortfolioModal(p=null) {
-    document.getElementById('portModalTitle').textContent = p ? 'Edit Project' : 'New Project';
-    document.getElementById('portId').value = p?.id || '';
-    document.getElementById('p-title').value = p?.title || '';
-    document.getElementById('p-category').value = p?.category || 'web';
-    document.getElementById('p-image').value = p?.image_url || '';
-    document.getElementById('p-desc').value = p?.description || '';
-    document.getElementById('p-client').value = p?.client || '';
-    document.getElementById('p-tech').value = p?.technologies || '';
+    document.getElementById('portModalTitle').textContent = p?'Edit Project':'New Project';
+    document.getElementById('portId').value = p?.id||'';
+    document.getElementById('p-title').value = p?.title||'';
+    document.getElementById('p-category').value = p?.category||'web';
+    document.getElementById('p-image').value = p?.image_url||'';
+    document.getElementById('p-desc').value = p?.description||'';
+    document.getElementById('p-client').value = p?.client||'';
+    document.getElementById('p-tech').value = p?.technologies||'';
     document.getElementById('p-results').value = (p?.results||[]).join('\n');
-    document.getElementById('p-featured').checked = p?.featured || false;
+    document.getElementById('p-featured').checked = p?.featured||false;
     previewFromUrl(p?.image_url||'','portImgPreview');
     document.getElementById('portfolioModal').classList.add('open');
 }
 function editPortfolio(id) { openPortfolioModal(portCache.find(p=>p.id===id)); }
 
 async function savePortfolio() {
-    if (!sb) return toast('Connect Supabase first','error');
     const id = document.getElementById('portId').value;
     const title = document.getElementById('p-title').value.trim();
     if (!title) return toast('Title required','error');
-    const data = {
-        title,
-        category: document.getElementById('p-category').value,
-        image_url: document.getElementById('p-image').value,
-        description: document.getElementById('p-desc').value,
-        client: document.getElementById('p-client').value,
-        technologies: document.getElementById('p-tech').value,
-        results: document.getElementById('p-results').value.split('\n').filter(r=>r.trim()),
-        featured: document.getElementById('p-featured').checked,
-        updated_at: new Date().toISOString()
-    };
+    const data={title,category:document.getElementById('p-category').value,image_url:document.getElementById('p-image').value,description:document.getElementById('p-desc').value,client:document.getElementById('p-client').value,technologies:document.getElementById('p-tech').value,results:document.getElementById('p-results').value.split('\n').filter(r=>r.trim()),featured:document.getElementById('p-featured').checked,updated_at:new Date().toISOString()};
     let err;
     if (id) { const r=await sb.from('portfolio').update(data).eq('id',id); err=r.error; }
     else { const r=await sb.from('portfolio').insert(data); err=r.error; }
     if (err) return toast('Error: '+err.message,'error');
-    toast('Project saved!','success');
-    closeModal('portfolioModal');
-    loadPortfolio();
-    updateDashStats();
+    toast('Project saved!','success'); closeModal('portfolioModal'); loadPortfolio(); updateDashStats();
 }
 
 async function deletePortfolio(id) {
     if (!confirm('Delete this project?')) return;
-    const {error} = await sb.from('portfolio').delete().eq('id',id);
-    if (error) return toast('Error: '+error.message,'error');
-    toast('Project deleted','success');
-    loadPortfolio();
-    updateDashStats();
+    await sb.from('portfolio').delete().eq('id',id);
+    toast('Deleted','success'); loadPortfolio(); updateDashStats();
 }
 
 // ============================================
@@ -850,12 +749,11 @@ async function deletePortfolio(id) {
 let svcCache = [];
 
 async function loadServices() {
-    if (!sb) return;
     const {data} = await sb.from('services').select('*').order('sort_order');
-    svcCache = data || [];
+    svcCache = data||[];
     const tbody = document.getElementById('servicesBody');
-    if (!svcCache.length) { tbody.innerHTML = '<tr class="loading-row"><td colspan="3">No services yet</td></tr>'; return; }
-    tbody.innerHTML = svcCache.map(s => `
+    if (!svcCache.length) { tbody.innerHTML='<tr><td colspan="3" style="text-align:center;padding:40px;color:var(--text-muted)">No services yet</td></tr>'; return; }
+    tbody.innerHTML = svcCache.map(s=>`
         <tr>
             <td><i class="fas ${s.icon||'fa-cog'}"></i> <b>${s.name}</b></td>
             <td style="font-size:.82rem">${s.description||''}</td>
@@ -867,39 +765,29 @@ async function loadServices() {
 }
 
 function openServiceModal(s=null) {
-    document.getElementById('svcId').value = s?.id || '';
-    document.getElementById('svc-name').value = s?.name || '';
-    document.getElementById('svc-icon').value = s?.icon || '';
-    document.getElementById('svc-desc').value = s?.description || '';
+    document.getElementById('svcId').value = s?.id||'';
+    document.getElementById('svc-name').value = s?.name||'';
+    document.getElementById('svc-icon').value = s?.icon||'';
+    document.getElementById('svc-desc').value = s?.description||'';
     document.getElementById('svc-features').value = (s?.features||[]).join('\n');
     document.getElementById('serviceModal').classList.add('open');
 }
 function editService(id) { openServiceModal(svcCache.find(s=>s.id===id)); }
 
 async function saveService() {
-    if (!sb) return toast('Connect Supabase first','error');
     const id = document.getElementById('svcId').value;
-    const data = {
-        name: document.getElementById('svc-name').value,
-        icon: document.getElementById('svc-icon').value,
-        description: document.getElementById('svc-desc').value,
-        features: document.getElementById('svc-features').value.split('\n').filter(f=>f.trim())
-    };
+    const data={name:document.getElementById('svc-name').value,icon:document.getElementById('svc-icon').value,description:document.getElementById('svc-desc').value,features:document.getElementById('svc-features').value.split('\n').filter(f=>f.trim())};
     let err;
     if (id) { const r=await sb.from('services').update(data).eq('id',id); err=r.error; }
     else { const r=await sb.from('services').insert(data); err=r.error; }
     if (err) return toast('Error: '+err.message,'error');
-    toast('Service saved!','success');
-    closeModal('serviceModal');
-    loadServices();
+    toast('Service saved!','success'); closeModal('serviceModal'); loadServices();
 }
 
 async function deleteService(id) {
-    if (!confirm('Delete this service?')) return;
-    const {error} = await sb.from('services').delete().eq('id',id);
-    if (error) return toast('Error: '+error.message,'error');
-    toast('Service deleted','success');
-    loadServices();
+    if (!confirm('Delete?')) return;
+    await sb.from('services').delete().eq('id',id);
+    toast('Deleted','success'); loadServices();
 }
 
 // ============================================
@@ -908,12 +796,11 @@ async function deleteService(id) {
 let testCache = [];
 
 async function loadTestimonials() {
-    if (!sb) return;
     const {data} = await sb.from('testimonials').select('*').order('created_at',{ascending:false});
-    testCache = data || [];
+    testCache = data||[];
     const tbody = document.getElementById('testimonialsBody');
-    if (!testCache.length) { tbody.innerHTML = '<tr class="loading-row"><td colspan="5">No testimonials yet</td></tr>'; return; }
-    tbody.innerHTML = testCache.map(t => `
+    if (!testCache.length) { tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted)">No testimonials yet</td></tr>'; return; }
+    tbody.innerHTML = testCache.map(t=>`
         <tr>
             <td><b>${t.name}</b></td>
             <td style="font-size:.8rem">${t.position}</td>
@@ -927,43 +814,31 @@ async function loadTestimonials() {
 }
 
 function openTestimonialModal(t=null) {
-    document.getElementById('testId').value = t?.id || '';
-    document.getElementById('t-name').value = t?.name || '';
-    document.getElementById('t-pos').value = t?.position || '';
-    document.getElementById('t-text').value = t?.text || '';
-    document.getElementById('t-rating').value = t?.rating || 5;
-    document.getElementById('t-featured').checked = t?.featured ?? true;
+    document.getElementById('testId').value = t?.id||'';
+    document.getElementById('t-name').value = t?.name||'';
+    document.getElementById('t-pos').value = t?.position||'';
+    document.getElementById('t-text').value = t?.text||'';
+    document.getElementById('t-rating').value = t?.rating||5;
+    document.getElementById('t-featured').checked = t?.featured??true;
     document.getElementById('testimonialModal').classList.add('open');
 }
 function editTestimonial(id) { openTestimonialModal(testCache.find(t=>t.id===id)); }
 
 async function saveTestimonial() {
-    if (!sb) return toast('Connect Supabase first','error');
     const id = document.getElementById('testId').value;
-    const data = {
-        name: document.getElementById('t-name').value,
-        position: document.getElementById('t-pos').value,
-        text: document.getElementById('t-text').value,
-        rating: parseInt(document.getElementById('t-rating').value),
-        featured: document.getElementById('t-featured').checked
-    };
+    const data={name:document.getElementById('t-name').value,position:document.getElementById('t-pos').value,text:document.getElementById('t-text').value,rating:parseInt(document.getElementById('t-rating').value),featured:document.getElementById('t-featured').checked};
     if (!data.name||!data.position||!data.text) return toast('Fill required fields','error');
     let err;
     if (id) { const r=await sb.from('testimonials').update(data).eq('id',id); err=r.error; }
     else { const r=await sb.from('testimonials').insert(data); err=r.error; }
     if (err) return toast('Error: '+err.message,'error');
-    toast('Testimonial saved!','success');
-    closeModal('testimonialModal');
-    loadTestimonials();
-    updateDashStats();
+    toast('Testimonial saved!','success'); closeModal('testimonialModal'); loadTestimonials(); updateDashStats();
 }
 
 async function deleteTestimonial(id) {
-    if (!confirm('Delete this testimonial?')) return;
+    if (!confirm('Delete?')) return;
     await sb.from('testimonials').delete().eq('id',id);
-    toast('Deleted','success');
-    loadTestimonials();
-    updateDashStats();
+    toast('Deleted','success'); loadTestimonials(); updateDashStats();
 }
 
 // ============================================
@@ -972,15 +847,13 @@ async function deleteTestimonial(id) {
 let teamCache = [];
 
 async function loadTeam() {
-    if (!sb) return;
     const {data} = await sb.from('team_members').select('*').order('sort_order');
-    teamCache = data || [];
+    teamCache = data||[];
     const tbody = document.getElementById('teamBody');
-    if (!teamCache.length) { tbody.innerHTML = '<tr class="loading-row"><td colspan="4">No team members yet</td></tr>'; return; }
-    tbody.innerHTML = teamCache.map(m => `
+    if (!teamCache.length) { tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:40px;color:var(--text-muted)">No team members yet</td></tr>'; return; }
+    tbody.innerHTML = teamCache.map(m=>`
         <tr>
-            <td>${m.photo_url?`<img src="${m.photo_url}" style="width:42px;height:42px;border-radius:50%;object-fit:cover">`:
-            `<div style="width:42px;height:42px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center"><i class="fas fa-user"></i></div>`}</td>
+            <td>${m.photo_url?`<img src="${m.photo_url}" style="width:42px;height:42px;border-radius:50%;object-fit:cover">`:`<div style="width:42px;height:42px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center"><i class="fas fa-user"></i></div>`}</td>
             <td><b>${m.name}</b></td>
             <td style="font-size:.82rem;color:var(--text-muted)">${m.title}</td>
             <td><div class="actions">
@@ -991,55 +864,42 @@ async function loadTeam() {
 }
 
 function openTeamModal(m=null) {
-    document.getElementById('memberId').value = m?.id || '';
-    document.getElementById('m-name').value = m?.name || '';
-    document.getElementById('m-title').value = m?.title || '';
-    document.getElementById('m-bio').value = m?.bio || '';
-    document.getElementById('m-photo').value = m?.photo_url || '';
-    document.getElementById('m-order').value = m?.sort_order || 0;
+    document.getElementById('memberId').value = m?.id||'';
+    document.getElementById('m-name').value = m?.name||'';
+    document.getElementById('m-title').value = m?.title||'';
+    document.getElementById('m-bio').value = m?.bio||'';
+    document.getElementById('m-photo').value = m?.photo_url||'';
+    document.getElementById('m-order').value = m?.sort_order||0;
     previewFromUrl(m?.photo_url||'','memberPhotoPreview');
     document.getElementById('teamModal').classList.add('open');
 }
 function editTeam(id) { openTeamModal(teamCache.find(m=>m.id===id)); }
 
 async function saveTeam() {
-    if (!sb) return toast('Connect Supabase first','error');
     const id = document.getElementById('memberId').value;
-    const data = {
-        name: document.getElementById('m-name').value,
-        title: document.getElementById('m-title').value,
-        bio: document.getElementById('m-bio').value,
-        photo_url: document.getElementById('m-photo').value,
-        sort_order: parseInt(document.getElementById('m-order').value)||0
-    };
+    const data={name:document.getElementById('m-name').value,title:document.getElementById('m-title').value,bio:document.getElementById('m-bio').value,photo_url:document.getElementById('m-photo').value,sort_order:parseInt(document.getElementById('m-order').value)||0};
     if (!data.name||!data.title) return toast('Name and title required','error');
     let err;
     if (id) { const r=await sb.from('team_members').update(data).eq('id',id); err=r.error; }
     else { const r=await sb.from('team_members').insert(data); err=r.error; }
     if (err) return toast('Error: '+err.message,'error');
-    toast('Team member saved!','success');
-    closeModal('teamModal');
-    loadTeam();
-    updateDashStats();
+    toast('Team member saved!','success'); closeModal('teamModal'); loadTeam(); updateDashStats();
 }
 
 async function deleteTeam(id) {
-    if (!confirm('Delete this member?')) return;
+    if (!confirm('Delete?')) return;
     await sb.from('team_members').delete().eq('id',id);
-    toast('Deleted','success');
-    loadTeam();
-    updateDashStats();
+    toast('Deleted','success'); loadTeam(); updateDashStats();
 }
 
 // ============================================
 // SETTINGS
 // ============================================
 async function loadSettings() {
-    if (!sb) return;
     const {data} = await sb.from('site_settings').select('*');
     if (!data) return;
-    const map = {};
-    data.forEach(s => map[s.key]=s.value);
+    const map={};
+    data.forEach(s=>map[s.key]=s.value);
     document.getElementById('s-heroTitle').value = map.hero_title||'';
     document.getElementById('s-heroSubtitle').value = map.hero_subtitle||'';
     document.getElementById('s-phone').value = map.phone||'';
@@ -1049,8 +909,7 @@ async function loadSettings() {
 
 async function saveSettings(e) {
     e.preventDefault();
-    if (!sb) return toast('Connect Supabase first','error');
-    const settings = [
+    const settings=[
         {key:'hero_title',value:document.getElementById('s-heroTitle').value},
         {key:'hero_subtitle',value:document.getElementById('s-heroSubtitle').value},
         {key:'phone',value:document.getElementById('s-phone').value},
@@ -1067,7 +926,6 @@ async function saveSettings(e) {
 // DASHBOARD STATS
 // ============================================
 async function updateDashStats() {
-    if (!sb) return;
     const [b,p,t,m] = await Promise.all([
         sb.from('blog_posts').select('id',{count:'exact',head:true}).eq('status','published'),
         sb.from('portfolio').select('id',{count:'exact',head:true}),
@@ -1083,97 +941,58 @@ async function updateDashStats() {
 // ============================================
 // IMAGE UPLOAD
 // ============================================
-async function handleImageUpload(input, previewId, zoneId, urlFieldId, bucket='blog-images') {
+async function handleImageUpload(input, previewId, urlFieldId, bucket='blog-images') {
     const file = input.files[0];
     if (!file) return;
     const ext = file.name.split('.').pop();
     const filename = `${Date.now()}-${Math.random().toString(36).substr(2,6)}.${ext}`;
     const preview = document.getElementById(previewId);
-    preview.style.display = 'block';
-    preview.style.opacity = '.5';
-    // Show local preview immediately
     const reader = new FileReader();
-    reader.onload = e => { preview.src = e.target.result; };
+    reader.onload = e => { preview.src=e.target.result; preview.style.display='block'; preview.style.opacity='.5'; };
     reader.readAsDataURL(file);
-    if (!sb) {
-        // No Supabase – use local blob URL
-        const url = URL.createObjectURL(file);
-        document.getElementById(urlFieldId).value = url;
-        preview.src = url;
-        preview.style.opacity = '1';
-        toast('Image loaded locally (no Supabase)', 'info');
-        return;
-    }
     const {data,error} = await sb.storage.from(bucket).upload(filename, file, {upsert:true});
     if (error) { toast('Upload error: '+error.message,'error'); return; }
     const {data:{publicUrl}} = sb.storage.from(bucket).getPublicUrl(filename);
     document.getElementById(urlFieldId).value = publicUrl;
-    preview.src = publicUrl;
-    preview.style.opacity = '1';
+    preview.src = publicUrl; preview.style.opacity='1';
     toast('Image uploaded!','success');
 }
 
-function triggerUpload(inputId) {
-    const el = document.getElementById(inputId);
-    el.click();
-}
-
+function triggerUpload(inputId) { document.getElementById(inputId).click(); }
 function previewFromUrl(url, previewId) {
     const img = document.getElementById(previewId);
-    if (url && url.startsWith('http')) {
-        img.src = url;
-        img.style.display = 'block';
-    } else {
-        img.style.display = 'none';
-    }
+    if (url&&url.startsWith('http')) { img.src=url; img.style.display='block'; } else { img.style.display='none'; }
 }
 
 // ============================================
-// RICH TEXT EDITOR
+// RICH TEXT
 // ============================================
-function fmt(cmd) { document.execCommand(cmd, false, null); document.getElementById('b-content').focus(); }
-function fmtBlock(tag) { document.execCommand('formatBlock', false, tag); document.getElementById('b-content').focus(); }
-function insertLink() {
-    const url = prompt('Enter URL:');
-    if (url) document.execCommand('createLink', false, url);
-    document.getElementById('b-content').focus();
-}
-function clearFormatting() { document.execCommand('removeFormat', false, null); }
+function fmt(cmd) { document.execCommand(cmd,false,null); document.getElementById('b-content').focus(); }
+function fmtBlock(tag) { document.execCommand('formatBlock',false,tag); document.getElementById('b-content').focus(); }
+function insertLink() { const url=prompt('Enter URL:'); if(url) document.execCommand('createLink',false,url); document.getElementById('b-content').focus(); }
+function clearFormatting() { document.execCommand('removeFormat',false,null); }
 
 // ============================================
-// UTILITIES
+// UTILS
 // ============================================
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-document.querySelectorAll('.modal-overlay').forEach(m => {
-    m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); });
-});
+document.querySelectorAll('.modal-overlay').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});});
 
-function generateSlug(title) {
-    return title.toLowerCase().replace(/[^a-z0-9\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-');
-}
-
-function fmtDate(d) {
-    if (!d) return '–';
-    return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-}
+function fmtDate(d) { if(!d) return '–'; return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
 
 function toast(msg, type='info') {
     const el = document.createElement('div');
     el.className = `toast-item toast-${type}`;
     el.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':type==='error'?'exclamation-circle':'info-circle'}"></i>${msg}`;
     document.getElementById('toast').appendChild(el);
-    setTimeout(() => el.remove(), 4000);
+    setTimeout(()=>el.remove(), 4000);
 }
 
-// Drag & drop on image zones
-document.querySelectorAll('.img-upload-zone').forEach(zone => {
-    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
-    zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
-    zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag'); const fi=zone.querySelector('input[type=file]'); if(fi&&e.dataTransfer.files[0]){const dt=new DataTransfer();dt.items.add(e.dataTransfer.files[0]);fi.files=dt.files;fi.dispatchEvent(new Event('change'));}});
+document.querySelectorAll('.img-upload-zone').forEach(zone=>{
+    zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drag');});
+    zone.addEventListener('dragleave',()=>zone.classList.remove('drag'));
+    zone.addEventListener('drop',e=>{e.preventDefault();zone.classList.remove('drag');const fi=zone.querySelector('input[type=file]');if(fi&&e.dataTransfer.files[0]){const dt=new DataTransfer();dt.items.add(e.dataTransfer.files[0]);fi.files=dt.files;fi.dispatchEvent(new Event('change'));}});
 });
-
-// Auto-init if previously configured
-initSupabase();
 </script>
 </body>
 </html>
