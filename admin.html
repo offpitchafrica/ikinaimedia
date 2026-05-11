@@ -3,1285 +3,1177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ikinai Media - Admin Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Ikinai Media – Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+        :root{
+            --bg:#0f0f12;--sidebar:#16161d;--card:#1e1e28;--border:#2a2a38;
+            --primary:#F9DE1F;--primary-dark:#d4bc00;--text:#e8e8f0;
+            --text-muted:#8888aa;--danger:#e55;--success:#4caf69;--warn:#f0a500;
+            --radius:10px;--transition:all .2s ease;
         }
+        body{background:var(--bg);color:var(--text);min-height:100vh}
 
-        body {
-            background: #f0f2f5;
-        }
+        /* LOGIN */
+        #loginWrap{display:flex;align-items:center;justify-content:center;min-height:100vh;background:radial-gradient(circle at 30% 50%,#1a1a2e,var(--bg))}
+        .login-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:48px 40px;width:100%;max-width:420px;text-align:center}
+        .login-logo{font-size:1.8rem;font-weight:700;color:var(--primary);margin-bottom:8px}
+        .login-sub{color:var(--text-muted);margin-bottom:32px;font-size:.9rem}
+        .login-box input{width:100%;padding:14px 16px;background:#0f0f12;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:1rem;margin-bottom:16px;outline:none;transition:var(--transition)}
+        .login-box input:focus{border-color:var(--primary)}
+        .login-box .btn-login{width:100%;padding:14px;background:var(--primary);color:#111;font-weight:600;border:none;border-radius:8px;cursor:pointer;font-size:1rem;transition:var(--transition)}
+        .login-box .btn-login:hover{background:var(--primary-dark)}
+        .login-err{color:var(--danger);font-size:.85rem;margin-top:8px;display:none}
 
-        .admin-container {
-            display: flex;
-            min-height: 100vh;
-        }
+        /* LAYOUT */
+        #appWrap{display:none}
+        .layout{display:flex;min-height:100vh}
+        .sidebar{width:260px;background:var(--sidebar);border-right:1px solid var(--border);position:fixed;height:100vh;display:flex;flex-direction:column;z-index:100}
+        .sb-logo{padding:24px 20px;border-bottom:1px solid var(--border)}
+        .sb-logo span{color:var(--primary);font-weight:700;font-size:1.3rem}
+        .sb-logo small{display:block;color:var(--text-muted);font-size:.75rem;margin-top:2px}
+        .sb-nav{flex:1;padding:16px 0;overflow-y:auto}
+        .nav-section{padding:8px 20px 4px;color:var(--text-muted);font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+        .nav-item{display:flex;align-items:center;gap:12px;padding:11px 20px;cursor:pointer;transition:var(--transition);border-left:3px solid transparent;color:var(--text-muted);font-size:.88rem}
+        .nav-item:hover{background:rgba(255,255,255,.04);color:var(--text)}
+        .nav-item.active{background:rgba(249,222,31,.07);border-left-color:var(--primary);color:var(--primary)}
+        .nav-item i{width:18px;text-align:center}
+        .sb-bottom{padding:16px 20px;border-top:1px solid var(--border)}
+        .logout-btn{display:flex;align-items:center;gap:10px;color:var(--text-muted);cursor:pointer;font-size:.88rem;transition:var(--transition)}
+        .logout-btn:hover{color:var(--danger)}
+        .main{margin-left:260px;flex:1;display:flex;flex-direction:column}
+        .topbar{background:var(--sidebar);border-bottom:1px solid var(--border);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+        .topbar h2{font-size:1.1rem;font-weight:600}
+        .supabase-badge{display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--text-muted)}
+        .supabase-badge .dot{width:8px;height:8px;border-radius:50%;background:#4caf69}
+        .content{padding:28px;flex:1}
 
-        /* Sidebar */
-        .sidebar {
-            width: 280px;
-            background: #1a1a2e;
-            color: white;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-        }
+        /* PANELS */
+        .panel{display:none}
+        .panel.active{display:block;animation:fadeIn .25s ease}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-        .sidebar-header {
-            padding: 25px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
+        /* CARDS */
+        .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px}
+        .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+        .card-header h3{font-size:1rem;font-weight:600}
 
-        .sidebar-header h2 {
-            color: #F9DE1F;
-            margin-bottom: 5px;
-        }
+        /* STATS */
+        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:28px}
+        .stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden}
+        .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent,var(--primary))}
+        .stat-num{font-size:2rem;font-weight:700;color:var(--text)}
+        .stat-label{font-size:.8rem;color:var(--text-muted);margin-top:4px}
 
-        .sidebar-nav {
-            padding: 20px 0;
-        }
+        /* BUTTONS */
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border:none;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:500;transition:var(--transition)}
+        .btn-primary{background:var(--primary);color:#111}
+        .btn-primary:hover{background:var(--primary-dark)}
+        .btn-ghost{background:transparent;color:var(--text-muted);border:1px solid var(--border)}
+        .btn-ghost:hover{background:rgba(255,255,255,.05);color:var(--text)}
+        .btn-danger{background:var(--danger);color:#fff}
+        .btn-danger:hover{opacity:.85}
+        .btn-warn{background:var(--warn);color:#111}
+        .btn-sm{padding:6px 12px;font-size:.78rem}
+        .btn-xs{padding:4px 8px;font-size:.72rem}
 
-        .nav-item {
-            padding: 12px 25px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border-left: 3px solid transparent;
-        }
+        /* TABLE */
+        .data-table{width:100%;border-collapse:collapse}
+        .data-table th{padding:10px 12px;text-align:left;background:#12121a;font-size:.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border)}
+        .data-table td{padding:12px;border-bottom:1px solid rgba(42,42,56,.6);font-size:.85rem;vertical-align:middle}
+        .data-table tr:hover td{background:rgba(255,255,255,.02)}
+        .data-table tr:last-child td{border-bottom:none}
+        .actions{display:flex;gap:6px}
+        .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:500}
+        .badge-pub{background:rgba(76,175,105,.15);color:#4caf69}
+        .badge-draft{background:rgba(240,165,0,.15);color:#f0a500}
+        .badge-arch{background:rgba(136,136,170,.15);color:#8888aa}
 
-        .nav-item:hover {
-            background: rgba(255,255,255,0.1);
+        /* FORM */
+        .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+        .form-group{margin-bottom:20px}
+        .form-group.full{grid-column:1/-1}
+        label{display:block;margin-bottom:7px;font-size:.82rem;font-weight:500;color:var(--text-muted)}
+        input[type=text],input[type=email],input[type=url],input[type=password],select,textarea{
+            width:100%;padding:11px 14px;background:#0f0f12;border:1px solid var(--border);border-radius:8px;
+            color:var(--text);font-size:.88rem;outline:none;transition:var(--transition)
         }
+        input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(249,222,31,.08)}
+        select option{background:#1e1e28}
+        textarea{min-height:140px;resize:vertical}
+        .rich-editor{background:#0f0f12;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+        .rich-toolbar{display:flex;flex-wrap:wrap;gap:4px;padding:10px;border-bottom:1px solid var(--border);background:#12121a}
+        .rich-toolbar button{padding:5px 10px;background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--text-muted);cursor:pointer;font-size:.78rem;transition:var(--transition)}
+        .rich-toolbar button:hover{background:rgba(255,255,255,.07);color:var(--text)}
+        .rich-content{min-height:220px;padding:14px;outline:none;font-size:.88rem;line-height:1.7;color:var(--text)}
+        .rich-content:focus{border-color:var(--primary)}
+        .rich-content h1,.rich-content h2,.rich-content h3{color:var(--text);margin:12px 0 8px}
+        .rich-content p{margin-bottom:10px;color:var(--text)}
+        .rich-content ul,.rich-content ol{padding-left:20px;margin-bottom:10px}
+        .rich-content li{margin-bottom:4px}
+        .rich-content blockquote{border-left:3px solid var(--primary);padding-left:16px;color:var(--text-muted);font-style:italic}
+        .rich-content a{color:var(--primary)}
 
-        .nav-item.active {
-            background: rgba(249,222,31,0.1);
-            border-left-color: #F9DE1F;
-            color: #F9DE1F;
-        }
+        /* IMAGE UPLOAD */
+        .img-upload-zone{border:2px dashed var(--border);border-radius:8px;padding:32px;text-align:center;cursor:pointer;transition:var(--transition);position:relative;overflow:hidden}
+        .img-upload-zone:hover,.img-upload-zone.drag{border-color:var(--primary);background:rgba(249,222,31,.04)}
+        .img-upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+        .img-upload-zone i{font-size:2rem;color:var(--text-muted);margin-bottom:8px}
+        .img-upload-zone p{color:var(--text-muted);font-size:.82rem}
+        .img-preview{width:100%;max-height:200px;object-fit:cover;border-radius:8px;margin-top:12px;display:none}
+        .url-or{text-align:center;color:var(--text-muted);font-size:.78rem;margin:8px 0;display:flex;align-items:center;gap:8px}
+        .url-or::before,.url-or::after{content:'';flex:1;height:1px;background:var(--border)}
 
-        .nav-item i {
-            width: 24px;
-        }
+        /* MODAL */
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+        .modal-overlay.open{display:flex}
+        .modal{background:var(--card);border:1px solid var(--border);border-radius:16px;width:100%;max-width:780px;max-height:90vh;overflow-y:auto}
+        .modal-hd{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--card);z-index:10}
+        .modal-hd h3{font-size:1rem;font-weight:600}
+        .modal-close{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.2rem;padding:4px}
+        .modal-close:hover{color:var(--text)}
+        .modal-body{padding:24px}
+        .modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;position:sticky;bottom:0;background:var(--card)}
 
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            margin-left: 280px;
-            padding: 20px;
-        }
+        /* ALERT */
+        #toast{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:10px}
+        .toast-item{padding:12px 20px;border-radius:8px;font-size:.85rem;font-weight:500;animation:slideUp .3s ease;display:flex;align-items:center;gap:10px;max-width:340px;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+        .toast-success{background:#1a3a25;border:1px solid #4caf69;color:#4caf69}
+        .toast-error{background:#3a1a1a;border:1px solid var(--danger);color:var(--danger)}
+        .toast-info{background:#1a1a3a;border:1px solid #6677ff;color:#99aaff}
+        @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-        .top-bar {
-            background: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        /* RESPONSIVE */
+        @media(max-width:768px){
+            .sidebar{width:60px}
+            .sb-logo span,.nav-item span,.sb-logo small,.nav-section,.sb-bottom .logout-text{display:none}
+            .main{margin-left:60px}
+            .form-grid{grid-template-columns:1fr}
         }
+        /* LOADING */
+        .loader{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.2);border-top-color:var(--primary);border-radius:50%;animation:spin .6s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .loading-row td{text-align:center;padding:40px;color:var(--text-muted)}
+        .empty-state{text-align:center;padding:60px 20px;color:var(--text-muted)}
+        .empty-state i{font-size:3rem;margin-bottom:12px;opacity:.3}
 
-        .logout-btn {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        /* Content Panels */
-        .panel {
-            display: none;
-            animation: fadeIn 0.3s;
-        }
-
-        .panel.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Cards */
-        .card {
-            background: white;
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background: #F9DE1F;
-            color: #333;
-        }
-
-        .btn-primary:hover {
-            background: #e6c919;
-            transform: translateY(-2px);
-        }
-
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-
-        .btn-warning {
-            background: #ffc107;
-            color: #333;
-        }
-
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-
-        /* Forms */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        textarea.form-control {
-            min-height: 150px;
-            resize: vertical;
-        }
-
-        /* Tables */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .data-table th,
-        .data-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-
-        .data-table th {
-            background: #f8f9fa;
-            font-weight: 600;
-        }
-
-        .data-table tr:hover {
-            background: #f8f9fa;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-        }
-
-        .action-buttons button {
-            padding: 5px 10px;
-            font-size: 12px;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            width: 90%;
-            max-width: 600px;
-            border-radius: 10px;
-            max-height: 80%;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .modal-body {
-            padding: 20px;
-        }
-
-        .image-preview {
-            max-width: 200px;
-            margin-top: 10px;
-        }
-
-        /* Grid for items */
-        .items-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .item-card {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .item-card img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-        }
-
-        .item-card-content {
-            padding: 15px;
-        }
-
-        .item-card h4 {
-            margin-bottom: 8px;
-        }
-
-        .item-card p {
-            color: #666;
-            font-size: 13px;
-            margin-bottom: 12px;
-        }
-
-        /* Login Page */
-        .login-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-        }
-
-        .login-box {
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        .login-box h2 {
-            margin-bottom: 30px;
-            color: #1a1a2e;
-        }
-
-        /* Alerts */
-        .alert {
-            padding: 12px 20px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .alert.success {
-            background: #d4edda;
-            color: #155724;
-            display: block;
-        }
-
-        .alert.error {
-            background: #f8d7da;
-            color: #721c24;
-            display: block;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 70px;
-            }
-            .sidebar-header h2, .nav-item span {
-                display: none;
-            }
-            .main-content {
-                margin-left: 70px;
-            }
-            .nav-item {
-                justify-content: center;
-            }
-        }
+        /* AUTHOR SECTION */
+        .author-grid{display:grid;grid-template-columns:80px 1fr;gap:16px;align-items:start}
+        .author-avatar-preview{width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--border);display:none}
+        .author-avatar-placeholder{width:80px;height:80px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:1.5rem}
     </style>
 </head>
 <body>
-    <div id="loginContainer" class="login-container">
-        <div class="login-box">
-            <h2>Admin Login</h2>
-            <form id="loginForm">
-                <div class="form-group">
-                    <input type="password" id="adminPassword" class="form-control" placeholder="Enter Admin Password" required>
-                </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
-            </form>
+
+<!-- LOGIN -->
+<div id="loginWrap">
+    <div class="login-box">
+        <div class="login-logo">⚡ Ikinai Media</div>
+        <div class="login-sub">Admin Dashboard</div>
+        <input type="password" id="adminPass" placeholder="Enter admin password" autocomplete="current-password">
+        <button class="btn-login" onclick="doLogin()">Login</button>
+        <div class="login-err" id="loginErr">Incorrect password. Try again.</div>
+    </div>
+</div>
+
+<!-- ADMIN APP -->
+<div id="appWrap">
+<div class="layout">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sb-logo">
+            <span>⚡ Ikinai Media</span>
+            <small>Admin Dashboard</small>
+        </div>
+        <div class="sb-nav">
+            <div class="nav-section">Main</div>
+            <div class="nav-item active" data-panel="dashboard"><i class="fas fa-chart-pie"></i><span>Dashboard</span></div>
+            <div class="nav-section">Content</div>
+            <div class="nav-item" data-panel="blog"><i class="fas fa-newspaper"></i><span>Blog Posts</span></div>
+            <div class="nav-item" data-panel="portfolio"><i class="fas fa-folder-open"></i><span>Portfolio</span></div>
+            <div class="nav-section">Business</div>
+            <div class="nav-item" data-panel="services"><i class="fas fa-cogs"></i><span>Services</span></div>
+            <div class="nav-item" data-panel="testimonials"><i class="fas fa-star"></i><span>Testimonials</span></div>
+            <div class="nav-item" data-panel="team"><i class="fas fa-users"></i><span>Team Members</span></div>
+            <div class="nav-section">Config</div>
+            <div class="nav-item" data-panel="settings"><i class="fas fa-sliders-h"></i><span>Settings</span></div>
+        </div>
+        <div class="sb-bottom">
+            <div class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span class="logout-text">Logout</span></div>
         </div>
     </div>
 
-    <div id="adminApp" style="display: none;">
-        <div class="admin-container">
-            <div class="sidebar">
-                <div class="sidebar-header">
-                    <h2>Ikinai Media</h2>
-                    <p>Admin Dashboard</p>
+    <!-- MAIN -->
+    <div class="main">
+        <div class="topbar">
+            <h2 id="panelTitle">Dashboard</h2>
+            <div class="supabase-badge"><div class="dot" id="dbDot"></div><span id="dbStatus">Connecting...</span></div>
+        </div>
+        <div class="content">
+
+            <!-- DASHBOARD -->
+            <div id="dashboardPanel" class="panel active">
+                <div class="stats-grid">
+                    <div class="stat-card" style="--accent:#F9DE1F"><div class="stat-num" id="s-blog">–</div><div class="stat-label">Published Posts</div></div>
+                    <div class="stat-card" style="--accent:#6677ff"><div class="stat-num" id="s-portfolio">–</div><div class="stat-label">Portfolio Items</div></div>
+                    <div class="stat-card" style="--accent:#4caf69"><div class="stat-num" id="s-test">–</div><div class="stat-label">Testimonials</div></div>
+                    <div class="stat-card" style="--accent:#f0a500"><div class="stat-num" id="s-team">–</div><div class="stat-label">Team Members</div></div>
                 </div>
-                <div class="sidebar-nav">
-                    <div class="nav-item active" data-panel="dashboard">
-                        <i class="fas fa-dashboard"></i>
-                        <span>Dashboard</span>
-                    </div>
-                    <div class="nav-item" data-panel="blog">
-                        <i class="fas fa-blog"></i>
-                        <span>Blog Posts</span>
-                    </div>
-                    <div class="nav-item" data-panel="portfolio">
-                        <i class="fas fa-folder"></i>
-                        <span>Portfolio</span>
-                    </div>
-                    <div class="nav-item" data-panel="services">
-                        <i class="fas fa-cogs"></i>
-                        <span>Services</span>
-                    </div>
-                    <div class="nav-item" data-panel="testimonials">
-                        <i class="fas fa-star"></i>
-                        <span>Testimonials</span>
-                    </div>
-                    <div class="nav-item" data-panel="team">
-                        <i class="fas fa-users"></i>
-                        <span>Team Members</span>
-                    </div>
-                    <div class="nav-item" data-panel="settings">
-                        <i class="fas fa-settings"></i>
-                        <span>Settings</span>
-                    </div>
+                <div class="card">
+                    <div class="card-header"><h3>Recent Blog Posts</h3><button class="btn btn-primary btn-sm" onclick="switchPanel('blog')">View All</button></div>
+                    <table class="data-table" id="dashRecentTable">
+                        <thead><tr><th>Title</th><th>Category</th><th>Status</th><th>Date</th></tr></thead>
+                        <tbody id="dashRecentBody"><tr class="loading-row"><td colspan="4"><span class="loader"></span></td></tr></tbody>
+                    </table>
                 </div>
             </div>
 
-            <div class="main-content">
-                <div class="top-bar">
-                    <h3 id="panelTitle">Dashboard</h3>
-                    <button class="logout-btn" onclick="logout()">Logout</button>
+            <!-- BLOG PANEL -->
+            <div id="blogPanel" class="panel">
+                <div class="card">
+                    <div class="card-header"><h3>Blog Posts</h3><button class="btn btn-primary" onclick="openBlogModal()"><i class="fas fa-plus"></i> New Post</button></div>
+                    <table class="data-table">
+                        <thead><tr><th>Title</th><th>Category</th><th>Author</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+                        <tbody id="blogBody"><tr class="loading-row"><td colspan="6"><span class="loader"></span></td></tr></tbody>
+                    </table>
                 </div>
+            </div>
 
-                <div id="alertContainer"></div>
+            <!-- PORTFOLIO PANEL -->
+            <div id="portfolioPanel" class="panel">
+                <div class="card">
+                    <div class="card-header"><h3>Portfolio Projects</h3><button class="btn btn-primary" onclick="openPortfolioModal()"><i class="fas fa-plus"></i> New Project</button></div>
+                    <table class="data-table">
+                        <thead><tr><th>Image</th><th>Title</th><th>Category</th><th>Client</th><th>Actions</th></tr></thead>
+                        <tbody id="portfolioBody"><tr class="loading-row"><td colspan="5"><span class="loader"></span></td></tr></tbody>
+                    </table>
+                </div>
+            </div>
 
-                <!-- Dashboard Panel -->
-                <div id="dashboardPanel" class="panel active">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Quick Stats</h3>
+            <!-- SERVICES PANEL -->
+            <div id="servicesPanel" class="panel">
+                <div class="card">
+                    <div class="card-header"><h3>Services</h3><button class="btn btn-primary" onclick="openServiceModal()"><i class="fas fa-plus"></i> New Service</button></div>
+                    <table class="data-table">
+                        <thead><tr><th>Service</th><th>Description</th><th>Actions</th></tr></thead>
+                        <tbody id="servicesBody"><tr class="loading-row"><td colspan="3"><span class="loader"></span></td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TESTIMONIALS PANEL -->
+            <div id="testimonialsPanel" class="panel">
+                <div class="card">
+                    <div class="card-header"><h3>Testimonials</h3><button class="btn btn-primary" onclick="openTestimonialModal()"><i class="fas fa-plus"></i> Add Testimonial</button></div>
+                    <table class="data-table">
+                        <thead><tr><th>Name</th><th>Position</th><th>Rating</th><th>Featured</th><th>Actions</th></tr></thead>
+                        <tbody id="testimonialsBody"><tr class="loading-row"><td colspan="5"><span class="loader"></span></td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TEAM PANEL -->
+            <div id="teamPanel" class="panel">
+                <div class="card">
+                    <div class="card-header"><h3>Team Members</h3><button class="btn btn-primary" onclick="openTeamModal()"><i class="fas fa-plus"></i> Add Member</button></div>
+                    <table class="data-table">
+                        <thead><tr><th>Photo</th><th>Name</th><th>Title</th><th>Actions</th></tr></thead>
+                        <tbody id="teamBody"><tr class="loading-row"><td colspan="4"><span class="loader"></span></td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SETTINGS PANEL -->
+            <div id="settingsPanel" class="panel">
+                <div class="card">
+                    <div class="card-header"><h3>Site Settings</h3></div>
+                    <form id="settingsForm" onsubmit="saveSettings(event)">
+                        <div class="form-grid">
+                            <div class="form-group"><label>Hero Title</label><input type="text" id="s-heroTitle"></div>
+                            <div class="form-group"><label>Phone Number</label><input type="text" id="s-phone"></div>
+                            <div class="form-group full"><label>Hero Subtitle</label><textarea id="s-heroSubtitle" rows="3"></textarea></div>
+                            <div class="form-group"><label>Email Address</label><input type="email" id="s-email"></div>
+                            <div class="form-group"><label>Address</label><input type="text" id="s-address"></div>
                         </div>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
-                            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px;">
-                                <h3 id="blogCount">0</h3>
-                                <p>Blog Posts</p>
-                            </div>
-                            <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 20px; border-radius: 10px;">
-                                <h3 id="portfolioCount">0</h3>
-                                <p>Portfolio Items</p>
-                            </div>
-                            <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 20px; border-radius: 10px;">
-                                <h3 id="testimonialCount">0</h3>
-                                <p>Testimonials</p>
-                            </div>
-                        </div>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Settings</button>
+                    </form>
+                </div>
+                <div class="card" style="margin-top:20px">
+                    <div class="card-header"><h3>Admin Password</h3></div>
+                    <div class="form-grid">
+                        <div class="form-group"><label>New Password</label><input type="password" id="newPassword" placeholder="Enter new password"></div>
+                        <div class="form-group"><label>Confirm Password</label><input type="password" id="confirmPassword" placeholder="Confirm new password"></div>
                     </div>
+                    <button class="btn btn-primary" onclick="changePassword()"><i class="fas fa-key"></i> Update Password</button>
                 </div>
+                <div class="card" style="margin-top:20px">
+                    <div class="card-header"><h3>Supabase Configuration</h3></div>
+                    <div class="form-group"><label>Supabase URL</label><input type="text" id="cfg-url" placeholder="https://xxxx.supabase.co"></div>
+                    <div class="form-group"><label>Supabase Anon Key</label><input type="text" id="cfg-key" placeholder="eyJhbGciOiJIUzI1NiIs..."></div>
+                    <button class="btn btn-primary" onclick="saveSupabaseConfig()"><i class="fas fa-plug"></i> Save & Reconnect</button>
+                </div>
+            </div>
+        </div><!-- end content -->
+    </div><!-- end main -->
+</div><!-- end layout -->
+</div><!-- end appWrap -->
 
-                <!-- Blog Panel -->
-                <div id="blogPanel" class="panel">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Blog Posts</h3>
-                            <button class="btn btn-primary" onclick="openBlogModal()">+ New Post</button>
-                        </div>
-                        <div id="blogList"></div>
-                    </div>
-                </div>
+<!-- TOAST -->
+<div id="toast"></div>
 
-                <!-- Portfolio Panel -->
-                <div id="portfolioPanel" class="panel">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Portfolio Projects</h3>
-                            <button class="btn btn-primary" onclick="openPortfolioModal()">+ New Project</button>
-                        </div>
-                        <div id="portfolioList"></div>
-                    </div>
-                </div>
+<!-- ===== BLOG MODAL ===== -->
+<div class="modal-overlay" id="blogModal">
+<div class="modal">
+    <div class="modal-hd">
+        <h3 id="blogModalTitle">New Blog Post</h3>
+        <button class="modal-close" onclick="closeModal('blogModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+        <input type="hidden" id="blogId">
+        <div class="form-grid">
+            <div class="form-group full"><label>Post Title *</label><input type="text" id="b-title" placeholder="Enter post title..." required></div>
+            <div class="form-group"><label>Category *</label>
+                <select id="b-category">
+                    <option value="News">📰 News</option>
+                    <option value="Sports">⚽ Sports</option>
+                    <option value="Entertainment">🎭 Entertainment</option>
+                    <option value="Technology">💻 Technology</option>
+                    <option value="Business">💼 Business</option>
+                    <option value="Politics">🏛️ Politics</option>
+                    <option value="Health">🏥 Health</option>
+                    <option value="Lifestyle">✨ Lifestyle</option>
+                    <option value="Opinion">💬 Opinion</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Status</label>
+                <select id="b-status">
+                    <option value="draft">Draft</option>
+                    <option value="published">Published</option>
+                    <option value="archived">Archived</option>
+                </select>
+            </div>
+        </div>
 
-                <!-- Services Panel -->
-                <div id="servicesPanel" class="panel">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Services</h3>
-                        </div>
-                        <div id="servicesList"></div>
-                    </div>
-                </div>
+        <!-- AUTHOR SECTION -->
+        <div class="card" style="margin-bottom:20px;padding:16px">
+            <div style="font-size:.88rem;font-weight:600;margin-bottom:14px;color:var(--text-muted)">✍️ BY LINE / AUTHOR</div>
+            <div class="form-grid">
+                <div class="form-group"><label>Author Name *</label><input type="text" id="b-author-name" placeholder="e.g. John Smith" value="Ikinai Media"></div>
+                <div class="form-group"><label>Author Email</label><input type="email" id="b-author-email" placeholder="author@example.com"></div>
+                <div class="form-group full"><label>Author Bio / Desk</label><input type="text" id="b-author-bio" placeholder="e.g. Sports Correspondent, Tech Desk, Senior Reporter..."></div>
+            </div>
+            <label>Author Avatar</label>
+            <div class="img-upload-zone" id="avatarZone" onclick="triggerUpload('avatarFile')">
+                <input type="file" id="avatarFile" accept="image/*" onchange="handleImageUpload(this,'avatarPreview','avatarZone','b-author-avatar')">
+                <i class="fas fa-user-circle"></i>
+                <p>Click to upload author photo</p>
+                <img id="avatarPreview" class="img-preview">
+            </div>
+            <div class="url-or">or paste URL</div>
+            <input type="url" id="b-author-avatar" placeholder="https://..." oninput="previewFromUrl(this.value,'avatarPreview')">
+        </div>
 
-                <!-- Testimonials Panel -->
-                <div id="testimonialsPanel" class="panel">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Testimonials</h3>
-                            <button class="btn btn-primary" onclick="openTestimonialModal()">+ New Testimonial</button>
-                        </div>
-                        <div id="testimonialsList"></div>
-                    </div>
-                </div>
+        <!-- FEATURED IMAGE -->
+        <div class="form-group">
+            <label>Featured Image</label>
+            <div class="img-upload-zone" id="blogImgZone" onclick="triggerUpload('blogImgFile')">
+                <input type="file" id="blogImgFile" accept="image/*" onchange="handleImageUpload(this,'blogImgPreview','blogImgZone','b-image')">
+                <i class="fas fa-image"></i>
+                <p>Click or drag & drop an image here</p>
+                <img id="blogImgPreview" class="img-preview">
+            </div>
+            <div class="url-or">or paste URL</div>
+            <input type="url" id="b-image" placeholder="https://images.unsplash.com/..." oninput="previewFromUrl(this.value,'blogImgPreview')">
+        </div>
 
-                <!-- Team Panel -->
-                <div id="teamPanel" class="panel">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Team Members</h3>
-                            <button class="btn btn-primary" onclick="openTeamModal()">+ Add Member</button>
-                        </div>
-                        <div id="teamList"></div>
-                    </div>
-                </div>
+        <div class="form-group"><label>Excerpt (short description)</label><textarea id="b-excerpt" rows="3" placeholder="Brief description for the card preview..."></textarea></div>
 
-                <!-- Settings Panel -->
-                <div id="settingsPanel" class="panel">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Site Settings</h3>
-                        </div>
-                        <form id="settingsForm">
-                            <div class="form-group">
-                                <label>Hero Title</label>
-                                <input type="text" id="heroTitle" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label>Hero Subtitle</label>
-                                <textarea id="heroSubtitle" class="form-control" rows="3"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>Phone Number</label>
-                                <input type="text" id="sitePhone" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label>Email Address</label>
-                                <input type="email" id="siteEmail" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label>Address</label>
-                                <textarea id="siteAddress" class="form-control" rows="2"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Save Settings</button>
-                        </form>
-                    </div>
+        <!-- RICH TEXT EDITOR -->
+        <div class="form-group">
+            <label>Full Content</label>
+            <div class="rich-editor">
+                <div class="rich-toolbar">
+                    <button type="button" onclick="fmt('bold')"><b>B</b></button>
+                    <button type="button" onclick="fmt('italic')"><i>I</i></button>
+                    <button type="button" onclick="fmt('underline')"><u>U</u></button>
+                    <button type="button" onclick="fmtBlock('h2')">H2</button>
+                    <button type="button" onclick="fmtBlock('h3')">H3</button>
+                    <button type="button" onclick="fmtBlock('p')">P</button>
+                    <button type="button" onclick="fmtBlock('blockquote')" title="Blockquote">❝</button>
+                    <button type="button" onclick="fmt('insertUnorderedList')">• List</button>
+                    <button type="button" onclick="fmt('insertOrderedList')">1. List</button>
+                    <button type="button" onclick="insertLink()">🔗 Link</button>
+                    <button type="button" onclick="clearFormatting()">✕ Clear</button>
                 </div>
+                <div class="rich-content" id="b-content" contenteditable="true" data-placeholder="Start writing your article..."></div>
             </div>
         </div>
     </div>
+    <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('blogModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveBlog()"><i class="fas fa-save"></i> Save Post</button>
+    </div>
+</div>
+</div>
 
-    <!-- Blog Modal -->
-    <div id="blogModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="blogModalTitle">Add Blog Post</h3>
-                <button onclick="closeModal('blogModal')" style="background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="blogForm">
-                    <input type="hidden" id="blogId">
-                    <div class="form-group">
-                        <label>Title</label>
-                        <input type="text" id="blogTitle" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Category</label>
-                        <select id="blogCategory" class="form-control">
-                            <option value="Web Development">Web Development</option>
-                            <option value="Digital Marketing">Digital Marketing</option>
-                            <option value="E-commerce">E-commerce</option>
-                            <option value="Branding">Branding</option>
-                            <option value="Social Media">Social Media</option>
-                            <option value="Content Marketing">Content Marketing</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Image URL</label>
-                        <input type="text" id="blogImage" class="form-control" placeholder="https://...">
-                        <div id="blogImagePreview" class="image-preview"></div>
-                    </div>
-                    <div class="form-group">
-                        <label>Excerpt (Short Description)</label>
-                        <textarea id="blogExcerpt" class="form-control" rows="3" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Full Content (HTML supported)</label>
-                        <textarea id="blogContent" class="form-control" rows="10" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Status</label>
-                        <select id="blogStatus" class="form-control">
-                            <option value="published">Published</option>
-                            <option value="draft">Draft</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save Post</button>
-                </form>
+<!-- ===== PORTFOLIO MODAL ===== -->
+<div class="modal-overlay" id="portfolioModal">
+<div class="modal">
+    <div class="modal-hd">
+        <h3 id="portModalTitle">New Portfolio Project</h3>
+        <button class="modal-close" onclick="closeModal('portfolioModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+        <input type="hidden" id="portId">
+        <div class="form-grid">
+            <div class="form-group"><label>Project Title *</label><input type="text" id="p-title" required></div>
+            <div class="form-group"><label>Category</label>
+                <select id="p-category">
+                    <option value="web">Web Development</option>
+                    <option value="design">Design & Branding</option>
+                    <option value="ecommerce">E-commerce</option>
+                    <option value="marketing">Digital Marketing</option>
+                </select>
             </div>
         </div>
-    </div>
-
-    <!-- Portfolio Modal -->
-    <div id="portfolioModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Add Portfolio Project</h3>
-                <button onclick="closeModal('portfolioModal')" style="background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
+        <div class="form-group">
+            <label>Project Image</label>
+            <div class="img-upload-zone" id="portImgZone" onclick="triggerUpload('portImgFile')">
+                <input type="file" id="portImgFile" accept="image/*" onchange="handleImageUpload(this,'portImgPreview','portImgZone','p-image','portfolio-images')">
+                <i class="fas fa-image"></i>
+                <p>Click or drag & drop an image here</p>
+                <img id="portImgPreview" class="img-preview">
             </div>
-            <div class="modal-body">
-                <form id="portfolioForm">
-                    <input type="hidden" id="portfolioId">
-                    <div class="form-group">
-                        <label>Project Title</label>
-                        <input type="text" id="portfolioTitle" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Category</label>
-                        <select id="portfolioCategory" class="form-control">
-                            <option value="web">Web Development</option>
-                            <option value="design">Design & Branding</option>
-                            <option value="ecommerce">E-commerce</option>
-                            <option value="marketing">Digital Marketing</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Image URL</label>
-                        <input type="text" id="portfolioImage" class="form-control" placeholder="https://...">
-                        <div id="portfolioImagePreview" class="image-preview"></div>
-                    </div>
-                    <div class="form-group">
-                        <label>Description</label>
-                        <textarea id="portfolioDescription" class="form-control" rows="3" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Client</label>
-                        <input type="text" id="portfolioClient" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label>Technologies Used</label>
-                        <input type="text" id="portfolioTechnologies" class="form-control" placeholder="React, Node.js, MongoDB">
-                    </div>
-                    <div class="form-group">
-                        <label>Key Results (one per line)</label>
-                        <textarea id="portfolioResults" class="form-control" rows="4" placeholder="Increased sales by 45%&#10;Improved engagement by 60%"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save Project</button>
-                </form>
-            </div>
+            <div class="url-or">or paste URL</div>
+            <input type="url" id="p-image" placeholder="https://..." oninput="previewFromUrl(this.value,'portImgPreview')">
+        </div>
+        <div class="form-grid">
+            <div class="form-group"><label>Client</label><input type="text" id="p-client" placeholder="Client name"></div>
+            <div class="form-group"><label>Technologies</label><input type="text" id="p-tech" placeholder="React, Node.js, ..."></div>
+            <div class="form-group full"><label>Description *</label><textarea id="p-desc" rows="3" required></textarea></div>
+            <div class="form-group full"><label>Key Results (one per line)</label><textarea id="p-results" rows="4" placeholder="Increased sales by 45%&#10;Improved engagement by 60%"></textarea></div>
+            <div class="form-group"><label><input type="checkbox" id="p-featured" style="width:auto;margin-right:6px">Featured Project</label></div>
         </div>
     </div>
+    <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('portfolioModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="savePortfolio()"><i class="fas fa-save"></i> Save Project</button>
+    </div>
+</div>
+</div>
 
-    <!-- Testimonial Modal -->
-    <div id="testimonialModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Add Testimonial</h3>
-                <button onclick="closeModal('testimonialModal')" style="background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="testimonialForm">
-                    <input type="hidden" id="testimonialId">
-                    <div class="form-group">
-                        <label>Client Name</label>
-                        <input type="text" id="testimonialName" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Position / Company</label>
-                        <input type="text" id="testimonialPosition" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Testimonial Text</label>
-                        <textarea id="testimonialText" class="form-control" rows="4" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Rating (1-5)</label>
-                        <select id="testimonialRating" class="form-control">
-                            <option value="5">★★★★★ (5)</option>
-                            <option value="4">★★★★☆ (4)</option>
-                            <option value="3">★★★☆☆ (3)</option>
-                            <option value="2">★★☆☆☆ (2)</option>
-                            <option value="1">★☆☆☆☆ (1)</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save Testimonial</button>
-                </form>
-            </div>
+<!-- TESTIMONIAL MODAL -->
+<div class="modal-overlay" id="testimonialModal">
+<div class="modal">
+    <div class="modal-hd"><h3>Testimonial</h3><button class="modal-close" onclick="closeModal('testimonialModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+        <input type="hidden" id="testId">
+        <div class="form-grid">
+            <div class="form-group"><label>Client Name *</label><input type="text" id="t-name" required></div>
+            <div class="form-group"><label>Position / Company *</label><input type="text" id="t-pos" required></div>
+            <div class="form-group full"><label>Testimonial Text *</label><textarea id="t-text" rows="4" required></textarea></div>
+            <div class="form-group"><label>Rating</label><select id="t-rating"><option value="5">★★★★★ (5)</option><option value="4">★★★★☆ (4)</option><option value="3">★★★☆☆ (3)</option><option value="2">★★☆☆☆ (2)</option><option value="1">★☆☆☆☆ (1)</option></select></div>
+            <div class="form-group"><label><input type="checkbox" id="t-featured" style="width:auto;margin-right:6px" checked>Featured on Homepage</label></div>
         </div>
     </div>
+    <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('testimonialModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveTestimonial()"><i class="fas fa-save"></i> Save</button>
+    </div>
+</div>
+</div>
 
-    <!-- Team Member Modal -->
-    <div id="teamModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Add Team Member</h3>
-                <button onclick="closeModal('teamModal')" style="background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
+<!-- TEAM MODAL -->
+<div class="modal-overlay" id="teamModal">
+<div class="modal">
+    <div class="modal-hd"><h3>Team Member</h3><button class="modal-close" onclick="closeModal('teamModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+        <input type="hidden" id="memberId">
+        <div class="form-group">
+            <label>Member Photo</label>
+            <div class="img-upload-zone" onclick="triggerUpload('memberPhotoFile')">
+                <input type="file" id="memberPhotoFile" accept="image/*" onchange="handleImageUpload(this,'memberPhotoPreview',null,'m-photo','team-photos')">
+                <i class="fas fa-user-circle"></i>
+                <p>Upload team member photo</p>
+                <img id="memberPhotoPreview" class="img-preview">
             </div>
-            <div class="modal-body">
-                <form id="teamForm">
-                    <input type="hidden" id="teamId">
-                    <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" id="teamName" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Title / Role</label>
-                        <input type="text" id="teamTitle" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Bio</label>
-                        <textarea id="teamBio" class="form-control" rows="3" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Photo URL</label>
-                        <input type="text" id="teamPhoto" class="form-control" placeholder="https://...">
-                        <div id="teamPhotoPreview" class="image-preview"></div>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save Member</button>
-                </form>
-            </div>
+            <div class="url-or">or paste URL</div>
+            <input type="url" id="m-photo" placeholder="https://..." oninput="previewFromUrl(this.value,'memberPhotoPreview')">
+        </div>
+        <div class="form-grid">
+            <div class="form-group"><label>Full Name *</label><input type="text" id="m-name" required></div>
+            <div class="form-group"><label>Title / Role *</label><input type="text" id="m-title" required></div>
+            <div class="form-group full"><label>Bio</label><textarea id="m-bio" rows="3"></textarea></div>
+            <div class="form-group"><label>Sort Order</label><input type="text" id="m-order" placeholder="1, 2, 3..." value="0"></div>
         </div>
     </div>
+    <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('teamModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveTeam()"><i class="fas fa-save"></i> Save Member</button>
+    </div>
+</div>
+</div>
 
-    <script>
-        // ============================================
-        // COMPLETE ADMIN PANEL JAVASCRIPT
-        // ============================================
-        
-        // Storage keys
-        const STORAGE_KEYS = {
-            BLOG: 'ikinai_blog_posts',
-            PORTFOLIO: 'ikinai_portfolio',
-            SERVICES: 'ikinai_services',
-            TESTIMONIALS: 'ikinai_testimonials',
-            TEAM: 'ikinai_team',
-            SETTINGS: 'ikinai_settings'
-        };
-        
-        // Default data
-        const defaultData = {
-            blog: [
-                {
-                    id: 1,
-                    title: "Why Your Business Needs a Mobile-First Website in 2025",
-                    category: "Web Development",
-                    image: "https://images.unsplash.com/photo-1558655146-9f40138edfeb",
-                    excerpt: "With over 60% of web traffic coming from mobile devices, learn why a mobile-first approach is essential.",
-                    content: "<p>Full content here...</p>",
-                    status: "published",
-                    date: "2025-03-18",
-                    readTime: "6 min read"
-                }
-            ],
-            portfolio: [
-                {
-                    id: 1,
-                    title: "FashionStore E-commerce",
-                    category: "ecommerce",
-                    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d",
-                    description: "Complete online fashion retail platform",
-                    client: "Fashion Retailer Co.",
-                    technologies: "React, Node.js, MongoDB",
-                    results: ["Increased sales by 45%", "Improved engagement by 60%"]
-                }
-            ],
-            services: [
-                { id: 1, name: "Web Development", icon: "fa-code", description: "Custom websites and web applications", features: ["Custom Development", "E-commerce", "CMS"] },
-                { id: 2, name: "Branding & Design", icon: "fa-paint-brush", description: "Creative design solutions", features: ["Logo Design", "Brand Strategy", "UI/UX"] },
-                { id: 3, name: "Digital Marketing", icon: "fa-chart-line", description: "Data-driven marketing strategies", features: ["SEO", "Social Media", "Email Marketing"] }
-            ],
-            testimonials: [
-                {
-                    id: 1,
-                    name: "Melton Konchella",
-                    position: "CEO, Ipate Deliveries",
-                    text: "Working with Ikinai Media transformed our online presence.",
-                    rating: 5
-                }
-            ],
-            team: [
-                { id: 1, name: "John Smith", title: "CEO & Founder", bio: "10+ years experience", photo: "" },
-                { id: 2, name: "Sarah Johnson", title: "Creative Director", bio: "Specializes in brand identity", photo: "" }
-            ],
-            settings: {
-                heroTitle: "Elevate Your Digital Presence",
-                heroSubtitle: "Ikinai Media is a full-service digital marketing agency...",
-                phone: "+254 704 107373",
-                email: "ikinaimedia@gmail.com",
-                address: "Nairobi, Kenya"
-            }
-        };
-        
-        // Initialize data
-        function initData() {
-            if (!localStorage.getItem(STORAGE_KEYS.BLOG)) {
-                localStorage.setItem(STORAGE_KEYS.BLOG, JSON.stringify(defaultData.blog));
-            }
-            if (!localStorage.getItem(STORAGE_KEYS.PORTFOLIO)) {
-                localStorage.setItem(STORAGE_KEYS.PORTFOLIO, JSON.stringify(defaultData.portfolio));
-            }
-            if (!localStorage.getItem(STORAGE_KEYS.TESTIMONIALS)) {
-                localStorage.setItem(STORAGE_KEYS.TESTIMONIALS, JSON.stringify(defaultData.testimonials));
-            }
-            if (!localStorage.getItem(STORAGE_KEYS.TEAM)) {
-                localStorage.setItem(STORAGE_KEYS.TEAM, JSON.stringify(defaultData.team));
-            }
-            if (!localStorage.getItem(STORAGE_KEYS.SETTINGS)) {
-                localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(defaultData.settings));
-            }
-        }
-        
-        // Login functionality
-        const ADMIN_PASSWORD = "admin123"; // Change this to your desired password
-        
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const password = document.getElementById('adminPassword').value;
-            if (password === ADMIN_PASSWORD) {
-                localStorage.setItem('admin_logged_in', 'true');
-                document.getElementById('loginContainer').style.display = 'none';
-                document.getElementById('adminApp').style.display = 'block';
-                loadAllData();
-                showAlert('Login successful!', 'success');
-            } else {
-                showAlert('Invalid password!', 'error');
-            }
-        });
-        
-        function logout() {
-            localStorage.removeItem('admin_logged_in');
-            document.getElementById('loginContainer').style.display = 'flex';
-            document.getElementById('adminApp').style.display = 'none';
-        }
-        
-        // Check if already logged in
-        if (localStorage.getItem('admin_logged_in') === 'true') {
-            document.getElementById('loginContainer').style.display = 'none';
-            document.getElementById('adminApp').style.display = 'block';
-            initData();
-            loadAllData();
-        }
-        
-        // Navigation
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const panelId = this.getAttribute('data-panel');
-                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-                this.classList.add('active');
-                document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
-                document.getElementById(`${panelId}Panel`).classList.add('active');
-                document.getElementById('panelTitle').textContent = this.querySelector('span').textContent;
-                if (panelId === 'dashboard') updateDashboardStats();
-            });
-        });
-        
-        // Load all data
-        function loadAllData() {
-            loadBlogs();
-            loadPortfolio();
-            loadServices();
-            loadTestimonials();
-            loadTeam();
-            loadSettings();
-            updateDashboardStats();
-        }
-        
-        // ============ BLOG FUNCTIONS ============
-        function loadBlogs() {
-            const blogs = JSON.parse(localStorage.getItem(STORAGE_KEYS.BLOG) || '[]');
-            const container = document.getElementById('blogList');
-            container.innerHTML = `
-                <table class="data-table">
-                    <thead>
-                        <tr><th>Title</th><th>Category</th><th>Status</th><th>Date</th><th>Actions</th></tr>
-                    </thead>
-                    <tbody>
-                        ${blogs.map(blog => `
-                            <tr>
-                                <td>${blog.title}</td>
-                                <td>${blog.category}</td>
-                                <td><span style="background: ${blog.status === 'published' ? '#28a745' : '#ffc107'}; color: white; padding: 2px 8px; border-radius: 3px;">${blog.status}</span></td>
-                                <td>${blog.date || new Date().toLocaleDateString()}</td>
-                                <td class="action-buttons">
-                                    <button class="btn btn-warning" onclick="editBlog(${blog.id})">Edit</button>
-                                    <button class="btn btn-danger" onclick="deleteBlog(${blog.id})">Delete</button>
-                                </td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
-        }
-        
-        function openBlogModal(blog = null) {
-            document.getElementById('blogModal').style.display = 'flex';
-            if (blog) {
-                document.getElementById('blogModalTitle').textContent = 'Edit Blog Post';
-                document.getElementById('blogId').value = blog.id;
-                document.getElementById('blogTitle').value = blog.title;
-                document.getElementById('blogCategory').value = blog.category;
-                document.getElementById('blogImage').value = blog.image;
-                document.getElementById('blogExcerpt').value = blog.excerpt;
-                document.getElementById('blogContent').value = blog.content;
-                document.getElementById('blogStatus').value = blog.status;
-                updateImagePreview('blogImage', 'blogImagePreview');
-            } else {
-                document.getElementById('blogModalTitle').textContent = 'Add Blog Post';
-                document.getElementById('blogForm').reset();
-                document.getElementById('blogId').value = '';
-                document.getElementById('blogImagePreview').innerHTML = '';
-            }
-        }
-        
-        function editBlog(id) {
-            const blogs = JSON.parse(localStorage.getItem(STORAGE_KEYS.BLOG));
-            const blog = blogs.find(b => b.id === id);
-            openBlogModal(blog);
-        }
-        
-        function deleteBlog(id) {
-            if (confirm('Are you sure you want to delete this blog post?')) {
-                let blogs = JSON.parse(localStorage.getItem(STORAGE_KEYS.BLOG));
-                blogs = blogs.filter(b => b.id !== id);
-                localStorage.setItem(STORAGE_KEYS.BLOG, JSON.stringify(blogs));
-                loadBlogs();
-                updateDashboardStats();
-                showAlert('Blog post deleted!', 'success');
-            }
-        }
-        
-        document.getElementById('blogForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const id = document.getElementById('blogId').value;
-            const blogData = {
-                id: id ? parseInt(id) : Date.now(),
-                title: document.getElementById('blogTitle').value,
-                category: document.getElementById('blogCategory').value,
-                image: document.getElementById('blogImage').value,
-                excerpt: document.getElementById('blogExcerpt').value,
-                content: document.getElementById('blogContent').value,
-                status: document.getElementById('blogStatus').value,
-                date: new Date().toLocaleDateString(),
-                readTime: Math.ceil(document.getElementById('blogContent').value.split(' ').length / 200) + ' min read'
-            };
-            
-            let blogs = JSON.parse(localStorage.getItem(STORAGE_KEYS.BLOG));
-            if (id) {
-                const index = blogs.findIndex(b => b.id === parseInt(id));
-                blogs[index] = blogData;
-            } else {
-                blogs.unshift(blogData);
-            }
-            localStorage.setItem(STORAGE_KEYS.BLOG, JSON.stringify(blogs));
-            closeModal('blogModal');
-            loadBlogs();
-            updateDashboardStats();
-            showAlert('Blog post saved!', 'success');
-        });
-        
-        // ============ PORTFOLIO FUNCTIONS ============
-        function loadPortfolio() {
-            const items = JSON.parse(localStorage.getItem(STORAGE_KEYS.PORTFOLIO) || '[]');
-            const container = document.getElementById('portfolioList');
-            container.innerHTML = `
-                <div class="items-grid">
-                    ${items.map(item => `
-                        <div class="item-card">
-                            <img src="${item.image}" alt="${item.title}">
-                            <div class="item-card-content">
-                                <h4>${item.title}</h4>
-                                <p>${item.description.substring(0, 100)}...</p>
-                                <div class="action-buttons">
-                                    <button class="btn btn-warning" onclick="editPortfolio(${item.id})">Edit</button>
-                                    <button class="btn btn-danger" onclick="deletePortfolio(${item.id})">Delete</button>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
-        
-        function openPortfolioModal(project = null) {
-            document.getElementById('portfolioModal').style.display = 'flex';
-            if (project) {
-                document.getElementById('portfolioId').value = project.id;
-                document.getElementById('portfolioTitle').value = project.title;
-                document.getElementById('portfolioCategory').value = project.category;
-                document.getElementById('portfolioImage').value = project.image;
-                document.getElementById('portfolioDescription').value = project.description;
-                document.getElementById('portfolioClient').value = project.client || '';
-                document.getElementById('portfolioTechnologies').value = project.technologies || '';
-                document.getElementById('portfolioResults').value = (project.results || []).join('\n');
-                updateImagePreview('portfolioImage', 'portfolioImagePreview');
-            } else {
-                document.getElementById('portfolioForm').reset();
-                document.getElementById('portfolioId').value = '';
-                document.getElementById('portfolioImagePreview').innerHTML = '';
-            }
-        }
-        
-        function editPortfolio(id) {
-            const items = JSON.parse(localStorage.getItem(STORAGE_KEYS.PORTFOLIO));
-            const item = items.find(i => i.id === id);
-            openPortfolioModal(item);
-        }
-        
-        function deletePortfolio(id) {
-            if (confirm('Are you sure you want to delete this portfolio item?')) {
-                let items = JSON.parse(localStorage.getItem(STORAGE_KEYS.PORTFOLIO));
-                items = items.filter(i => i.id !== id);
-                localStorage.setItem(STORAGE_KEYS.PORTFOLIO, JSON.stringify(items));
-                loadPortfolio();
-                updateDashboardStats();
-                showAlert('Portfolio item deleted!', 'success');
-            }
-        }
-        
-        document.getElementById('portfolioForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const id = document.getElementById('portfolioId').value;
-            const portfolioData = {
-                id: id ? parseInt(id) : Date.now(),
-                title: document.getElementById('portfolioTitle').value,
-                category: document.getElementById('portfolioCategory').value,
-                image: document.getElementById('portfolioImage').value,
-                description: document.getElementById('portfolioDescription').value,
-                client: document.getElementById('portfolioClient').value,
-                technologies: document.getElementById('portfolioTechnologies').value,
-                results: document.getElementById('portfolioResults').value.split('\n').filter(r => r.trim())
-            };
-            
-            let items = JSON.parse(localStorage.getItem(STORAGE_KEYS.PORTFOLIO));
-            if (id) {
-                const index = items.findIndex(i => i.id === parseInt(id));
-                items[index] = portfolioData;
-            } else {
-                items.push(portfolioData);
-            }
-            localStorage.setItem(STORAGE_KEYS.PORTFOLIO, JSON.stringify(items));
-            closeModal('portfolioModal');
-            loadPortfolio();
-            updateDashboardStats();
-            showAlert('Portfolio item saved!', 'success');
-        });
-        
-        // ============ SERVICES FUNCTIONS ============
-        function loadServices() {
-            const services = JSON.parse(localStorage.getItem(STORAGE_KEYS.SERVICES) || JSON.stringify(defaultData.services));
-            const container = document.getElementById('servicesList');
-            container.innerHTML = `
-                <table class="data-table">
-                    <thead><tr><th>Service</th><th>Description</th><th>Actions</th></tr></thead>
-                    <tbody>
-                        ${services.map(service => `
-                            <tr>
-                                <td><i class="fas ${service.icon}"></i> ${service.name}</td>
-                                <td>${service.description}</td>
-                                <td><button class="btn btn-warning" onclick="editService(${service.id})">Edit</button></td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
-        }
-        
-        function editService(id) {
-            const services = JSON.parse(localStorage.getItem(STORAGE_KEYS.SERVICES) || JSON.stringify(defaultData.services));
-            const service = services.find(s => s.id === id);
-            const newName = prompt('Edit service name:', service.name);
-            const newDesc = prompt('Edit service description:', service.description);
-            if (newName) service.name = newName;
-            if (newDesc) service.description = newDesc;
-            localStorage.setItem(STORAGE_KEYS.SERVICES, JSON.stringify(services));
-            loadServices();
-            showAlert('Service updated!', 'success');
-        }
-        
-        // ============ TESTIMONIAL FUNCTIONS ============
-        function loadTestimonials() {
-            const testimonials = JSON.parse(localStorage.getItem(STORAGE_KEYS.TESTIMONIALS) || '[]');
-            const container = document.getElementById('testimonialsList');
-            container.innerHTML = `
-                <div class="items-grid">
-                    ${testimonials.map(t => `
-                        <div class="item-card">
-                            <div class="item-card-content">
-                                <div style="color: #F9DE1F; margin-bottom: 10px;">${'★'.repeat(t.rating)}${'☆'.repeat(5-t.rating)}</div>
-                                <p>"${t.text.substring(0, 150)}..."</p>
-                                <h4>${t.name}</h4>
-                                <p style="font-size: 12px;">${t.position}</p>
-                                <div class="action-buttons">
-                                    <button class="btn btn-warning" onclick="editTestimonial(${t.id})">Edit</button>
-                                    <button class="btn btn-danger" onclick="deleteTestimonial(${t.id})">Delete</button>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
-        
-        function openTestimonialModal(testimonial = null) {
-            document.getElementById('testimonialModal').style.display = 'flex';
-            if (testimonial) {
-                document.getElementById('testimonialId').value = testimonial.id;
-                document.getElementById('testimonialName').value = testimonial.name;
-                document.getElementById('testimonialPosition').value = testimonial.position;
-                document.getElementById('testimonialText').value = testimonial.text;
-                document.getElementById('testimonialRating').value = testimonial.rating;
-            } else {
-                document.getElementById('testimonialForm').reset();
-                document.getElementById('testimonialId').value = '';
-            }
-        }
-        
-        function editTestimonial(id) {
-            const testimonials = JSON.parse(localStorage.getItem(STORAGE_KEYS.TESTIMONIALS));
-            const testimonial = testimonials.find(t => t.id === id);
-            openTestimonialModal(testimonial);
-        }
-        
-        function deleteTestimonial(id) {
-            if (confirm('Are you sure you want to delete this testimonial?')) {
-                let testimonials = JSON.parse(localStorage.getItem(STORAGE_KEYS.TESTIMONIALS));
-                testimonials = testimonials.filter(t => t.id !== id);
-                localStorage.setItem(STORAGE_KEYS.TESTIMONIALS, JSON.stringify(testimonials));
-                loadTestimonials();
-                updateDashboardStats();
-                showAlert('Testimonial deleted!', 'success');
-            }
-        }
-        
-        document.getElementById('testimonialForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const id = document.getElementById('testimonialId').value;
-            const testimonialData = {
-                id: id ? parseInt(id) : Date.now(),
-                name: document.getElementById('testimonialName').value,
-                position: document.getElementById('testimonialPosition').value,
-                text: document.getElementById('testimonialText').value,
-                rating: parseInt(document.getElementById('testimonialRating').value)
-            };
-            
-            let testimonials = JSON.parse(localStorage.getItem(STORAGE_KEYS.TESTIMONIALS));
-            if (id) {
-                const index = testimonials.findIndex(t => t.id === parseInt(id));
-                testimonials[index] = testimonialData;
-            } else {
-                testimonials.push(testimonialData);
-            }
-            localStorage.setItem(STORAGE_KEYS.TESTIMONIALS, JSON.stringify(testimonials));
-            closeModal('testimonialModal');
-            loadTestimonials();
-            updateDashboardStats();
-            showAlert('Testimonial saved!', 'success');
-        });
-        
-        // ============ TEAM FUNCTIONS ============
-        function loadTeam() {
-            const team = JSON.parse(localStorage.getItem(STORAGE_KEYS.TEAM) || '[]');
-            const container = document.getElementById('teamList');
-            container.innerHTML = `
-                <div class="items-grid">
-                    ${team.map(member => `
-                        <div class="item-card">
-                            ${member.photo ? `<img src="${member.photo}" alt="${member.name}">` : '<div style="height: 180px; background: #f0f2f5; display: flex; align-items: center; justify-content: center;"><i class="fas fa-user" style="font-size: 50px; color: #ccc;"></i></div>'}
-                            <div class="item-card-content">
-                                <h4>${member.name}</h4>
-                                <p style="color: #F9DE1F; font-weight: 500;">${member.title}</p>
-                                <p>${member.bio.substring(0, 100)}...</p>
-                                <div class="action-buttons">
-                                    <button class="btn btn-warning" onclick="editTeam(${member.id})">Edit</button>
-                                    <button class="btn btn-danger" onclick="deleteTeam(${member.id})">Delete</button>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
-        
-        function openTeamModal(member = null) {
-            document.getElementById('teamModal').style.display = 'flex';
-            if (member) {
-                document.getElementById('teamId').value = member.id;
-                document.getElementById('teamName').value = member.name;
-                document.getElementById('teamTitle').value = member.title;
-                document.getElementById('teamBio').value = member.bio;
-                document.getElementById('teamPhoto').value = member.photo || '';
-                updateImagePreview('teamPhoto', 'teamPhotoPreview');
-            } else {
-                document.getElementById('teamForm').reset();
-                document.getElementById('teamId').value = '';
-                document.getElementById('teamPhotoPreview').innerHTML = '';
-            }
-        }
-        
-        function editTeam(id) {
-            const team = JSON.parse(localStorage.getItem(STORAGE_KEYS.TEAM));
-            const member = team.find(m => m.id === id);
-            openTeamModal(member);
-        }
-        
-        function deleteTeam(id) {
-            if (confirm('Are you sure you want to delete this team member?')) {
-                let team = JSON.parse(localStorage.getItem(STORAGE_KEYS.TEAM));
-                team = team.filter(m => m.id !== id);
-                localStorage.setItem(STORAGE_KEYS.TEAM, JSON.stringify(team));
-                loadTeam();
-                updateDashboardStats();
-                showAlert('Team member deleted!', 'success');
-            }
-        }
-        
-        document.getElementById('teamForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const id = document.getElementById('teamId').value;
-            const teamData = {
-                id: id ? parseInt(id) : Date.now(),
-                name: document.getElementById('teamName').value,
-                title: document.getElementById('teamTitle').value,
-                bio: document.getElementById('teamBio').value,
-                photo: document.getElementById('teamPhoto').value
-            };
-            
-            let team = JSON.parse(localStorage.getItem(STORAGE_KEYS.TEAM));
-            if (id) {
-                const index = team.findIndex(m => m.id === parseInt(id));
-                team[index] = teamData;
-            } else {
-                team.push(teamData);
-            }
-            localStorage.setItem(STORAGE_KEYS.TEAM, JSON.stringify(team));
-            closeModal('teamModal');
-            loadTeam();
-            updateDashboardStats();
-            showAlert('Team member saved!', 'success');
-        });
-        
-        // ============ SETTINGS FUNCTIONS ============
-        function loadSettings() {
-            const settings = JSON.parse(localStorage.getItem(STORAGE_KEYS.SETTINGS) || '{}');
-            document.getElementById('heroTitle').value = settings.heroTitle || '';
-            document.getElementById('heroSubtitle').value = settings.heroSubtitle || '';
-            document.getElementById('sitePhone').value = settings.phone || '';
-            document.getElementById('siteEmail').value = settings.email || '';
-            document.getElementById('siteAddress').value = settings.address || '';
-        }
-        
-        document.getElementById('settingsForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const settings = {
-                heroTitle: document.getElementById('heroTitle').value,
-                heroSubtitle: document.getElementById('heroSubtitle').value,
-                phone: document.getElementById('sitePhone').value,
-                email: document.getElementById('siteEmail').value,
-                address: document.getElementById('siteAddress').value
-            };
-            localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
-            showAlert('Settings saved!', 'success');
-        });
-        
-        // ============ UTILITY FUNCTIONS ============
-        function updateDashboardStats() {
-            const blogs = JSON.parse(localStorage.getItem(STORAGE_KEYS.BLOG) || '[]');
-            const portfolio = JSON.parse(localStorage.getItem(STORAGE_KEYS.PORTFOLIO) || '[]');
-            const testimonials = JSON.parse(localStorage.getItem(STORAGE_KEYS.TESTIMONIALS) || '[]');
-            document.getElementById('blogCount').textContent = blogs.length;
-            document.getElementById('portfolioCount').textContent = portfolio.length;
-            document.getElementById('testimonialCount').textContent = testimonials.length;
-        }
-        
-        function updateImagePreview(inputId, previewId) {
-            const input = document.getElementById(inputId);
-            const preview = document.getElementById(previewId);
-            if (input.value) {
-                preview.innerHTML = `<img src="${input.value}" style="max-width: 100%; max-height: 100px; border-radius: 5px;">`;
-            }
-        }
-        
-        function showAlert(message, type) {
-            const container = document.getElementById('alertContainer');
-            container.innerHTML = `<div class="alert ${type}">${message}</div>`;
-            setTimeout(() => {
-                container.innerHTML = '';
-            }, 3000);
-        }
-        
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-        
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = 'none';
-            }
-        };
-        
-        // Image preview listeners
-        document.getElementById('blogImage').addEventListener('input', () => updateImagePreview('blogImage', 'blogImagePreview'));
-        document.getElementById('portfolioImage').addEventListener('input', () => updateImagePreview('portfolioImage', 'portfolioImagePreview'));
-        document.getElementById('teamPhoto').addEventListener('input', () => updateImagePreview('teamPhoto', 'teamPhotoPreview'));
-        
-        // Initialize
-        initData();
-    </script>
+<!-- SERVICE MODAL -->
+<div class="modal-overlay" id="serviceModal">
+<div class="modal">
+    <div class="modal-hd"><h3>Service</h3><button class="modal-close" onclick="closeModal('serviceModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+        <input type="hidden" id="svcId">
+        <div class="form-grid">
+            <div class="form-group"><label>Service Name *</label><input type="text" id="svc-name" required></div>
+            <div class="form-group"><label>Font Awesome Icon</label><input type="text" id="svc-icon" placeholder="fa-code, fa-paint-brush..."></div>
+            <div class="form-group full"><label>Description</label><textarea id="svc-desc" rows="3"></textarea></div>
+            <div class="form-group full"><label>Features (one per line)</label><textarea id="svc-features" rows="5" placeholder="Custom Website Development&#10;E-commerce Solutions..."></textarea></div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('serviceModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveService()"><i class="fas fa-save"></i> Save Service</button>
+    </div>
+</div>
+</div>
+
+<script>
+// ============================================
+// CONFIGURATION
+// ============================================
+const CONFIG = {
+    ADMIN_PASSWORD: localStorage.getItem('ikinai_admin_pass') || 'ikinai2025admin',
+    SUPABASE_URL: localStorage.getItem('ikinai_sb_url') || '',
+    SUPABASE_KEY: localStorage.getItem('ikinai_sb_key') || ''
+};
+
+let sb = null;
+
+function initSupabase() {
+    if (!CONFIG.SUPABASE_URL || !CONFIG.SUPABASE_KEY) {
+        setDbStatus('Not Configured', false);
+        return false;
+    }
+    try {
+        sb = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
+        setDbStatus('Connected', true);
+        return true;
+    } catch(e) {
+        setDbStatus('Error', false);
+        return false;
+    }
+}
+
+function setDbStatus(msg, ok) {
+    document.getElementById('dbStatus').textContent = msg;
+    document.getElementById('dbDot').style.background = ok ? '#4caf69' : '#e55';
+}
+
+// ============================================
+// LOGIN
+// ============================================
+function doLogin() {
+    const pass = document.getElementById('adminPass').value;
+    if (pass === CONFIG.ADMIN_PASSWORD) {
+        document.getElementById('loginWrap').style.display = 'none';
+        document.getElementById('appWrap').style.display = 'block';
+        initSupabase();
+        loadAll();
+        // Prefill config fields
+        document.getElementById('cfg-url').value = CONFIG.SUPABASE_URL;
+        document.getElementById('cfg-key').value = CONFIG.SUPABASE_KEY;
+    } else {
+        document.getElementById('loginErr').style.display = 'block';
+    }
+}
+document.getElementById('adminPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+function logout() {
+    document.getElementById('loginWrap').style.display = 'flex';
+    document.getElementById('appWrap').style.display = 'none';
+    document.getElementById('adminPass').value = '';
+    document.getElementById('loginErr').style.display = 'none';
+}
+
+function changePassword() {
+    const np = document.getElementById('newPassword').value;
+    const cp = document.getElementById('confirmPassword').value;
+    if (!np) return toast('Enter a new password', 'error');
+    if (np !== cp) return toast('Passwords do not match', 'error');
+    localStorage.setItem('ikinai_admin_pass', np);
+    CONFIG.ADMIN_PASSWORD = np;
+    document.getElementById('newPassword').value = '';
+    document.getElementById('confirmPassword').value = '';
+    toast('Password updated successfully!', 'success');
+}
+
+function saveSupabaseConfig() {
+    const url = document.getElementById('cfg-url').value.trim();
+    const key = document.getElementById('cfg-key').value.trim();
+    if (!url || !key) return toast('Enter both URL and Key', 'error');
+    localStorage.setItem('ikinai_sb_url', url);
+    localStorage.setItem('ikinai_sb_key', key);
+    CONFIG.SUPABASE_URL = url;
+    CONFIG.SUPABASE_KEY = key;
+    if (initSupabase()) {
+        toast('Supabase connected!', 'success');
+        loadAll();
+    } else {
+        toast('Connection failed. Check credentials.', 'error');
+    }
+}
+
+// ============================================
+// NAVIGATION
+// ============================================
+document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', function() {
+        const panel = this.getAttribute('data-panel');
+        switchPanel(panel);
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        this.classList.add('active');
+        const titles = {dashboard:'Dashboard',blog:'Blog Posts',portfolio:'Portfolio',services:'Services',testimonials:'Testimonials',team:'Team Members',settings:'Settings'};
+        document.getElementById('panelTitle').textContent = titles[panel] || panel;
+    });
+});
+
+function switchPanel(name) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(name+'Panel').classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => {
+        n.classList.toggle('active', n.getAttribute('data-panel') === name);
+    });
+    const titles = {dashboard:'Dashboard',blog:'Blog Posts',portfolio:'Portfolio',services:'Services',testimonials:'Testimonials',team:'Team Members',settings:'Settings'};
+    document.getElementById('panelTitle').textContent = titles[name] || name;
+}
+
+// ============================================
+// LOAD ALL
+// ============================================
+async function loadAll() {
+    await Promise.all([loadBlog(), loadPortfolio(), loadServices(), loadTestimonials(), loadTeam(), loadSettings()]);
+    await updateDashStats();
+}
+
+// ============================================
+// BLOG
+// ============================================
+let blogCache = [];
+
+async function loadBlog() {
+    if (!sb) { document.getElementById('blogBody').innerHTML = '<tr><td colspan="6" class="loading-row">Configure Supabase first</td></tr>'; return; }
+    const {data,error} = await sb.from('blog_posts').select('*').order('created_at',{ascending:false});
+    if (error) { toast('Error loading posts: '+error.message,'error'); return; }
+    blogCache = data || [];
+    renderBlogTable(blogCache);
+    renderDashRecent(blogCache.slice(0,5));
+}
+
+function renderBlogTable(posts) {
+    const tbody = document.getElementById('blogBody');
+    if (!posts.length) { tbody.innerHTML = '<tr><td colspan="6" class="loading-row"><div class="empty-state"><i class="fas fa-newspaper"></i><p>No posts yet</p></div></td></tr>'; return; }
+    tbody.innerHTML = posts.map(p => `
+        <tr>
+            <td style="max-width:300px"><b>${p.title}</b></td>
+            <td><span class="badge" style="background:rgba(249,222,31,.12);color:#F9DE1F">${p.category}</span></td>
+            <td style="font-size:.8rem">${p.author_name || '–'}</td>
+            <td><span class="badge badge-${p.status==='published'?'pub':p.status==='draft'?'draft':'arch'}">${p.status}</span></td>
+            <td style="font-size:.78rem;color:var(--text-muted)">${fmtDate(p.created_at)}</td>
+            <td><div class="actions">
+                <button class="btn btn-warn btn-xs" onclick="editBlog('${p.id}')"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-danger btn-xs" onclick="deleteBlog('${p.id}')"><i class="fas fa-trash"></i></button>
+            </div></td>
+        </tr>`).join('');
+}
+
+function renderDashRecent(posts) {
+    const tbody = document.getElementById('dashRecentBody');
+    if (!posts.length) { tbody.innerHTML = '<tr class="loading-row"><td colspan="4">No posts yet</td></tr>'; return; }
+    tbody.innerHTML = posts.map(p => `
+        <tr>
+            <td><b>${p.title}</b></td>
+            <td>${p.category}</td>
+            <td><span class="badge badge-${p.status==='published'?'pub':'draft'}">${p.status}</span></td>
+            <td style="font-size:.78rem;color:var(--text-muted)">${fmtDate(p.created_at)}</td>
+        </tr>`).join('');
+}
+
+function openBlogModal(post=null) {
+    document.getElementById('blogModalTitle').textContent = post ? 'Edit Post' : 'New Blog Post';
+    document.getElementById('blogId').value = post?.id || '';
+    document.getElementById('b-title').value = post?.title || '';
+    document.getElementById('b-category').value = post?.category || 'News';
+    document.getElementById('b-status').value = post?.status || 'draft';
+    document.getElementById('b-author-name').value = post?.author_name || 'Ikinai Media';
+    document.getElementById('b-author-email').value = post?.author_email || '';
+    document.getElementById('b-author-bio').value = post?.author_bio || '';
+    document.getElementById('b-author-avatar').value = post?.author_avatar_url || '';
+    document.getElementById('b-image').value = post?.image_url || '';
+    document.getElementById('b-excerpt').value = post?.excerpt || '';
+    document.getElementById('b-content').innerHTML = post?.content || '';
+    previewFromUrl(post?.author_avatar_url || '', 'avatarPreview');
+    previewFromUrl(post?.image_url || '', 'blogImgPreview');
+    document.getElementById('blogModal').classList.add('open');
+}
+
+function editBlog(id) { const p = blogCache.find(b=>b.id===id); openBlogModal(p); }
+
+async function saveBlog() {
+    if (!sb) return toast('Connect Supabase first','error');
+    const id = document.getElementById('blogId').value;
+    const title = document.getElementById('b-title').value.trim();
+    if (!title) return toast('Title is required','error');
+    const content = document.getElementById('b-content').innerHTML;
+    const wordCount = document.getElementById('b-content').innerText.split(/\s+/).filter(Boolean).length;
+    const readTime = Math.max(1, Math.ceil(wordCount/200)) + ' min read';
+    const slug = generateSlug(title) + (id ? '' : '-' + Date.now().toString(36));
+    const data = {
+        title, slug,
+        category: document.getElementById('b-category').value,
+        status: document.getElementById('b-status').value,
+        author_name: document.getElementById('b-author-name').value || 'Ikinai Media',
+        author_email: document.getElementById('b-author-email').value,
+        author_bio: document.getElementById('b-author-bio').value,
+        author_avatar_url: document.getElementById('b-author-avatar').value,
+        image_url: document.getElementById('b-image').value,
+        excerpt: document.getElementById('b-excerpt').value,
+        content, read_time: readTime,
+        updated_at: new Date().toISOString()
+    };
+    if (document.getElementById('b-status').value === 'published' && !blogCache.find(b=>b.id===id)?.published_at) {
+        data.published_at = new Date().toISOString();
+    }
+
+    let err;
+    if (id) {
+        const res = await sb.from('blog_posts').update(data).eq('id',id);
+        err = res.error;
+    } else {
+        const res = await sb.from('blog_posts').insert(data);
+        err = res.error;
+    }
+    if (err) return toast('Error: '+err.message,'error');
+    toast('Post saved!','success');
+    closeModal('blogModal');
+    loadBlog();
+    updateDashStats();
+}
+
+async function deleteBlog(id) {
+    if (!confirm('Delete this post?')) return;
+    const {error} = await sb.from('blog_posts').delete().eq('id',id);
+    if (error) return toast('Error: '+error.message,'error');
+    toast('Post deleted','success');
+    loadBlog();
+    updateDashStats();
+}
+
+// ============================================
+// PORTFOLIO
+// ============================================
+let portCache = [];
+
+async function loadPortfolio() {
+    if (!sb) return;
+    const {data,error} = await sb.from('portfolio').select('*').order('created_at',{ascending:false});
+    if (error) { toast('Error loading portfolio','error'); return; }
+    portCache = data || [];
+    const tbody = document.getElementById('portfolioBody');
+    if (!portCache.length) { tbody.innerHTML = '<tr class="loading-row"><td colspan="5">No projects yet</td></tr>'; return; }
+    tbody.innerHTML = portCache.map(p => `
+        <tr>
+            <td><img src="${p.image_url||''}" style="width:60px;height:45px;object-fit:cover;border-radius:6px;background:var(--border)" onerror="this.style.display='none'"></td>
+            <td><b>${p.title}</b>${p.featured?'<span class="badge" style="margin-left:6px;background:rgba(249,222,31,.12);color:#F9DE1F">Featured</span>':''}</td>
+            <td>${p.category}</td>
+            <td style="font-size:.8rem">${p.client||'–'}</td>
+            <td><div class="actions">
+                <button class="btn btn-warn btn-xs" onclick="editPortfolio('${p.id}')"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-danger btn-xs" onclick="deletePortfolio('${p.id}')"><i class="fas fa-trash"></i></button>
+            </div></td>
+        </tr>`).join('');
+}
+
+function openPortfolioModal(p=null) {
+    document.getElementById('portModalTitle').textContent = p ? 'Edit Project' : 'New Project';
+    document.getElementById('portId').value = p?.id || '';
+    document.getElementById('p-title').value = p?.title || '';
+    document.getElementById('p-category').value = p?.category || 'web';
+    document.getElementById('p-image').value = p?.image_url || '';
+    document.getElementById('p-desc').value = p?.description || '';
+    document.getElementById('p-client').value = p?.client || '';
+    document.getElementById('p-tech').value = p?.technologies || '';
+    document.getElementById('p-results').value = (p?.results||[]).join('\n');
+    document.getElementById('p-featured').checked = p?.featured || false;
+    previewFromUrl(p?.image_url||'','portImgPreview');
+    document.getElementById('portfolioModal').classList.add('open');
+}
+function editPortfolio(id) { openPortfolioModal(portCache.find(p=>p.id===id)); }
+
+async function savePortfolio() {
+    if (!sb) return toast('Connect Supabase first','error');
+    const id = document.getElementById('portId').value;
+    const title = document.getElementById('p-title').value.trim();
+    if (!title) return toast('Title required','error');
+    const data = {
+        title,
+        category: document.getElementById('p-category').value,
+        image_url: document.getElementById('p-image').value,
+        description: document.getElementById('p-desc').value,
+        client: document.getElementById('p-client').value,
+        technologies: document.getElementById('p-tech').value,
+        results: document.getElementById('p-results').value.split('\n').filter(r=>r.trim()),
+        featured: document.getElementById('p-featured').checked,
+        updated_at: new Date().toISOString()
+    };
+    let err;
+    if (id) { const r=await sb.from('portfolio').update(data).eq('id',id); err=r.error; }
+    else { const r=await sb.from('portfolio').insert(data); err=r.error; }
+    if (err) return toast('Error: '+err.message,'error');
+    toast('Project saved!','success');
+    closeModal('portfolioModal');
+    loadPortfolio();
+    updateDashStats();
+}
+
+async function deletePortfolio(id) {
+    if (!confirm('Delete this project?')) return;
+    const {error} = await sb.from('portfolio').delete().eq('id',id);
+    if (error) return toast('Error: '+error.message,'error');
+    toast('Project deleted','success');
+    loadPortfolio();
+    updateDashStats();
+}
+
+// ============================================
+// SERVICES
+// ============================================
+let svcCache = [];
+
+async function loadServices() {
+    if (!sb) return;
+    const {data} = await sb.from('services').select('*').order('sort_order');
+    svcCache = data || [];
+    const tbody = document.getElementById('servicesBody');
+    if (!svcCache.length) { tbody.innerHTML = '<tr class="loading-row"><td colspan="3">No services yet</td></tr>'; return; }
+    tbody.innerHTML = svcCache.map(s => `
+        <tr>
+            <td><i class="fas ${s.icon||'fa-cog'}"></i> <b>${s.name}</b></td>
+            <td style="font-size:.82rem">${s.description||''}</td>
+            <td><div class="actions">
+                <button class="btn btn-warn btn-xs" onclick="editService('${s.id}')"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-danger btn-xs" onclick="deleteService('${s.id}')"><i class="fas fa-trash"></i></button>
+            </div></td>
+        </tr>`).join('');
+}
+
+function openServiceModal(s=null) {
+    document.getElementById('svcId').value = s?.id || '';
+    document.getElementById('svc-name').value = s?.name || '';
+    document.getElementById('svc-icon').value = s?.icon || '';
+    document.getElementById('svc-desc').value = s?.description || '';
+    document.getElementById('svc-features').value = (s?.features||[]).join('\n');
+    document.getElementById('serviceModal').classList.add('open');
+}
+function editService(id) { openServiceModal(svcCache.find(s=>s.id===id)); }
+
+async function saveService() {
+    if (!sb) return toast('Connect Supabase first','error');
+    const id = document.getElementById('svcId').value;
+    const data = {
+        name: document.getElementById('svc-name').value,
+        icon: document.getElementById('svc-icon').value,
+        description: document.getElementById('svc-desc').value,
+        features: document.getElementById('svc-features').value.split('\n').filter(f=>f.trim())
+    };
+    let err;
+    if (id) { const r=await sb.from('services').update(data).eq('id',id); err=r.error; }
+    else { const r=await sb.from('services').insert(data); err=r.error; }
+    if (err) return toast('Error: '+err.message,'error');
+    toast('Service saved!','success');
+    closeModal('serviceModal');
+    loadServices();
+}
+
+async function deleteService(id) {
+    if (!confirm('Delete this service?')) return;
+    const {error} = await sb.from('services').delete().eq('id',id);
+    if (error) return toast('Error: '+error.message,'error');
+    toast('Service deleted','success');
+    loadServices();
+}
+
+// ============================================
+// TESTIMONIALS
+// ============================================
+let testCache = [];
+
+async function loadTestimonials() {
+    if (!sb) return;
+    const {data} = await sb.from('testimonials').select('*').order('created_at',{ascending:false});
+    testCache = data || [];
+    const tbody = document.getElementById('testimonialsBody');
+    if (!testCache.length) { tbody.innerHTML = '<tr class="loading-row"><td colspan="5">No testimonials yet</td></tr>'; return; }
+    tbody.innerHTML = testCache.map(t => `
+        <tr>
+            <td><b>${t.name}</b></td>
+            <td style="font-size:.8rem">${t.position}</td>
+            <td>${'★'.repeat(t.rating)}${'☆'.repeat(5-t.rating)}</td>
+            <td>${t.featured?'<span class="badge badge-pub">Yes</span>':'<span class="badge badge-arch">No</span>'}</td>
+            <td><div class="actions">
+                <button class="btn btn-warn btn-xs" onclick="editTestimonial('${t.id}')"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-danger btn-xs" onclick="deleteTestimonial('${t.id}')"><i class="fas fa-trash"></i></button>
+            </div></td>
+        </tr>`).join('');
+}
+
+function openTestimonialModal(t=null) {
+    document.getElementById('testId').value = t?.id || '';
+    document.getElementById('t-name').value = t?.name || '';
+    document.getElementById('t-pos').value = t?.position || '';
+    document.getElementById('t-text').value = t?.text || '';
+    document.getElementById('t-rating').value = t?.rating || 5;
+    document.getElementById('t-featured').checked = t?.featured ?? true;
+    document.getElementById('testimonialModal').classList.add('open');
+}
+function editTestimonial(id) { openTestimonialModal(testCache.find(t=>t.id===id)); }
+
+async function saveTestimonial() {
+    if (!sb) return toast('Connect Supabase first','error');
+    const id = document.getElementById('testId').value;
+    const data = {
+        name: document.getElementById('t-name').value,
+        position: document.getElementById('t-pos').value,
+        text: document.getElementById('t-text').value,
+        rating: parseInt(document.getElementById('t-rating').value),
+        featured: document.getElementById('t-featured').checked
+    };
+    if (!data.name||!data.position||!data.text) return toast('Fill required fields','error');
+    let err;
+    if (id) { const r=await sb.from('testimonials').update(data).eq('id',id); err=r.error; }
+    else { const r=await sb.from('testimonials').insert(data); err=r.error; }
+    if (err) return toast('Error: '+err.message,'error');
+    toast('Testimonial saved!','success');
+    closeModal('testimonialModal');
+    loadTestimonials();
+    updateDashStats();
+}
+
+async function deleteTestimonial(id) {
+    if (!confirm('Delete this testimonial?')) return;
+    await sb.from('testimonials').delete().eq('id',id);
+    toast('Deleted','success');
+    loadTestimonials();
+    updateDashStats();
+}
+
+// ============================================
+// TEAM
+// ============================================
+let teamCache = [];
+
+async function loadTeam() {
+    if (!sb) return;
+    const {data} = await sb.from('team_members').select('*').order('sort_order');
+    teamCache = data || [];
+    const tbody = document.getElementById('teamBody');
+    if (!teamCache.length) { tbody.innerHTML = '<tr class="loading-row"><td colspan="4">No team members yet</td></tr>'; return; }
+    tbody.innerHTML = teamCache.map(m => `
+        <tr>
+            <td>${m.photo_url?`<img src="${m.photo_url}" style="width:42px;height:42px;border-radius:50%;object-fit:cover">`:
+            `<div style="width:42px;height:42px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center"><i class="fas fa-user"></i></div>`}</td>
+            <td><b>${m.name}</b></td>
+            <td style="font-size:.82rem;color:var(--text-muted)">${m.title}</td>
+            <td><div class="actions">
+                <button class="btn btn-warn btn-xs" onclick="editTeam('${m.id}')"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-danger btn-xs" onclick="deleteTeam('${m.id}')"><i class="fas fa-trash"></i></button>
+            </div></td>
+        </tr>`).join('');
+}
+
+function openTeamModal(m=null) {
+    document.getElementById('memberId').value = m?.id || '';
+    document.getElementById('m-name').value = m?.name || '';
+    document.getElementById('m-title').value = m?.title || '';
+    document.getElementById('m-bio').value = m?.bio || '';
+    document.getElementById('m-photo').value = m?.photo_url || '';
+    document.getElementById('m-order').value = m?.sort_order || 0;
+    previewFromUrl(m?.photo_url||'','memberPhotoPreview');
+    document.getElementById('teamModal').classList.add('open');
+}
+function editTeam(id) { openTeamModal(teamCache.find(m=>m.id===id)); }
+
+async function saveTeam() {
+    if (!sb) return toast('Connect Supabase first','error');
+    const id = document.getElementById('memberId').value;
+    const data = {
+        name: document.getElementById('m-name').value,
+        title: document.getElementById('m-title').value,
+        bio: document.getElementById('m-bio').value,
+        photo_url: document.getElementById('m-photo').value,
+        sort_order: parseInt(document.getElementById('m-order').value)||0
+    };
+    if (!data.name||!data.title) return toast('Name and title required','error');
+    let err;
+    if (id) { const r=await sb.from('team_members').update(data).eq('id',id); err=r.error; }
+    else { const r=await sb.from('team_members').insert(data); err=r.error; }
+    if (err) return toast('Error: '+err.message,'error');
+    toast('Team member saved!','success');
+    closeModal('teamModal');
+    loadTeam();
+    updateDashStats();
+}
+
+async function deleteTeam(id) {
+    if (!confirm('Delete this member?')) return;
+    await sb.from('team_members').delete().eq('id',id);
+    toast('Deleted','success');
+    loadTeam();
+    updateDashStats();
+}
+
+// ============================================
+// SETTINGS
+// ============================================
+async function loadSettings() {
+    if (!sb) return;
+    const {data} = await sb.from('site_settings').select('*');
+    if (!data) return;
+    const map = {};
+    data.forEach(s => map[s.key]=s.value);
+    document.getElementById('s-heroTitle').value = map.hero_title||'';
+    document.getElementById('s-heroSubtitle').value = map.hero_subtitle||'';
+    document.getElementById('s-phone').value = map.phone||'';
+    document.getElementById('s-email').value = map.email||'';
+    document.getElementById('s-address').value = map.address||'';
+}
+
+async function saveSettings(e) {
+    e.preventDefault();
+    if (!sb) return toast('Connect Supabase first','error');
+    const settings = [
+        {key:'hero_title',value:document.getElementById('s-heroTitle').value},
+        {key:'hero_subtitle',value:document.getElementById('s-heroSubtitle').value},
+        {key:'phone',value:document.getElementById('s-phone').value},
+        {key:'email',value:document.getElementById('s-email').value},
+        {key:'address',value:document.getElementById('s-address').value}
+    ];
+    for (const s of settings) {
+        await sb.from('site_settings').upsert({key:s.key,value:s.value,updated_at:new Date().toISOString()},{onConflict:'key'});
+    }
+    toast('Settings saved!','success');
+}
+
+// ============================================
+// DASHBOARD STATS
+// ============================================
+async function updateDashStats() {
+    if (!sb) return;
+    const [b,p,t,m] = await Promise.all([
+        sb.from('blog_posts').select('id',{count:'exact',head:true}).eq('status','published'),
+        sb.from('portfolio').select('id',{count:'exact',head:true}),
+        sb.from('testimonials').select('id',{count:'exact',head:true}),
+        sb.from('team_members').select('id',{count:'exact',head:true})
+    ]);
+    document.getElementById('s-blog').textContent = b.count||0;
+    document.getElementById('s-portfolio').textContent = p.count||0;
+    document.getElementById('s-test').textContent = t.count||0;
+    document.getElementById('s-team').textContent = m.count||0;
+}
+
+// ============================================
+// IMAGE UPLOAD
+// ============================================
+async function handleImageUpload(input, previewId, zoneId, urlFieldId, bucket='blog-images') {
+    const file = input.files[0];
+    if (!file) return;
+    const ext = file.name.split('.').pop();
+    const filename = `${Date.now()}-${Math.random().toString(36).substr(2,6)}.${ext}`;
+    const preview = document.getElementById(previewId);
+    preview.style.display = 'block';
+    preview.style.opacity = '.5';
+    // Show local preview immediately
+    const reader = new FileReader();
+    reader.onload = e => { preview.src = e.target.result; };
+    reader.readAsDataURL(file);
+    if (!sb) {
+        // No Supabase – use local blob URL
+        const url = URL.createObjectURL(file);
+        document.getElementById(urlFieldId).value = url;
+        preview.src = url;
+        preview.style.opacity = '1';
+        toast('Image loaded locally (no Supabase)', 'info');
+        return;
+    }
+    const {data,error} = await sb.storage.from(bucket).upload(filename, file, {upsert:true});
+    if (error) { toast('Upload error: '+error.message,'error'); return; }
+    const {data:{publicUrl}} = sb.storage.from(bucket).getPublicUrl(filename);
+    document.getElementById(urlFieldId).value = publicUrl;
+    preview.src = publicUrl;
+    preview.style.opacity = '1';
+    toast('Image uploaded!','success');
+}
+
+function triggerUpload(inputId) {
+    const el = document.getElementById(inputId);
+    el.click();
+}
+
+function previewFromUrl(url, previewId) {
+    const img = document.getElementById(previewId);
+    if (url && url.startsWith('http')) {
+        img.src = url;
+        img.style.display = 'block';
+    } else {
+        img.style.display = 'none';
+    }
+}
+
+// ============================================
+// RICH TEXT EDITOR
+// ============================================
+function fmt(cmd) { document.execCommand(cmd, false, null); document.getElementById('b-content').focus(); }
+function fmtBlock(tag) { document.execCommand('formatBlock', false, tag); document.getElementById('b-content').focus(); }
+function insertLink() {
+    const url = prompt('Enter URL:');
+    if (url) document.execCommand('createLink', false, url);
+    document.getElementById('b-content').focus();
+}
+function clearFormatting() { document.execCommand('removeFormat', false, null); }
+
+// ============================================
+// UTILITIES
+// ============================================
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => {
+    m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); });
+});
+
+function generateSlug(title) {
+    return title.toLowerCase().replace(/[^a-z0-9\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-');
+}
+
+function fmtDate(d) {
+    if (!d) return '–';
+    return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+}
+
+function toast(msg, type='info') {
+    const el = document.createElement('div');
+    el.className = `toast-item toast-${type}`;
+    el.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':type==='error'?'exclamation-circle':'info-circle'}"></i>${msg}`;
+    document.getElementById('toast').appendChild(el);
+    setTimeout(() => el.remove(), 4000);
+}
+
+// Drag & drop on image zones
+document.querySelectorAll('.img-upload-zone').forEach(zone => {
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+    zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag'); const fi=zone.querySelector('input[type=file]'); if(fi&&e.dataTransfer.files[0]){const dt=new DataTransfer();dt.items.add(e.dataTransfer.files[0]);fi.files=dt.files;fi.dispatchEvent(new Event('change'));}});
+});
+
+// Auto-init if previously configured
+initSupabase();
+</script>
 </body>
 </html>
