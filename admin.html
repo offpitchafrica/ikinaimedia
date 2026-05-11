@@ -123,6 +123,10 @@
         .img-preview{width:100%;max-height:200px;object-fit:cover;border-radius:8px;margin-top:12px;display:none}
         .url-or{text-align:center;color:var(--text-muted);font-size:.78rem;margin:8px 0;display:flex;align-items:center;gap:8px}
         .url-or::before,.url-or::after{content:'';flex:1;height:1px;background:var(--border)}
+        .upload-status{font-size:.78rem;margin-top:6px;padding:6px 10px;border-radius:6px;display:none}
+        .upload-status.uploading{display:block;background:rgba(249,222,31,.08);color:var(--primary)}
+        .upload-status.done{display:block;background:rgba(76,175,105,.1);color:var(--success)}
+        .upload-status.error{display:block;background:rgba(238,85,85,.1);color:var(--danger)}
 
         /* MODAL */
         .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
@@ -197,7 +201,7 @@
     <div class="main">
         <div class="topbar">
             <h2 id="panelTitle">Dashboard</h2>
-            <div class="supabase-badge"><div class="dot" id="dbDot" style="background:#4caf69"></div><span id="dbStatus">Connected</span></div>
+            <div class="supabase-badge"><div class="dot" id="dbDot"></div><span id="dbStatus">Connecting…</span></div>
         </div>
         <div class="content">
 
@@ -300,6 +304,11 @@
                     <div class="card-header"><h3>Supabase Connection</h3></div>
                     <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:12px">Project: <strong style="color:var(--primary)">hplfmxhumfkfhligpfps.supabase.co</strong></p>
                     <p style="font-size:.82rem;color:var(--success)"><i class="fas fa-check-circle"></i> Credentials are hardcoded in the source files.</p>
+                    <div style="margin-top:16px;font-size:.82rem;color:var(--text-muted)">
+                        <strong style="color:var(--text)">Required Storage Buckets:</strong><br>
+                        Make sure these public buckets exist in your Supabase dashboard → Storage:<br>
+                        <code style="color:var(--primary)">blog-images</code> &nbsp;|&nbsp; <code style="color:var(--primary)">portfolio-images</code> &nbsp;|&nbsp; <code style="color:var(--primary)">team-photos</code>
+                    </div>
                 </div>
             </div>
 
@@ -351,22 +360,24 @@
             </div>
             <label>Author Avatar</label>
             <div class="img-upload-zone" onclick="triggerUpload('avatarFile')">
-                <input type="file" id="avatarFile" accept="image/*" onchange="handleImageUpload(this,'avatarPreview','b-author-avatar')">
+                <input type="file" id="avatarFile" accept="image/*" onchange="handleImageUpload(this,'avatarPreview','b-author-avatar','avatarStatus','blog-images')">
                 <i class="fas fa-user-circle"></i>
                 <p>Click to upload author photo</p>
                 <img id="avatarPreview" class="img-preview">
             </div>
+            <div class="upload-status" id="avatarStatus"></div>
             <div class="url-or">or paste URL</div>
             <input type="url" id="b-author-avatar" placeholder="https://..." oninput="previewFromUrl(this.value,'avatarPreview')">
         </div>
         <div class="form-group">
             <label>Featured Image</label>
             <div class="img-upload-zone" onclick="triggerUpload('blogImgFile')">
-                <input type="file" id="blogImgFile" accept="image/*" onchange="handleImageUpload(this,'blogImgPreview','b-image')">
+                <input type="file" id="blogImgFile" accept="image/*" onchange="handleImageUpload(this,'blogImgPreview','b-image','blogImgStatus','blog-images')">
                 <i class="fas fa-image"></i>
                 <p>Click or drag & drop an image here</p>
                 <img id="blogImgPreview" class="img-preview">
             </div>
+            <div class="upload-status" id="blogImgStatus"></div>
             <div class="url-or">or paste URL</div>
             <input type="url" id="b-image" placeholder="https://images.unsplash.com/..." oninput="previewFromUrl(this.value,'blogImgPreview')">
         </div>
@@ -393,7 +404,7 @@
     </div>
     <div class="modal-footer">
         <button class="btn btn-ghost" onclick="closeModal('blogModal')">Cancel</button>
-        <button class="btn btn-primary" onclick="saveBlog()"><i class="fas fa-save"></i> Save Post</button>
+        <button class="btn btn-primary" id="blogSaveBtn" onclick="saveBlog()"><i class="fas fa-save"></i> Save Post</button>
     </div>
 </div>
 </div>
@@ -421,10 +432,11 @@
         <div class="form-group">
             <label>Project Image</label>
             <div class="img-upload-zone" onclick="triggerUpload('portImgFile')">
-                <input type="file" id="portImgFile" accept="image/*" onchange="handleImageUpload(this,'portImgPreview','p-image','portfolio-images')">
+                <input type="file" id="portImgFile" accept="image/*" onchange="handleImageUpload(this,'portImgPreview','p-image','portImgStatus','portfolio-images')">
                 <i class="fas fa-image"></i><p>Click or drag & drop</p>
                 <img id="portImgPreview" class="img-preview">
             </div>
+            <div class="upload-status" id="portImgStatus"></div>
             <div class="url-or">or paste URL</div>
             <input type="url" id="p-image" placeholder="https://..." oninput="previewFromUrl(this.value,'portImgPreview')">
         </div>
@@ -464,7 +476,7 @@
 </div>
 </div>
 
-<!-- TEAM MODAL -->
+<!-- TEAM MODAL — FIXED: proper upload with status indicator and race condition prevention -->
 <div class="modal-overlay" id="teamModal">
 <div class="modal">
     <div class="modal-hd"><h3>Team Member</h3><button class="modal-close" onclick="closeModal('teamModal')"><i class="fas fa-times"></i></button></div>
@@ -473,23 +485,26 @@
         <div class="form-group">
             <label>Member Photo</label>
             <div class="img-upload-zone" onclick="triggerUpload('memberPhotoFile')">
-                <input type="file" id="memberPhotoFile" accept="image/*" onchange="handleImageUpload(this,'memberPhotoPreview','m-photo','team-photos')">
-                <i class="fas fa-user-circle"></i><p>Upload photo</p>
-                <img id="memberPhotoPreview" class="img-preview">
+                <input type="file" id="memberPhotoFile" accept="image/*" onchange="handleImageUpload(this,'memberPhotoPreview','m-photo','memberPhotoStatus','team-photos')">
+                <i class="fas fa-user-circle"></i>
+                <p>Click to upload team member photo</p>
+                <small style="color:var(--text-muted);font-size:.75rem;margin-top:4px;display:block">JPG, PNG, WebP supported</small>
+                <img id="memberPhotoPreview" class="img-preview" style="border-radius:50%;max-height:120px;object-fit:cover">
             </div>
-            <div class="url-or">or paste URL</div>
+            <div class="upload-status" id="memberPhotoStatus"></div>
+            <div class="url-or">or paste URL directly</div>
             <input type="url" id="m-photo" placeholder="https://..." oninput="previewFromUrl(this.value,'memberPhotoPreview')">
         </div>
         <div class="form-grid">
             <div class="form-group"><label>Full Name *</label><input type="text" id="m-name" required></div>
             <div class="form-group"><label>Title / Role *</label><input type="text" id="m-title" required></div>
-            <div class="form-group full"><label>Bio</label><textarea id="m-bio" rows="3"></textarea></div>
-            <div class="form-group"><label>Sort Order</label><input type="text" id="m-order" value="0"></div>
+            <div class="form-group full"><label>Bio</label><textarea id="m-bio" rows="3" style="min-height:80px"></textarea></div>
+            <div class="form-group"><label>Sort Order</label><input type="text" id="m-order" value="0" placeholder="0 = first"></div>
         </div>
     </div>
     <div class="modal-footer">
         <button class="btn btn-ghost" onclick="closeModal('teamModal')">Cancel</button>
-        <button class="btn btn-primary" onclick="saveTeam()"><i class="fas fa-save"></i> Save Member</button>
+        <button class="btn btn-primary" id="teamSaveBtn" onclick="saveTeam()"><i class="fas fa-save"></i> Save Member</button>
     </div>
 </div>
 </div>
@@ -516,13 +531,35 @@
 
 <script>
 // ============================================
-// SUPABASE — hardcoded credentials
+// SUPABASE
 // ============================================
 const SB_URL = 'https://hplfmxhumfkfhligpfps.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwbGZteGh1bWZrZmhsaWdwZnBzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwOTY2MDUsImV4cCI6MjA4NjY3MjYwNX0.NCmh5YriukkPOpmjeVHW7ptqtQxmbMKPXdRrmcYqyUA';
 const sb = supabase.createClient(SB_URL, SB_KEY);
 
-const ADMIN_PASSWORD = localStorage.getItem('ikinai_admin_pass') || 'ikinai2025admin';
+// Track ongoing uploads to prevent race conditions
+const uploadInProgress = {};
+
+// ============================================
+// DB CONNECTION CHECK
+// ============================================
+async function checkDbConnection() {
+    try {
+        const { error } = await sb.from('site_settings').select('key').limit(1);
+        const dot = document.getElementById('dbDot');
+        const status = document.getElementById('dbStatus');
+        if (error) {
+            dot.style.background = '#e55';
+            status.textContent = 'Connection error';
+        } else {
+            dot.style.background = '#4caf69';
+            status.textContent = 'Connected';
+        }
+    } catch(e) {
+        document.getElementById('dbDot').style.background = '#e55';
+        document.getElementById('dbStatus').textContent = 'Offline';
+    }
+}
 
 // ============================================
 // LOGIN
@@ -533,6 +570,7 @@ function doLogin() {
     if (pass === stored) {
         document.getElementById('loginWrap').style.display = 'none';
         document.getElementById('appWrap').style.display = 'block';
+        checkDbConnection();
         loadAll();
     } else {
         document.getElementById('loginErr').style.display = 'block';
@@ -563,8 +601,7 @@ function changePassword() {
 // ============================================
 document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', function() {
-        const panel = this.getAttribute('data-panel');
-        switchPanel(panel);
+        switchPanel(this.getAttribute('data-panel'));
     });
 });
 
@@ -641,11 +678,16 @@ function openBlogModal(post=null) {
     document.getElementById('b-content').innerHTML = post?.content||'';
     previewFromUrl(post?.author_avatar_url||'','avatarPreview');
     previewFromUrl(post?.image_url||'','blogImgPreview');
+    clearUploadStatus('avatarStatus');
+    clearUploadStatus('blogImgStatus');
     document.getElementById('blogModal').classList.add('open');
 }
 function editBlog(id) { openBlogModal(blogCache.find(b=>b.id===id)); }
 
 async function saveBlog() {
+    if (Object.values(uploadInProgress).some(Boolean)) {
+        return toast('Please wait — image upload still in progress…','info');
+    }
     const id = document.getElementById('blogId').value;
     const title = document.getElementById('b-title').value.trim();
     if (!title) return toast('Title is required','error');
@@ -653,22 +695,28 @@ async function saveBlog() {
     const wordCount = document.getElementById('b-content').innerText.split(/\s+/).filter(Boolean).length;
     const readTime = Math.max(1,Math.ceil(wordCount/200))+' min read';
     const slug = title.toLowerCase().replace(/[^a-z0-9\s-]/g,'').replace(/\s+/g,'-')+(id?'':'-'+Date.now().toString(36));
+    const newStatus = document.getElementById('b-status').value;
+    const existing = blogCache.find(b=>b.id===id);
+
     const data = {
-        title,slug,
-        category:document.getElementById('b-category').value,
-        status:document.getElementById('b-status').value,
-        author_name:document.getElementById('b-author-name').value||'Ikinai Media',
-        author_email:document.getElementById('b-author-email').value,
-        author_bio:document.getElementById('b-author-bio').value,
-        author_avatar_url:document.getElementById('b-author-avatar').value,
-        image_url:document.getElementById('b-image').value,
-        excerpt:document.getElementById('b-excerpt').value,
-        content,read_time:readTime,
-        updated_at:new Date().toISOString()
+        title, slug,
+        category: document.getElementById('b-category').value,
+        status: newStatus,
+        author_name: document.getElementById('b-author-name').value||'Ikinai Media',
+        author_email: document.getElementById('b-author-email').value,
+        author_bio: document.getElementById('b-author-bio').value,
+        author_avatar_url: document.getElementById('b-author-avatar').value,
+        image_url: document.getElementById('b-image').value,
+        excerpt: document.getElementById('b-excerpt').value,
+        content, read_time: readTime,
+        updated_at: new Date().toISOString()
     };
-    if (document.getElementById('b-status').value==='published'&&!blogCache.find(b=>b.id===id)?.published_at) {
+
+    // FIX: Set published_at whenever status becomes 'published' (not just for new posts)
+    if (newStatus === 'published' && !existing?.published_at) {
         data.published_at = new Date().toISOString();
     }
+
     let err;
     if (id) { const r=await sb.from('blog_posts').update(data).eq('id',id); err=r.error; }
     else { const r=await sb.from('blog_posts').insert(data); err=r.error; }
@@ -721,11 +769,15 @@ function openPortfolioModal(p=null) {
     document.getElementById('p-results').value = (p?.results||[]).join('\n');
     document.getElementById('p-featured').checked = p?.featured||false;
     previewFromUrl(p?.image_url||'','portImgPreview');
+    clearUploadStatus('portImgStatus');
     document.getElementById('portfolioModal').classList.add('open');
 }
 function editPortfolio(id) { openPortfolioModal(portCache.find(p=>p.id===id)); }
 
 async function savePortfolio() {
+    if (Object.values(uploadInProgress).some(Boolean)) {
+        return toast('Please wait — image upload still in progress…','info');
+    }
     const id = document.getElementById('portId').value;
     const title = document.getElementById('p-title').value.trim();
     if (!title) return toast('Title required','error');
@@ -842,7 +894,7 @@ async function deleteTestimonial(id) {
 }
 
 // ============================================
-// TEAM
+// TEAM — fully fixed upload flow
 // ============================================
 let teamCache = [];
 
@@ -853,7 +905,7 @@ async function loadTeam() {
     if (!teamCache.length) { tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:40px;color:var(--text-muted)">No team members yet</td></tr>'; return; }
     tbody.innerHTML = teamCache.map(m=>`
         <tr>
-            <td>${m.photo_url?`<img src="${m.photo_url}" style="width:42px;height:42px;border-radius:50%;object-fit:cover">`:`<div style="width:42px;height:42px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center"><i class="fas fa-user"></i></div>`}</td>
+            <td>${m.photo_url?`<img src="${m.photo_url}" style="width:42px;height:42px;border-radius:50%;object-fit:cover" onerror="this.style.background='var(--border)'">`:`<div style="width:42px;height:42px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center"><i class="fas fa-user"></i></div>`}</td>
             <td><b>${m.name}</b></td>
             <td style="font-size:.82rem;color:var(--text-muted)">${m.title}</td>
             <td><div class="actions">
@@ -869,19 +921,41 @@ function openTeamModal(m=null) {
     document.getElementById('m-title').value = m?.title||'';
     document.getElementById('m-bio').value = m?.bio||'';
     document.getElementById('m-photo').value = m?.photo_url||'';
-    document.getElementById('m-order').value = m?.sort_order||0;
+    document.getElementById('m-order').value = m?.sort_order??0;
     previewFromUrl(m?.photo_url||'','memberPhotoPreview');
+    clearUploadStatus('memberPhotoStatus');
+    // Reset the file input
+    document.getElementById('memberPhotoFile').value = '';
     document.getElementById('teamModal').classList.add('open');
 }
 function editTeam(id) { openTeamModal(teamCache.find(m=>m.id===id)); }
 
 async function saveTeam() {
+    // Block save if upload is running
+    if (uploadInProgress['memberPhotoFile']) {
+        return toast('Photo is still uploading — please wait…','info');
+    }
     const id = document.getElementById('memberId').value;
-    const data={name:document.getElementById('m-name').value,title:document.getElementById('m-title').value,bio:document.getElementById('m-bio').value,photo_url:document.getElementById('m-photo').value,sort_order:parseInt(document.getElementById('m-order').value)||0};
+    const data = {
+        name: document.getElementById('m-name').value.trim(),
+        title: document.getElementById('m-title').value.trim(),
+        bio: document.getElementById('m-bio').value.trim(),
+        photo_url: document.getElementById('m-photo').value.trim(),
+        sort_order: parseInt(document.getElementById('m-order').value)||0
+    };
     if (!data.name||!data.title) return toast('Name and title required','error');
+
+    const btn = document.getElementById('teamSaveBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="loader"></span> Saving…';
+
     let err;
     if (id) { const r=await sb.from('team_members').update(data).eq('id',id); err=r.error; }
     else { const r=await sb.from('team_members').insert(data); err=r.error; }
+
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-save"></i> Save Member';
+
     if (err) return toast('Error: '+err.message,'error');
     toast('Team member saved!','success'); closeModal('teamModal'); loadTeam(); updateDashStats();
 }
@@ -932,36 +1006,108 @@ async function updateDashStats() {
         sb.from('testimonials').select('id',{count:'exact',head:true}),
         sb.from('team_members').select('id',{count:'exact',head:true})
     ]);
-    document.getElementById('s-blog').textContent = b.count||0;
-    document.getElementById('s-portfolio').textContent = p.count||0;
-    document.getElementById('s-test').textContent = t.count||0;
-    document.getElementById('s-team').textContent = m.count||0;
+    document.getElementById('s-blog').textContent = b.count??0;
+    document.getElementById('s-portfolio').textContent = p.count??0;
+    document.getElementById('s-test').textContent = t.count??0;
+    document.getElementById('s-team').textContent = m.count??0;
 }
 
 // ============================================
-// IMAGE UPLOAD
+// IMAGE UPLOAD — fixed with status feedback,
+// race-condition lock, and proper error handling
 // ============================================
-async function handleImageUpload(input, previewId, urlFieldId, bucket='blog-images') {
+async function handleImageUpload(input, previewId, urlFieldId, statusId, bucket) {
     const file = input.files[0];
     if (!file) return;
-    const ext = file.name.split('.').pop();
-    const filename = `${Date.now()}-${Math.random().toString(36).substr(2,6)}.${ext}`;
+
+    // Validate file type
+    const allowed = ['image/jpeg','image/png','image/webp','image/gif'];
+    if (!allowed.includes(file.type)) {
+        showUploadStatus(statusId, 'error', 'Unsupported file type. Use JPG, PNG, or WebP.');
+        return;
+    }
+
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+        showUploadStatus(statusId, 'error', 'File too large. Max 5MB.');
+        return;
+    }
+
+    // Show local preview immediately
     const preview = document.getElementById(previewId);
     const reader = new FileReader();
-    reader.onload = e => { preview.src=e.target.result; preview.style.display='block'; preview.style.opacity='.5'; };
+    reader.onload = e => {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+        preview.style.opacity = '0.5';
+    };
     reader.readAsDataURL(file);
-    const {data,error} = await sb.storage.from(bucket).upload(filename, file, {upsert:true});
-    if (error) { toast('Upload error: '+error.message,'error'); return; }
-    const {data:{publicUrl}} = sb.storage.from(bucket).getPublicUrl(filename);
-    document.getElementById(urlFieldId).value = publicUrl;
-    preview.src = publicUrl; preview.style.opacity='1';
-    toast('Image uploaded!','success');
+
+    // Lock the upload slot
+    uploadInProgress[input.id] = true;
+    showUploadStatus(statusId, 'uploading', 'Uploading… please wait');
+
+    const ext = file.name.split('.').pop().toLowerCase();
+    const filename = `${Date.now()}-${Math.random().toString(36).substr(2,8)}.${ext}`;
+
+    const {data, error} = await sb.storage.from(bucket).upload(filename, file, {
+        upsert: true,
+        contentType: file.type
+    });
+
+    uploadInProgress[input.id] = false;
+
+    if (error) {
+        preview.style.opacity = '1';
+        showUploadStatus(statusId, 'error', `Upload failed: ${error.message}. Check that the "${bucket}" bucket exists in Supabase Storage and is set to Public.`);
+        toast('Upload failed: ' + error.message, 'error');
+        return;
+    }
+
+    const { data: { publicUrl } } = sb.storage.from(bucket).getPublicUrl(filename);
+
+    // Write the URL into the input field
+    const urlField = document.getElementById(urlFieldId);
+    urlField.value = publicUrl;
+
+    // Update preview with the real URL
+    preview.src = publicUrl;
+    preview.style.opacity = '1';
+    preview.style.display = 'block';
+
+    showUploadStatus(statusId, 'done', '✓ Photo uploaded successfully');
+    toast('Image uploaded!', 'success');
 }
 
-function triggerUpload(inputId) { document.getElementById(inputId).click(); }
+function showUploadStatus(statusId, type, msg) {
+    if (!statusId) return;
+    const el = document.getElementById(statusId);
+    if (!el) return;
+    el.className = `upload-status ${type}`;
+    el.textContent = msg;
+}
+
+function clearUploadStatus(statusId) {
+    if (!statusId) return;
+    const el = document.getElementById(statusId);
+    if (!el) return;
+    el.className = 'upload-status';
+    el.textContent = '';
+}
+
+function triggerUpload(inputId) {
+    document.getElementById(inputId).click();
+}
+
 function previewFromUrl(url, previewId) {
     const img = document.getElementById(previewId);
-    if (url&&url.startsWith('http')) { img.src=url; img.style.display='block'; } else { img.style.display='none'; }
+    if (!img) return;
+    if (url && url.startsWith('http')) {
+        img.src = url;
+        img.style.display = 'block';
+    } else {
+        img.style.display = 'none';
+    }
 }
 
 // ============================================
@@ -976,22 +1122,35 @@ function clearFormatting() { document.execCommand('removeFormat',false,null); }
 // UTILS
 // ============================================
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-document.querySelectorAll('.modal-overlay').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});});
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+    m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); });
+});
 
 function fmtDate(d) { if(!d) return '–'; return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
 
 function toast(msg, type='info') {
     const el = document.createElement('div');
     el.className = `toast-item toast-${type}`;
-    el.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':type==='error'?'exclamation-circle':'info-circle'}"></i>${msg}`;
+    const icon = type==='success'?'check-circle':type==='error'?'exclamation-circle':'info-circle';
+    el.innerHTML = `<i class="fas fa-${icon}"></i>${msg}`;
     document.getElementById('toast').appendChild(el);
     setTimeout(()=>el.remove(), 4000);
 }
 
 document.querySelectorAll('.img-upload-zone').forEach(zone=>{
-    zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drag');});
-    zone.addEventListener('dragleave',()=>zone.classList.remove('drag'));
-    zone.addEventListener('drop',e=>{e.preventDefault();zone.classList.remove('drag');const fi=zone.querySelector('input[type=file]');if(fi&&e.dataTransfer.files[0]){const dt=new DataTransfer();dt.items.add(e.dataTransfer.files[0]);fi.files=dt.files;fi.dispatchEvent(new Event('change'));}});
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+    zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('drag');
+        const fi = zone.querySelector('input[type=file]');
+        if (fi && e.dataTransfer.files[0]) {
+            const dt = new DataTransfer();
+            dt.items.add(e.dataTransfer.files[0]);
+            fi.files = dt.files;
+            fi.dispatchEvent(new Event('change'));
+        }
+    });
 });
 </script>
 </body>
