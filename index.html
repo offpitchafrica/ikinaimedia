@@ -16,7 +16,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
         :root{
@@ -57,6 +57,7 @@
         .btn-outline:hover{background:var(--secondary);color:#333}
         .btn-dark{background:#333;color:var(--primary)}
         .btn-dark:hover{background:#222;transform:translateY(-2px)}
+        .btn-sm{padding:8px 18px;font-size:.8rem}
 
         /* PAGES */
         .page{display:none;animation:fadeIn .4s ease}
@@ -163,7 +164,7 @@
 
         /* BLOG SINGLE HERO */
         .blog-hero{position:relative;min-height:520px;display:flex;align-items:flex-end;padding:0;overflow:hidden}
-        .blog-hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;transition:background-image .4s ease}
+        .blog-hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat}
         .blog-hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(249,222,31,0.55) 0%,rgba(230,201,25,0.75) 40%,rgba(26,26,46,0.92) 100%)}
         .blog-hero-content{position:relative;z-index:2;width:100%;padding:140px 0 56px}
         .blog-hero-content .container{display:flex;flex-direction:column;align-items:flex-start;gap:16px}
@@ -178,7 +179,7 @@
         .blog-hero-author-meta span+span::before{content:'·';margin-right:8px}
 
         /* SHARE BAR */
-        .share-bar{display:flex;align-items:center;gap:10px;margin:24px 0 32px;padding:16px 20px;background:rgba(249,222,31,.08);border-radius:var(--radius);border:1px solid rgba(249,222,31,.2)}
+        .share-bar{display:flex;align-items:center;gap:10px;margin:24px 0 32px;padding:16px 20px;background:rgba(249,222,31,.08);border-radius:var(--radius);border:1px solid rgba(249,222,31,.2);flex-wrap:wrap}
         .share-bar span{font-size:.82rem;font-weight:600;color:var(--text-light);margin-right:4px}
         .share-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:20px;font-size:.78rem;font-weight:600;cursor:pointer;border:none;transition:var(--transition)}
         .share-copy{background:var(--secondary);color:#333}
@@ -190,9 +191,8 @@
         .share-fb{background:#1877F2;color:#fff}
         .share-fb:hover{opacity:.85}
 
-        /* ARTICLE BODY */
+        /* ARTICLE */
         .blog-single-wrap{max-width:780px;margin:0 auto}
-        .single-image{width:100%;max-height:460px;object-fit:cover;border-radius:var(--radius);margin-bottom:36px;display:none}
         .single-content{font-size:.95rem;line-height:1.85;color:var(--text)}
         .single-content h2{font-size:1.5rem;font-weight:700;margin:32px 0 12px;color:var(--text)}
         .single-content h3{font-size:1.2rem;font-weight:600;margin:24px 0 10px;color:var(--text)}
@@ -202,7 +202,6 @@
         .single-content blockquote{border-left:4px solid var(--secondary);padding:16px 20px;margin:28px 0;background:rgba(249,222,31,.06);border-radius:0 8px 8px 0;font-style:italic;color:var(--text-light)}
         .single-content strong{color:var(--text)}
         .single-nav{display:flex;justify-content:space-between;gap:16px;padding:24px 0;border-top:1px solid rgba(0,0,0,.08)}
-        .single-nav .btn{font-size:.82rem}
 
         /* ABOUT */
         .about-content{display:flex;gap:60px;align-items:center}
@@ -263,7 +262,10 @@
         .newsletter-section p{color:rgba(34,34,34,.8);max-width:500px;margin:0 auto 28px}
         .newsletter-form{display:flex;gap:10px;max-width:440px;margin:0 auto}
         .newsletter-form input{flex:1;padding:12px 18px;border:none;border-radius:30px;outline:none;font-size:.88rem}
-        .newsletter-form .btn{padding:12px 24px;border-radius:30px;white-space:nowrap}
+
+        /* EMPTY STATES */
+        .empty-state{text-align:center;padding:60px 20px;color:var(--text-light)}
+        .empty-state i{font-size:3rem;margin-bottom:12px;opacity:.3;display:block}
 
         /* COOKIE */
         .cookie-bar{position:fixed;bottom:0;left:0;right:0;background:#222;color:#fff;padding:16px 20px;z-index:10000;transform:translateY(100%);transition:transform .3s}
@@ -293,6 +295,25 @@
         .chat-input-row input{flex:1;padding:9px 12px;border:1px solid rgba(0,0,0,.1);border-radius:20px;outline:none;font-size:.8rem;background:var(--light);color:var(--text)}
         .chat-input-row button{width:36px;height:36px;border-radius:50%;background:var(--secondary);border:none;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;color:#333}
 
+        /* PORTFOLIO MODAL */
+        .port-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:2000;padding:20px;overflow-y:auto;display:none}
+        .port-modal-overlay.open{display:block}
+        .port-modal-inner{background:var(--light);max-width:900px;margin:40px auto;border-radius:16px;overflow:hidden;position:relative}
+        .port-modal-close{position:absolute;top:16px;right:16px;z-index:10;background:rgba(0,0,0,.5);color:#fff;border:none;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1rem}
+        .port-modal-img{height:360px;background:#ccc;background-size:cover;background-position:center}
+        .port-modal-body{padding:36px}
+        .port-modal-body h2{margin-bottom:12px}
+        .port-modal-body .desc{color:var(--text-light);margin-bottom:24px}
+        .port-modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+        .port-modal-box{background:#f9f9f9;padding:20px;border-radius:10px}
+        [data-theme="dark"] .port-modal-box{background:#2a2a3a}
+        .port-modal-box h3{margin-bottom:14px;color:var(--secondary);font-size:1rem}
+        .port-detail-row{display:flex;gap:8px;margin-bottom:10px;font-size:.82rem}
+        .port-detail-row strong{min-width:100px;color:var(--text)}
+        .port-detail-row span{color:var(--text-light)}
+        .port-result-item{display:flex;align-items:flex-start;gap:8px;font-size:.82rem;color:var(--text-light);margin-bottom:8px}
+        .port-result-item::before{content:'✓';color:var(--secondary);font-weight:700;flex-shrink:0}
+
         /* FOOTER */
         footer{background:#1a1a2e;color:#fff;padding:60px 0 20px}
         .footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
@@ -318,9 +339,10 @@
         .page-hero h1{font-size:clamp(1.8rem,4vw,3rem);font-weight:800;color:#222;margin-bottom:12px}
         .page-hero p{color:rgba(34,34,34,.75);font-size:.95rem;max-width:500px;margin:0 auto}
 
-        /* LOADING */
+        /* SPINNER */
         .spinner{display:inline-block;width:20px;height:20px;border:2px solid rgba(0,0,0,.1);border-top-color:var(--secondary);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle}
         @keyframes spin{to{transform:rotate(360deg)}}
+        .loading-center{text-align:center;padding:60px 20px;color:var(--text-light)}
         .notification{position:fixed;top:90px;right:20px;padding:14px 22px;border-radius:10px;font-size:.85rem;font-weight:500;z-index:10000;box-shadow:0 6px 20px rgba(0,0,0,.2);transform:translateX(400px);transition:transform .3s}
         .notification.show{transform:translateX(0)}
         .notification.success{background:var(--secondary);color:#333}
@@ -330,6 +352,7 @@
         @media(max-width:992px){
             .about-content,.contact-grid{flex-direction:column;grid-template-columns:1fr}
             .footer-grid{grid-template-columns:1fr 1fr}
+            .port-modal-grid{grid-template-columns:1fr}
         }
         @media(max-width:768px){
             .mobile-btn{display:block}
@@ -347,7 +370,7 @@
             .cookie-inner{flex-direction:column;text-align:center}
             .blog-hero{min-height:420px}
             .blog-hero h1{font-size:1.5rem}
-            .share-bar{flex-wrap:wrap}
+            .values-grid{grid-template-columns:1fr}
         }
         @media print{.cookie-bar,.chat-widget{display:none!important}}
     </style>
@@ -407,6 +430,31 @@
     </div>
 </header>
 
+<!-- PORTFOLIO DETAIL MODAL -->
+<div class="port-modal-overlay" id="portModal">
+    <div class="port-modal-inner">
+        <button class="port-modal-close" onclick="closePortModal()"><i class="fas fa-times"></i></button>
+        <div class="port-modal-img" id="portModalImg"></div>
+        <div class="port-modal-body">
+            <h2 id="portModalTitle"></h2>
+            <p class="desc" id="portModalDesc"></p>
+            <div class="port-modal-grid">
+                <div class="port-modal-box">
+                    <h3>Project Details</h3>
+                    <div id="portModalDetails"></div>
+                </div>
+                <div class="port-modal-box">
+                    <h3>Key Results</h3>
+                    <div id="portModalResults"></div>
+                </div>
+            </div>
+            <div style="text-align:center;margin-top:28px">
+                <button class="btn btn-primary" data-page="contact" onclick="closePortModal()">Start a Similar Project</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <main id="main">
 
 <!-- ===== HOME ===== -->
@@ -424,15 +472,14 @@
         <div class="scroll-indicator"><i class="fas fa-chevron-down" style="color:#333;font-size:1.2rem"></i></div>
     </section>
 
-    <section class="services" style="background:var(--light)">
+    <!-- HOME SERVICES — pulled from DB -->
+    <section style="background:var(--light)">
         <div class="container">
             <p class="section-label">What We Do</p>
             <h2 class="section-title">Our Services</h2>
             <p class="section-sub">Comprehensive digital solutions designed to grow your business and enhance your online presence.</p>
             <div class="services-grid" id="homeServices">
-                <div class="service-card"><div class="svc-icon"><i class="fas fa-code"></i></div><h3>Web Development</h3><p>Custom websites and web applications built with the latest technologies to deliver exceptional user experiences.</p><ul><li>Custom Development</li><li>E-commerce Solutions</li><li>CMS Implementation</li></ul></div>
-                <div class="service-card"><div class="svc-icon"><i class="fas fa-paint-brush"></i></div><h3>Branding & Design</h3><p>Creative design solutions that capture your brand's essence and communicate your message effectively.</p><ul><li>Logo & Identity Design</li><li>Brand Strategy</li><li>UI/UX Design</li></ul></div>
-                <div class="service-card"><div class="svc-icon"><i class="fas fa-chart-line"></i></div><h3>Digital Marketing</h3><p>Data-driven marketing strategies that increase visibility, engagement, and conversions for your business.</p><ul><li>Social Media Marketing</li><li>SEO Optimization</li><li>Content Marketing</li></ul></div>
+                <div class="loading-center"><span class="spinner"></span></div>
             </div>
             <div style="text-align:center;margin-top:36px"><button class="btn btn-outline" data-page="services">View All Services</button></div>
         </div>
@@ -449,39 +496,33 @@
         </div>
     </section>
 
+    <!-- HOME PORTFOLIO — pulled from DB -->
     <section style="background:var(--light)">
         <div class="container">
             <p class="section-label">Our Work</p>
             <h2 class="section-title">Featured Projects</h2>
             <p class="section-sub">A glimpse into how we've helped businesses transform their digital presence.</p>
             <div class="port-grid" id="homePortfolio">
-                <div class="port-item"><img class="port-img" src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=600&q=80" alt="E-commerce"><div class="port-overlay"><h3>E-commerce Platform</h3><p>Complete online store with custom features</p><button class="btn btn-dark btn-sm" data-page="portfolio">View All</button></div></div>
-                <div class="port-item"><img class="port-img" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80" alt="Corporate"><div class="port-overlay"><h3>Corporate Website</h3><p>Modern design for financial services</p><button class="btn btn-dark btn-sm" data-page="portfolio">View All</button></div></div>
-                <div class="port-item"><img class="port-img" src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=600&q=80" alt="App"><div class="port-overlay"><h3>Mobile Application</h3><p>Fitness tracking app with social features</p><button class="btn btn-dark btn-sm" data-page="portfolio">View All</button></div></div>
+                <div class="loading-center" style="grid-column:1/-1"><span class="spinner"></span></div>
             </div>
             <div style="text-align:center;margin-top:36px"><button class="btn btn-outline" data-page="portfolio">View Full Portfolio</button></div>
         </div>
     </section>
 
+    <!-- TESTIMONIALS -->
     <section class="testimonials-section">
         <div class="container">
             <p class="section-label">Client Stories</p>
             <h2 class="section-title">What Our Clients Say</h2>
             <p class="section-sub" style="margin-bottom:40px">Don't just take our word for it.</p>
             <div class="test-slider" id="testimonialsContainer">
-                <div class="test-card active">
-                    <div class="stars">★★★★★</div>
-                    <p class="test-text">Working with Ikinai Media transformed our online presence. Their team delivered a website that not only looks incredible but has significantly increased our conversion rates.</p>
-                    <div class="test-author">
-                        <div class="test-avatar">MK</div>
-                        <div class="test-info"><h4>Melton Konchella</h4><p>CEO, Ipate Deliveries and OnPoint Kenya Ltd</p></div>
-                    </div>
-                </div>
+                <div class="loading-center"><span class="spinner"></span></div>
             </div>
             <div class="test-dots" id="testDots"></div>
         </div>
     </section>
 
+    <!-- HOME BLOG — pulled from DB -->
     <section style="background:var(--light)">
         <div class="container">
             <p class="section-label">Latest Articles</p>
@@ -511,7 +552,7 @@
     </section>
 </div>
 
-<!-- ===== SERVICES ===== -->
+<!-- ===== SERVICES — fully from DB ===== -->
 <div id="services" class="page">
     <div class="page-hero">
         <div class="container"><h1>Our Services</h1><p>Comprehensive digital solutions to grow your business and enhance your online presence.</p></div>
@@ -519,16 +560,11 @@
     <section style="background:var(--light)">
         <div class="container">
             <div class="services-grid" id="servicesGrid">
-                <div class="service-card"><div class="svc-icon"><i class="fas fa-code"></i></div><h3>Web Development</h3><p>We create responsive, high-performance websites and web applications using the latest technologies.</p><ul><li>Custom Website Development</li><li>E-commerce Solutions</li><li>Web Application Development</li><li>CMS Implementation</li><li>Website Maintenance & Support</li></ul></div>
-                <div class="service-card"><div class="svc-icon"><i class="fas fa-paint-brush"></i></div><h3>Branding & Design</h3><p>Our design team creates compelling visual identities that communicate your brand's story effectively.</p><ul><li>Logo & Identity Design</li><li>Brand Strategy</li><li>UI/UX Design</li><li>Print & Digital Collateral</li><li>Brand Guidelines</li></ul></div>
-                <div class="service-card"><div class="svc-icon"><i class="fas fa-chart-line"></i></div><h3>Digital Marketing</h3><p>Data-driven marketing strategies that increase visibility, engagement, and conversions.</p><ul><li>Social Media Marketing</li><li>Content Marketing</li><li>Email Marketing</li><li>PPC Advertising</li><li>Marketing Automation</li></ul></div>
-                <div class="service-card"><div class="svc-icon"><i class="fas fa-shopping-cart"></i></div><h3>E-commerce Solutions</h3><p>Complete e-commerce platforms designed to maximize sales and provide seamless shopping experiences.</p><ul><li>E-commerce Development</li><li>Payment Gateway Integration</li><li>Inventory Management</li><li>Mobile Commerce</li><li>E-commerce Analytics</li></ul></div>
-                <div class="service-card"><div class="svc-icon"><i class="fas fa-search"></i></div><h3>SEO Optimization</h3><p>Improve your search engine rankings and drive organic traffic with comprehensive SEO strategies.</p><ul><li>Keyword Research & Strategy</li><li>On-Page SEO</li><li>Technical SEO</li><li>Local SEO</li><li>SEO Analytics & Reporting</li></ul></div>
-                <div class="service-card"><div class="svc-icon"><i class="fas fa-video"></i></div><h3>Content Creation</h3><p>Engaging content that tells your brand story and connects with your target audience.</p><ul><li>Content Strategy</li><li>Blog Writing</li><li>Video Production</li><li>Graphic Design</li><li>Content Distribution</li></ul></div>
+                <div class="loading-center" style="grid-column:1/-1"><span class="spinner"></span></div>
             </div>
         </div>
     </section>
-    <section style="background:#f5f7fa" class="pricing-section">
+    <section style="background:#f5f7fa">
         <div class="container">
             <p class="section-label">Transparent Pricing</p>
             <h2 class="section-title">Service Packages</h2>
@@ -543,12 +579,12 @@
     </section>
 </div>
 
-<!-- ===== PORTFOLIO ===== -->
+<!-- ===== PORTFOLIO — fully from DB ===== -->
 <div id="portfolio" class="page">
     <div class="page-hero"><div class="container"><h1>Our Portfolio</h1><p>Explore our recent projects and see how we've helped businesses achieve their digital goals.</p></div></div>
     <section style="background:var(--light)">
         <div class="container">
-            <div class="port-filters">
+            <div class="port-filters" id="portFilters">
                 <button class="filter-btn active" data-filter="all">All Projects</button>
                 <button class="filter-btn" data-filter="web">Web Development</button>
                 <button class="filter-btn" data-filter="design">Design & Branding</button>
@@ -556,33 +592,11 @@
                 <button class="filter-btn" data-filter="marketing">Digital Marketing</button>
             </div>
             <div class="port-grid" id="portfolioGrid">
-                <div class="port-item" data-category="web ecommerce"><img class="port-img" src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=600&q=80" alt="FashionStore"><div class="port-overlay"><h3>FashionStore E-commerce</h3><p>Complete online fashion retail platform</p><div class="port-tags"><span class="port-tag">E-commerce</span><span class="port-tag">React</span></div><button class="btn btn-dark btn-sm" onclick="openPortModal(1)">View Case Study</button></div></div>
-                <div class="port-item" data-category="web design"><img class="port-img" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80" alt="FinServe"><div class="port-overlay"><h3>FinServe Corporate Portal</h3><p>Modern financial services website</p><div class="port-tags"><span class="port-tag">Web Dev</span><span class="port-tag">Branding</span></div><button class="btn btn-dark btn-sm" onclick="openPortModal(2)">View Case Study</button></div></div>
-                <div class="port-item" data-category="web"><img class="port-img" src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=600&q=80" alt="FitTrack"><div class="port-overlay"><h3>FitTrack Mobile App</h3><p>Fitness tracking with social features</p><div class="port-tags"><span class="port-tag">Mobile</span><span class="port-tag">React Native</span></div><button class="btn btn-dark btn-sm" onclick="openPortModal(3)">View Case Study</button></div></div>
-                <div class="port-item" data-category="design"><img class="port-img" src="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=600&q=80" alt="TechStart"><div class="port-overlay"><h3>TechStart Brand Identity</h3><p>Complete rebranding for tech startup</p><div class="port-tags"><span class="port-tag">Branding</span><span class="port-tag">Logo</span></div><button class="btn btn-dark btn-sm" onclick="openPortModal(4)">View Case Study</button></div></div>
-                <div class="port-item" data-category="marketing"><img class="port-img" src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=600&q=80" alt="StyleVibe"><div class="port-overlay"><h3>StyleVibe Social Campaign</h3><p>Social media marketing campaign</p><div class="port-tags"><span class="port-tag">Marketing</span><span class="port-tag">Social</span></div><button class="btn btn-dark btn-sm" onclick="openPortModal(5)">View Case Study</button></div></div>
-                <div class="port-item" data-category="web ecommerce"><img class="port-img" src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=600&q=80" alt="GlobalMart"><div class="port-overlay"><h3>GlobalMart Marketplace</h3><p>Multi-vendor e-commerce platform</p><div class="port-tags"><span class="port-tag">E-commerce</span><span class="port-tag">Marketplace</span></div><button class="btn btn-dark btn-sm" onclick="openPortModal(6)">View Case Study</button></div></div>
+                <div class="loading-center" style="grid-column:1/-1"><span class="spinner"></span></div>
             </div>
             <div style="text-align:center;margin-top:40px"><button class="btn btn-primary" data-page="contact">Start Your Project</button></div>
         </div>
     </section>
-</div>
-
-<!-- Portfolio Modal -->
-<div id="portModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:2000;padding:20px;overflow-y:auto">
-    <div style="background:var(--light);max-width:900px;margin:40px auto;border-radius:16px;overflow:hidden;position:relative">
-        <button onclick="document.getElementById('portModal').style.display='none'" style="position:absolute;top:16px;right:16px;z-index:10;background:rgba(0,0,0,.5);color:#fff;border:none;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1rem"><i class="fas fa-times"></i></button>
-        <div id="portModalImg" style="height:360px;background:#ccc;background-size:cover;background-position:center"></div>
-        <div style="padding:36px">
-            <h2 id="portModalTitle" style="margin-bottom:12px"></h2>
-            <p id="portModalDesc" style="color:var(--text-light);margin-bottom:24px"></p>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
-                <div style="background:#f9f9f9;padding:20px;border-radius:10px"><h3 style="margin-bottom:14px;color:var(--secondary);font-size:1rem">Project Details</h3><div id="portModalDetails"></div></div>
-                <div style="background:#f9f9f9;padding:20px;border-radius:10px"><h3 style="margin-bottom:14px;color:var(--secondary);font-size:1rem">Key Results</h3><ul id="portModalResults" style="list-style:none;display:flex;flex-direction:column;gap:8px"></ul></div>
-            </div>
-            <div style="text-align:center;margin-top:28px"><button class="btn btn-primary" data-page="contact" onclick="document.getElementById('portModal').style.display='none'">Start Similar Project</button></div>
-        </div>
-    </div>
 </div>
 
 <!-- ===== BLOG ===== -->
@@ -612,8 +626,6 @@
 
 <!-- ===== BLOG SINGLE ===== -->
 <div id="blog-single" class="page">
-
-    <!-- HERO -->
     <div class="blog-hero" id="singleHero">
         <div class="blog-hero-bg" id="singleHeroBg"></div>
         <div class="blog-hero-overlay"></div>
@@ -622,27 +634,17 @@
                 <span class="single-cat-badge" id="singleCat"></span>
                 <h1 id="singleTitle">Article Title</h1>
                 <div class="blog-hero-author">
-                    <div class="blog-hero-avatar" id="singleAvatarWrap">
-                        <span id="singleAvatarInitials"></span>
-                    </div>
+                    <div class="blog-hero-avatar" id="singleAvatarWrap"><span id="singleAvatarInitials"></span></div>
                     <div class="blog-hero-author-info">
                         <div class="blog-hero-author-name" id="singleAuthor">Ikinai Media</div>
-                        <div class="blog-hero-author-meta">
-                            <span id="singleDate"></span>
-                            <span id="singleReadTime"></span>
-                        </div>
+                        <div class="blog-hero-author-meta"><span id="singleDate"></span><span id="singleReadTime"></span></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- ARTICLE BODY -->
     <section style="background:var(--light)">
         <div class="container blog-single-wrap">
-            <img class="single-image" id="singleImg" src="" alt="">
-
-            <!-- SHARE BAR -->
             <div class="share-bar" id="shareBar">
                 <span><i class="fas fa-share-alt"></i> Share:</span>
                 <button class="share-btn share-copy" onclick="copyPostLink()"><i class="fas fa-link"></i> Copy Link</button>
@@ -650,7 +652,6 @@
                 <button class="share-btn share-tw" onclick="shareTwitter()"><i class="fab fa-twitter"></i> Twitter</button>
                 <button class="share-btn share-fb" onclick="shareFacebook()"><i class="fab fa-facebook-f"></i> Facebook</button>
             </div>
-
             <div class="single-content" id="singleContent"></div>
             <div class="single-nav">
                 <button class="btn btn-outline" data-page="blog"><i class="fas fa-arrow-left"></i> Back to Blog</button>
@@ -678,7 +679,7 @@
                         <div class="value-item"><div class="value-icon"><i class="fas fa-lightbulb"></i></div><div><h4>Innovation</h4><p>Continuously exploring new technologies and creative approaches.</p></div></div>
                     </div>
                 </div>
-                <div class="about-img"><img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800&q=80" alt="Ikinai Media team"></div>
+                <div class="about-img"><img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800&q=80" alt="Ikinai Media team" loading="lazy"></div>
             </div>
         </div>
     </section>
@@ -688,10 +689,7 @@
             <h2 class="section-title">Our Team</h2>
             <p class="section-sub">Meet the talented people behind Ikinai Media.</p>
             <div class="team-grid" id="teamGrid">
-                <div class="team-card"><div class="team-photo"><i class="fas fa-user"></i></div><h3>John Smith</h3><p class="team-role">CEO & Founder</p><p class="team-bio">With over 10 years of experience in digital marketing and business strategy.</p></div>
-                <div class="team-card"><div class="team-photo"><i class="fas fa-user"></i></div><h3>Sarah Johnson</h3><p class="team-role">Creative Director</p><p class="team-bio">Specializes in brand identity, UI/UX design, and visual storytelling.</p></div>
-                <div class="team-card"><div class="team-photo"><i class="fas fa-user"></i></div><h3>Michael Brown</h3><p class="team-role">Lead Developer</p><p class="team-bio">Expert in full-stack development and emerging web technologies.</p></div>
-                <div class="team-card"><div class="team-photo"><i class="fas fa-user"></i></div><h3>Emily Davis</h3><p class="team-role">Marketing Strategist</p><p class="team-bio">Focuses on data-driven marketing campaigns and growth strategies.</p></div>
+                <div class="loading-center" style="grid-column:1/-1"><span class="spinner"></span></div>
             </div>
             <div style="text-align:center;margin-top:40px"><button class="btn btn-primary" data-page="contact">Work With Us</button></div>
         </div>
@@ -714,12 +712,12 @@
                         <div class="contact-item"><div class="contact-icon"><i class="fas fa-clock"></i></div><div><h4>Business Hours</h4><p>Monday–Friday: 9AM – 6PM<br>Saturday: 10AM – 2PM</p></div></div>
                     </div>
                     <div class="social-links">
-                        <a href="https://www.facebook.com/offpitchafrica" class="social-link" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://twitter.com/offpitchafrica" class="social-link" target="_blank"><i class="fab fa-twitter"></i></a>
-                        <a href="https://www.instagram.com/offpitchafrica" class="social-link" target="_blank"><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.linkedin.com/company/offpitchafrica" class="social-link" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="https://www.tiktok.com/@offpitchafrica" class="social-link" target="_blank"><i class="fab fa-tiktok"></i></a>
-                        <a href="https://www.youtube.com/@offpitchafrica" class="social-link" target="_blank"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.facebook.com/offpitchafrica" class="social-link" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://twitter.com/offpitchafrica" class="social-link" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.instagram.com/offpitchafrica" class="social-link" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/company/offpitchafrica" class="social-link" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.tiktok.com/@offpitchafrica" class="social-link" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://www.youtube.com/@offpitchafrica" class="social-link" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
                 <div>
@@ -740,7 +738,7 @@
                     </form>
                 </div>
             </div>
-            <div class="map-wrap"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127641.17044270584!2d36.76499575876998!3d-1.3030359782409504!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f1172d84d49a7%3A0xf7cf0254b297924c!2sNairobi!5e0!3m2!1sen!2ske" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+            <div class="map-wrap"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127641.17044270584!2d36.76499575876998!3d-1.3030359782409504!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f1172d84d49a7%3A0xf7cf0254b297924c!2sNairobi!5e0!3m2!1sen!2ske" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Ikinai Media office location"></iframe></div>
         </div>
     </section>
 </div>
@@ -780,40 +778,31 @@
     <div class="container">
         <div class="footer-grid">
             <div>
-                <div class="footer-logo">
-                    <img src="https://i.ibb.co/vx3Mx0V1/ikinai-logo.png" alt="Ikinai Media" onerror="this.style.display='none'">
-                    Ikinai <span>Media</span>
-                </div>
+                <div class="footer-logo"><img src="https://i.ibb.co/vx3Mx0V1/ikinai-logo.png" alt="Ikinai Media" onerror="this.style.display='none'">Ikinai <span>Media</span></div>
                 <p class="footer-desc">A full-service digital agency dedicated to helping businesses thrive in the digital age through innovative solutions and strategic thinking.</p>
                 <div class="footer-social">
-                    <a href="https://www.facebook.com/offpitchafrica" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://twitter.com/offpitchafrica" target="_blank"><i class="fab fa-twitter"></i></a>
-                    <a href="https://www.instagram.com/offpitchafrica" target="_blank"><i class="fab fa-instagram"></i></a>
-                    <a href="https://www.linkedin.com/company/offpitchafrica" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="https://www.tiktok.com/@offpitchafrica" target="_blank"><i class="fab fa-tiktok"></i></a>
-                    <a href="https://www.youtube.com/@offpitchafrica" target="_blank"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.facebook.com/offpitchafrica" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://twitter.com/offpitchafrica" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/offpitchafrica" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/company/offpitchafrica" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://www.tiktok.com/@offpitchafrica" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://www.youtube.com/@offpitchafrica" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
             <div>
                 <h4>Quick Links</h4>
                 <ul class="footer-links">
-                    <li><a data-page="home">Home</a></li>
-                    <li><a data-page="services">Services</a></li>
-                    <li><a data-page="portfolio">Portfolio</a></li>
-                    <li><a data-page="about">About</a></li>
-                    <li><a data-page="blog">Blog</a></li>
-                    <li><a data-page="contact">Contact</a></li>
+                    <li><a data-page="home">Home</a></li><li><a data-page="services">Services</a></li>
+                    <li><a data-page="portfolio">Portfolio</a></li><li><a data-page="about">About</a></li>
+                    <li><a data-page="blog">Blog</a></li><li><a data-page="contact">Contact</a></li>
                 </ul>
             </div>
             <div>
                 <h4>Services</h4>
                 <ul class="footer-links">
-                    <li><a data-page="services">Web Development</a></li>
-                    <li><a data-page="services">Digital Marketing</a></li>
-                    <li><a data-page="services">Branding & Design</a></li>
-                    <li><a data-page="services">E-commerce</a></li>
-                    <li><a data-page="services">SEO Optimization</a></li>
-                    <li><a data-page="services">Content Creation</a></li>
+                    <li><a data-page="services">Web Development</a></li><li><a data-page="services">Digital Marketing</a></li>
+                    <li><a data-page="services">Branding & Design</a></li><li><a data-page="services">E-commerce</a></li>
+                    <li><a data-page="services">SEO Optimization</a></li><li><a data-page="services">Content Creation</a></li>
                 </ul>
             </div>
             <div>
@@ -840,11 +829,15 @@
 
 <script>
 // ============================================
-// SUPABASE
+// INIT SUPABASE after defer script loads
 // ============================================
-const SB_URL = 'https://hplfmxhumfkfhligpfps.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwbGZteGh1bWZrZmhsaWdwZnBzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwOTY2MDUsImV4cCI6MjA4NjY3MjYwNX0.NCmh5YriukkPOpmjeVHW7ptqtQxmbMKPXdRrmcYqyUA';
-const sb = supabase.createClient(SB_URL, SB_KEY);
+let sb;
+window.addEventListener('load', () => {
+    const SB_URL = 'https://hplfmxhumfkfhligpfps.supabase.co';
+    const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwbGZteGh1bWZrZmhsaWdwZnBzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwOTY2MDUsImV4cCI6MjA4NjY3MjYwNX0.NCmh5YriukkPOpmjeVHW7ptqtQxmbMKPXdRrmcYqyUA';
+    sb = supabase.createClient(SB_URL, SB_KEY);
+    initApp();
+});
 
 // ============================================
 // NAVIGATION
@@ -854,13 +847,15 @@ function showPage(pageId, pushHistory=true) {
     const target = document.getElementById(pageId);
     if (target) { target.classList.add('active'); } else { document.getElementById('home').classList.add('active'); pageId='home'; }
     document.querySelectorAll('nav a').forEach(a => a.classList.toggle('active', a.getAttribute('data-page')===pageId));
-    window.scrollTo(0,0);
+    window.scrollTo({top:0,behavior:'smooth'});
     if (pushHistory) history.pushState({page:pageId},'',`#${pageId}`);
     closeMobileMenu();
+    // Lazy-load page data
     if (pageId==='blog') loadBlogPage();
-    if (pageId==='home') loadHomeBlog();
+    if (pageId==='portfolio') loadPortfolioPage();
+    if (pageId==='services') loadServicesPage();
     if (pageId==='about') loadTeam();
-    // Reset page title when leaving blog-single
+    // Reset title when leaving single post
     if (pageId !== 'blog-single') {
         document.title = 'Ikinai Media | Digital Marketing Agency';
         setMeta('og:title','Ikinai Media | Digital Marketing Agency');
@@ -886,23 +881,6 @@ window.addEventListener('popstate', e => {
 });
 
 // ============================================
-// INIT — handle deep link on page load
-// ============================================
-(function initRoute() {
-    const hash = location.hash.replace('#','');
-    if (hash.startsWith('post/')) {
-        const slug = hash.replace('post/','');
-        // Show blog page quietly first, then load the post
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById('blog').classList.add('active');
-        loadBlogPage();
-        openBlogPostBySlug(slug, false);
-    } else {
-        showPage(hash || 'home', false);
-    }
-})();
-
-// ============================================
 // MOBILE MENU
 // ============================================
 function toggleMobileMenu() { document.getElementById('navMenu').classList.toggle('open'); }
@@ -919,17 +897,188 @@ function toggleTheme() {
 }
 if (localStorage.getItem('theme')==='dark'||(!localStorage.getItem('theme')&&window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     document.documentElement.setAttribute('data-theme','dark');
-    document.querySelector('#themeBtn i').className = 'fas fa-sun';
 }
+// Set icon after DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.documentElement.getAttribute('data-theme')==='dark') {
+        document.querySelector('#themeBtn i').className = 'fas fa-sun';
+    }
+});
 
 // ============================================
-// META TAG HELPER
+// META HELPER
 // ============================================
 function setMeta(prop, val) {
     let el = document.querySelector(`meta[property="${prop}"]`);
     if (!el) { el = document.createElement('meta'); el.setAttribute('property', prop); document.head.appendChild(el); }
     el.setAttribute('content', val);
 }
+
+// ============================================
+// DEEP LINK INIT
+// ============================================
+function initApp() {
+    loadSiteSettings();
+    loadTestimonials();
+    loadHomeBlog();
+    loadHomeServices();
+    loadHomePortfolio();
+
+    const hash = location.hash.replace('#','');
+    if (hash.startsWith('post/')) {
+        const slug = hash.replace('post/','');
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('blog').classList.add('active');
+        loadBlogPage();
+        openBlogPostBySlug(slug, false);
+    } else {
+        showPage(hash || 'home', false);
+    }
+}
+
+// ============================================
+// UTILS
+// ============================================
+function escHtml(str){return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmtDate(d){if(!d)return'–';return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}
+function fmtDateLong(d){if(!d)return'–';return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});}
+
+// ============================================
+// SERVICES — load from DB
+// ============================================
+let servicesCache = [];
+
+// Default fallback cards if DB is empty
+const DEFAULT_SERVICES = [
+    {name:'Web Development',icon:'fa-code',description:'Custom websites and web applications built with the latest technologies.',features:['Custom Development','E-commerce Solutions','CMS Implementation','Website Maintenance']},
+    {name:'Branding & Design',icon:'fa-paint-brush',description:'Creative design solutions that capture your brand\'s essence.',features:['Logo & Identity Design','Brand Strategy','UI/UX Design','Print Collateral']},
+    {name:'Digital Marketing',icon:'fa-chart-line',description:'Data-driven marketing strategies that increase visibility and conversions.',features:['Social Media Marketing','SEO Optimization','Content Marketing','Email Marketing']},
+    {name:'E-commerce',icon:'fa-shopping-cart',description:'Complete e-commerce platforms designed to maximise sales.',features:['E-commerce Development','Payment Integration','Inventory Management','Mobile Commerce']},
+    {name:'SEO Optimization',icon:'fa-search',description:'Improve your search rankings and drive organic traffic.',features:['Keyword Research','On-Page SEO','Technical SEO','Local SEO']},
+    {name:'Content Creation',icon:'fa-video',description:'Engaging content that tells your brand story.',features:['Content Strategy','Blog Writing','Video Production','Graphic Design']},
+];
+
+function renderServiceCard(s) {
+    const features = (s.features || []).slice(0,5);
+    return `<div class="service-card">
+        <div class="svc-icon"><i class="fas ${s.icon||'fa-cog'}"></i></div>
+        <h3>${escHtml(s.name)}</h3>
+        <p>${escHtml(s.description||'')}</p>
+        <ul>${features.map(f=>`<li>${escHtml(f)}</li>`).join('')}</ul>
+    </div>`;
+}
+
+async function loadHomeServices() {
+    const el = document.getElementById('homeServices');
+    const {data} = await sb.from('services').select('*').order('sort_order').limit(3);
+    const list = data?.length ? data : DEFAULT_SERVICES.slice(0,3);
+    el.innerHTML = list.map(renderServiceCard).join('');
+}
+
+async function loadServicesPage() {
+    const el = document.getElementById('servicesGrid');
+    if (!el || el.querySelector('.service-card')) return; // already loaded
+    const {data} = await sb.from('services').select('*').order('sort_order');
+    servicesCache = data || [];
+    const list = servicesCache.length ? servicesCache : DEFAULT_SERVICES;
+    el.innerHTML = list.map(renderServiceCard).join('');
+}
+
+// ============================================
+// PORTFOLIO — fully from DB
+// ============================================
+let portCache = [];
+let portCurrentFilter = 'all';
+
+const FALLBACK_IMG = 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80';
+
+function renderPortItem(p) {
+    return `<div class="port-item" data-category="${escHtml(p.category||'')}" onclick="openPortModal('${p.id}')">
+        <img class="port-img" src="${escHtml(p.image_url||FALLBACK_IMG)}" alt="${escHtml(p.title)}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
+        <div class="port-overlay">
+            <h3>${escHtml(p.title)}</h3>
+            <p>${escHtml((p.description||'').substring(0,80))}${(p.description||'').length>80?'…':''}</p>
+            <div class="port-tags">
+                <span class="port-tag">${escHtml(p.category||'')}</span>
+                ${p.technologies?p.technologies.split(',').slice(0,2).map(t=>`<span class="port-tag">${escHtml(t.trim())}</span>`).join(''):''}
+            </div>
+            <button class="btn btn-dark btn-sm">View Case Study</button>
+        </div>
+    </div>`;
+}
+
+async function loadHomePortfolio() {
+    const el = document.getElementById('homePortfolio');
+    const {data} = await sb.from('portfolio').select('*').eq('featured',true).order('created_at',{ascending:false}).limit(3);
+    if (!data?.length) {
+        // Try any 3 if no featured
+        const {data:any} = await sb.from('portfolio').select('*').order('created_at',{ascending:false}).limit(3);
+        if (!any?.length) { el.innerHTML='<p style="text-align:center;color:var(--text-light);grid-column:1/-1;padding:40px 0">No portfolio items yet.</p>'; return; }
+        el.innerHTML = any.map(renderPortItem).join('');
+        return;
+    }
+    el.innerHTML = data.map(renderPortItem).join('');
+}
+
+async function loadPortfolioPage() {
+    const el = document.getElementById('portfolioGrid');
+    if (!el || el.querySelector('.port-item')) return; // already loaded
+    const {data} = await sb.from('portfolio').select('*').order('created_at',{ascending:false});
+    portCache = data || [];
+    renderPortfolioGrid();
+}
+
+function renderPortfolioGrid() {
+    const el = document.getElementById('portfolioGrid');
+    const filtered = portCurrentFilter==='all' ? portCache : portCache.filter(p=>(p.category||'').toLowerCase().includes(portCurrentFilter));
+    if (!filtered.length) {
+        el.innerHTML='<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-folder-open"></i><p>No projects in this category yet.</p></div>';
+        return;
+    }
+    el.innerHTML = filtered.map(renderPortItem).join('');
+}
+
+// Portfolio page filter buttons
+document.querySelectorAll('#portFilters .filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('#portFilters .filter-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        portCurrentFilter = btn.getAttribute('data-filter');
+        renderPortfolioGrid();
+    });
+});
+
+// Portfolio Modal — now uses DB data
+function openPortModal(id) {
+    const p = portCache.find(x=>x.id===id);
+    if (!p) return;
+    document.getElementById('portModalImg').style.backgroundImage = `url('${p.image_url||FALLBACK_IMG}')`;
+    document.getElementById('portModalTitle').textContent = p.title;
+    document.getElementById('portModalDesc').textContent = p.description||'';
+
+    const details = [
+        p.client && ['Client', p.client],
+        p.category && ['Category', p.category],
+        p.technologies && ['Technologies', p.technologies],
+    ].filter(Boolean);
+    document.getElementById('portModalDetails').innerHTML = details.map(([k,v])=>`<div class="port-detail-row"><strong>${k}:</strong><span>${escHtml(v)}</span></div>`).join('') || '<p style="font-size:.82rem;color:var(--text-light)">Details coming soon.</p>';
+
+    const results = p.results || [];
+    document.getElementById('portModalResults').innerHTML = results.length
+        ? results.map(r=>`<div class="port-result-item">${escHtml(r)}</div>`).join('')
+        : '<p style="font-size:.82rem;color:var(--text-light)">Results coming soon.</p>';
+
+    document.getElementById('portModal').classList.add('open');
+    document.body.style.overflow='hidden';
+}
+
+function closePortModal() {
+    document.getElementById('portModal').classList.remove('open');
+    document.body.style.overflow='';
+}
+document.getElementById('portModal').addEventListener('click', e => {
+    if (e.target===document.getElementById('portModal')) closePortModal();
+});
 
 // ============================================
 // BLOG LIST
@@ -948,7 +1097,8 @@ async function loadHomeBlog() {
 
 async function loadBlogPage() {
     const container = document.getElementById('blogGrid');
-    container.innerHTML = '<div class="blog-skeleton"><div style="height:200px" class="skeleton"></div></div>';
+    if (allBlogPosts.length) { renderBlogGrid(); return; } // use cache
+    container.innerHTML = '<div class="blog-skeleton" style="grid-column:1/-1"><div style="height:200px" class="skeleton"></div></div>';
     const {data,error} = await sb.from('blog_posts').select('*').eq('status','published').order('created_at',{ascending:false});
     if (error||!data) { container.innerHTML='<p style="text-align:center;padding:40px">Could not load posts.</p>'; return; }
     allBlogPosts = data;
@@ -968,157 +1118,26 @@ function renderBlogGrid() {
 }
 
 function renderBlogCard(post) {
-    const date = new Date(post.created_at||Date.now()).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+    const date = fmtDate(post.created_at);
     const initials = (post.author_name||'I').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
     return `<div class="blog-card" onclick="openBlogPost('${post.id}')">
         <div class="blog-thumb">
             <img src="${post.image_url||'https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=600&q=80'}" alt="${escHtml(post.title)}" loading="lazy">
-            <span class="blog-cat">${post.category}</span>
+            <span class="blog-cat">${escHtml(post.category)}</span>
         </div>
         <div class="blog-body">
             <div class="blog-byline">
                 <div class="byline-avatar">${post.author_avatar_url?`<img src="${post.author_avatar_url}" alt="">`:initials}</div>
-                <div class="byline-info"><span class="byline-name">${post.author_name||'Ikinai Media'}</span></div>
+                <div class="byline-info"><span class="byline-name">${escHtml(post.author_name||'Ikinai Media')}</span></div>
             </div>
             <h3>${escHtml(post.title)}</h3>
             <p>${escHtml(post.excerpt||'')}</p>
-            <div class="blog-meta"><span>${date}</span><span>${post.read_time||'–'}</span></div>
+            <div class="blog-meta"><span>${date}</span><span>${escHtml(post.read_time||'')}</span></div>
         </div>
     </div>`;
 }
 
-// ============================================
-// BLOG SINGLE — open by ID (from card click)
-// ============================================
-async function openBlogPost(id, preloaded=null) {
-    let post = preloaded || allBlogPosts.find(p=>p.id===id);
-    if (!post) {
-        const {data} = await sb.from('blog_posts').select('*').eq('id',id).single();
-        post = data;
-    }
-    if (!post) return;
-    renderBlogSingle(post, true);
-}
-
-// ============================================
-// BLOG SINGLE — open by SLUG (from shared URL)
-// ============================================
-async function openBlogPostBySlug(slug, pushHist=true) {
-    // Try cache first
-    let post = allBlogPosts.find(p=>p.slug===slug);
-    if (!post) {
-        const {data} = await sb.from('blog_posts').select('*').eq('slug',slug).single();
-        post = data;
-    }
-    if (!post) { showPage('blog', false); return; }
-    renderBlogSingle(post, pushHist);
-}
-
-// ============================================
-// BLOG SINGLE — render
-// ============================================
-function renderBlogSingle(post, pushHist=true) {
-    const date = new Date(post.published_at||post.created_at||Date.now()).toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});
-    const initials = (post.author_name||'I').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    const slug = post.slug || post.id;
-    const postUrl = `${location.origin}${location.pathname}#post/${slug}`;
-
-    // Update browser URL & page title
-    if (pushHist) {
-        history.pushState({page:'blog-single', slug}, '', `#post/${slug}`);
-    }
-    document.title = `${post.title} | Ikinai Media`;
-
-    // Update OG meta for social sharing
-    setMeta('og:title', post.title);
-    setMeta('og:description', post.excerpt || 'Read this article on Ikinai Media.');
-    setMeta('og:image', post.image_url || '');
-    setMeta('og:url', postUrl);
-
-    // Category badge
-    document.getElementById('singleCat').textContent = post.category || '';
-
-    // Title
-    document.getElementById('singleTitle').textContent = post.title;
-
-    // Author
-    document.getElementById('singleAuthor').textContent = post.author_name || 'Ikinai Media';
-    document.getElementById('singleDate').textContent = date;
-    document.getElementById('singleReadTime').textContent = post.read_time || '';
-
-    // Avatar
-    const avatarWrap = document.getElementById('singleAvatarWrap');
-    if (post.author_avatar_url) {
-        avatarWrap.innerHTML = `<img src="${escHtml(post.author_avatar_url)}" alt="${escHtml(post.author_name||'')}">`;
-    } else {
-        avatarWrap.innerHTML = `<span style="font-size:1.1rem;font-weight:700;color:#333">${initials}</span>`;
-    }
-
-    // Hero background
-    const heroBg = document.getElementById('singleHeroBg');
-    if (post.image_url) {
-        heroBg.style.backgroundImage = `url('${post.image_url}')`;
-        heroBg.style.backgroundSize = 'cover';
-        heroBg.style.backgroundPosition = 'center';
-    } else {
-        heroBg.style.backgroundImage = 'linear-gradient(135deg, #1a1a2e 0%, #2d2d4e 100%)';
-    }
-
-    // Body image hidden (hero handles it)
-    document.getElementById('singleImg').style.display = 'none';
-
-    // Article content
-    document.getElementById('singleContent').innerHTML = post.content || '';
-
-    // Store current post URL for share buttons
-    window._currentPostUrl = postUrl;
-    window._currentPostTitle = post.title;
-
-    // Show the page
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('blog-single').classList.add('active');
-    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
-    window.scrollTo(0,0);
-    closeMobileMenu();
-}
-
-// ============================================
-// SHARE FUNCTIONS
-// ============================================
-function getShareUrl() { return window._currentPostUrl || location.href; }
-function getShareTitle() { return window._currentPostTitle || document.title; }
-
-function copyPostLink() {
-    const url = getShareUrl();
-    if (navigator.clipboard) {
-        navigator.clipboard.writeText(url).then(()=>showNotif('Link copied to clipboard! 🔗','success'));
-    } else {
-        const ta = document.createElement('textarea');
-        ta.value = url; document.body.appendChild(ta); ta.select();
-        document.execCommand('copy'); document.body.removeChild(ta);
-        showNotif('Link copied! 🔗','success');
-    }
-}
-
-function shareWhatsApp() {
-    const text = encodeURIComponent(getShareTitle() + '\n' + getShareUrl());
-    window.open(`https://wa.me/?text=${text}`, '_blank');
-}
-
-function shareTwitter() {
-    const text = encodeURIComponent(getShareTitle());
-    const url = encodeURIComponent(getShareUrl());
-    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
-}
-
-function shareFacebook() {
-    const url = encodeURIComponent(getShareUrl());
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
-}
-
-// ============================================
-// BLOG FILTERS
-// ============================================
+// Blog filters
 document.querySelectorAll('#blogFilters .filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('#blogFilters .filter-btn').forEach(b=>b.classList.remove('active'));
@@ -1130,20 +1149,115 @@ document.querySelectorAll('#blogFilters .filter-btn').forEach(btn => {
 });
 
 // ============================================
+// BLOG SINGLE
+// ============================================
+async function openBlogPost(id) {
+    let post = allBlogPosts.find(p=>p.id===id);
+    if (!post) {
+        const {data} = await sb.from('blog_posts').select('*').eq('id',id).single();
+        post = data;
+    }
+    if (!post) return;
+    renderBlogSingle(post, true);
+}
+
+async function openBlogPostBySlug(slug, pushHist=true) {
+    let post = allBlogPosts.find(p=>p.slug===slug);
+    if (!post) {
+        const {data} = await sb.from('blog_posts').select('*').eq('slug',slug).single();
+        post = data;
+    }
+    if (!post) { showNotif('Post not found.','error'); showPage('blog', false); return; }
+    renderBlogSingle(post, pushHist);
+}
+
+function renderBlogSingle(post, pushHist=true) {
+    const date = fmtDateLong(post.published_at||post.created_at);
+    const initials = (post.author_name||'I').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const slug = post.slug || post.id;
+    const postUrl = `${location.origin}${location.pathname}#post/${slug}`;
+
+    if (pushHist) history.pushState({page:'blog-single', slug}, '', `#post/${slug}`);
+    document.title = `${post.title} | Ikinai Media`;
+    setMeta('og:title', post.title);
+    setMeta('og:description', post.excerpt || 'Read this article on Ikinai Media.');
+    setMeta('og:image', post.image_url || '');
+    setMeta('og:url', postUrl);
+
+    document.getElementById('singleCat').textContent = post.category || '';
+    document.getElementById('singleTitle').textContent = post.title;
+    document.getElementById('singleAuthor').textContent = post.author_name || 'Ikinai Media';
+    document.getElementById('singleDate').textContent = date;
+    document.getElementById('singleReadTime').textContent = post.read_time || '';
+
+    const avatarWrap = document.getElementById('singleAvatarWrap');
+    avatarWrap.innerHTML = post.author_avatar_url
+        ? `<img src="${escHtml(post.author_avatar_url)}" alt="${escHtml(post.author_name||'')}">`
+        : `<span style="font-size:1.1rem;font-weight:700;color:#333">${initials}</span>`;
+
+    const heroBg = document.getElementById('singleHeroBg');
+    heroBg.style.backgroundImage = post.image_url
+        ? `url('${post.image_url}')`
+        : 'linear-gradient(135deg, #1a1a2e 0%, #2d2d4e 100%)';
+    heroBg.style.backgroundSize = 'cover';
+    heroBg.style.backgroundPosition = 'center';
+
+    document.getElementById('singleContent').innerHTML = post.content || '';
+    window._currentPostUrl = postUrl;
+    window._currentPostTitle = post.title;
+
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('blog-single').classList.add('active');
+    document.querySelectorAll('nav a').forEach(a => a.classList.toggle('active', a.getAttribute('data-page')==='blog'));
+    window.scrollTo({top:0,behavior:'smooth'});
+    closeMobileMenu();
+}
+
+// ============================================
+// SHARE
+// ============================================
+function getShareUrl() { return window._currentPostUrl || location.href; }
+function getShareTitle() { return window._currentPostTitle || document.title; }
+function copyPostLink() {
+    const url = getShareUrl();
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(()=>showNotif('Link copied! 🔗','success'));
+    } else {
+        const ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+        showNotif('Link copied! 🔗','success');
+    }
+}
+function shareWhatsApp(){window.open(`https://wa.me/?text=${encodeURIComponent(getShareTitle()+'\n'+getShareUrl())}`, '_blank');}
+function shareTwitter(){window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(getShareTitle())}&url=${encodeURIComponent(getShareUrl())}`, '_blank');}
+function shareFacebook(){window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(getShareUrl())}`, '_blank');}
+
+// ============================================
 // TESTIMONIALS
 // ============================================
 let testData = [];
 let testIdx = 0;
+let testTimer = null;
 
 async function loadTestimonials() {
     const {data} = await sb.from('testimonials').select('*').eq('featured',true).order('created_at',{ascending:false});
     if (data?.length) { testData=data; renderTestimonials(); }
+    else {
+        // Default fallback
+        document.getElementById('testimonialsContainer').innerHTML = `
+        <div class="test-card active">
+            <div class="stars">★★★★★</div>
+            <p class="test-text">Working with Ikinai Media transformed our online presence. Their team delivered a website that not only looks incredible but has significantly increased our conversion rates.</p>
+            <div class="test-author">
+                <div class="test-avatar">MK</div>
+                <div class="test-info"><h4>Melton Konchella</h4><p>CEO, Ipate Deliveries and OnPoint Kenya Ltd</p></div>
+            </div>
+        </div>`;
+    }
 }
 
 function renderTestimonials() {
     const wrap = document.getElementById('testimonialsContainer');
     const dots = document.getElementById('testDots');
-    if (!testData.length) return;
     wrap.innerHTML = testData.map((t,i)=>{
         const initials = t.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
         return `<div class="test-card ${i===0?'active':''}">
@@ -1156,7 +1270,8 @@ function renderTestimonials() {
         </div>`;
     }).join('');
     dots.innerHTML = testData.map((_,i)=>`<span class="test-dot ${i===0?'active':''}" onclick="showTest(${i})"></span>`).join('');
-    setInterval(()=>showTest((testIdx+1)%testData.length), 5000);
+    if(testTimer) clearInterval(testTimer);
+    testTimer = setInterval(()=>showTest((testIdx+1)%testData.length), 5000);
 }
 
 function showTest(i) {
@@ -1169,11 +1284,16 @@ function showTest(i) {
 // TEAM
 // ============================================
 async function loadTeam() {
+    const el = document.getElementById('teamGrid');
+    if (el.querySelector('.team-card')) return; // already loaded
     const {data} = await sb.from('team_members').select('*').order('sort_order');
-    if (!data?.length) return;
-    document.getElementById('teamGrid').innerHTML = data.map(m=>`
+    if (!data?.length) {
+        el.innerHTML='<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-users"></i><p>Team info coming soon.</p></div>';
+        return;
+    }
+    el.innerHTML = data.map(m=>`
         <div class="team-card">
-            <div class="team-photo">${m.photo_url?`<img src="${m.photo_url}" alt="${escHtml(m.name)}">`:'<i class="fas fa-user"></i>'}</div>
+            <div class="team-photo">${m.photo_url?`<img src="${escHtml(m.photo_url)}" alt="${escHtml(m.name)}">`:'<i class="fas fa-user"></i>'}</div>
             <h3>${escHtml(m.name)}</h3>
             <p class="team-role">${escHtml(m.title)}</p>
             <p class="team-bio">${escHtml(m.bio||'')}</p>
@@ -1196,41 +1316,6 @@ async function loadSiteSettings() {
 }
 
 // ============================================
-// PORTFOLIO MODAL
-// ============================================
-const portProjects = {
-    1:{title:"FashionStore E-commerce",description:"Complete online fashion retail platform with advanced product filtering and seamless checkout.",client:"Fashion Retailer Co.",industry:"Fashion & Retail",timeline:"3 months",technologies:"React, Node.js, MongoDB, Stripe",results:["Increased sales by 45%","Improved user engagement by 60%","Reduced cart abandonment by 30%"],image:"https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80"},
-    2:{title:"FinServe Corporate Portal",description:"Modern financial services website with secure client portal and document management.",client:"Financial Services Inc.",industry:"Finance & Banking",timeline:"4 months",technologies:"WordPress, PHP, MySQL, SSL",results:["Improved client satisfaction by 35%","Increased lead generation by 50%","Reduced admin workload by 25%"],image:"https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=900&q=80"},
-    3:{title:"FitTrack Mobile App",description:"Fitness tracking app with social features, personalized plans, and nutrition tracking.",client:"Fitness Startup",industry:"Health & Fitness",timeline:"5 months",technologies:"React Native, Firebase, Node.js",results:["50,000+ downloads in 3 months","4.8 star app store rating","User retention increased 40%"],image:"https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=900&q=80"},
-    4:{title:"TechStart Brand Identity",description:"Complete rebranding including logo, guidelines, website design, and marketing collateral.",client:"Tech Startup Solutions",industry:"Technology",timeline:"2 months",technologies:"Adobe Creative Suite, Figma",results:["Strong brand recognition established","Investor interest increased 60%","Cohesive brand experience created"],image:"https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80"},
-    5:{title:"StyleVibe Social Campaign",description:"Social media marketing campaign with influencer collaborations across multiple platforms.",client:"StyleVibe Fashion",industry:"Fashion & Lifestyle",timeline:"3 months",technologies:"Social Media APIs, Analytics",results:["Social engagement up 75%","15,000+ new Instagram followers","Online sales increased 30%"],image:"https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=900&q=80"},
-    6:{title:"GlobalMart Marketplace",description:"Multi-vendor marketplace with advanced search, international payments, and vendor management.",client:"GlobalMart Retail",industry:"E-commerce",timeline:"6 months",technologies:"React, Node.js, Stripe, AWS",results:["200+ vendors onboarded month 1","$1M+ transactions in Q1","99.9% platform uptime"],image:"https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=900&q=80"}
-};
-
-function openPortModal(id) {
-    const p = portProjects[id]; if (!p) return;
-    document.getElementById('portModalImg').style.backgroundImage=`url('${p.image}')`;
-    document.getElementById('portModalTitle').textContent=p.title;
-    document.getElementById('portModalDesc').textContent=p.description;
-    document.getElementById('portModalDetails').innerHTML=[['Client',p.client],['Industry',p.industry],['Timeline',p.timeline],['Technologies',p.technologies]].map(([k,v])=>`<div style="display:flex;gap:8px;margin-bottom:10px;font-size:.82rem"><strong style="min-width:100px;color:var(--text)">${k}:</strong><span style="color:var(--text-light)">${v}</span></div>`).join('');
-    document.getElementById('portModalResults').innerHTML=p.results.map(r=>`<li style="display:flex;align-items:flex-start;gap:8px;font-size:.82rem;color:var(--text-light)"><span style="color:var(--secondary);font-weight:700;flex-shrink:0">✓</span>${r}</li>`).join('');
-    document.getElementById('portModal').style.display='flex';
-}
-window.addEventListener('click',e=>{if(e.target===document.getElementById('portModal'))document.getElementById('portModal').style.display='none';});
-
-document.querySelectorAll('.port-filters:not(#blogFilters) .filter-btn').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-        document.querySelectorAll('.port-filters:not(#blogFilters) .filter-btn').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        const filter=btn.getAttribute('data-filter');
-        document.querySelectorAll('#portfolioGrid .port-item').forEach(item=>{
-            const cats=item.getAttribute('data-category')||'';
-            item.style.display=(filter==='all'||cats.includes(filter))?'block':'none';
-        });
-    });
-});
-
-// ============================================
 // CONTACT FORM
 // ============================================
 document.getElementById('contactForm').addEventListener('submit', async function(e) {
@@ -1240,7 +1325,7 @@ document.getElementById('contactForm').addEventListener('submit', async function
     btn.innerHTML='<span class="spinner"></span> Sending...'; btn.disabled=true;
     try {
         const res=await fetch(this.action,{method:'POST',body:new FormData(this),headers:{Accept:'application/json'}});
-        showNotif(res.ok?'Message sent! We\'ll be in touch soon.':'Error sending message. Please try again.',res.ok?'success':'error');
+        showNotif(res.ok?'Message sent! We\'ll be in touch soon.':'Error sending. Please try again.',res.ok?'success':'error');
         if(res.ok) this.reset();
     } catch { showNotif('Error sending message. Please try again.','error'); }
     btn.innerHTML=orig; btn.disabled=false;
@@ -1256,7 +1341,7 @@ let chatOpen=false;
 function toggleChat(){chatOpen=!chatOpen;document.getElementById('chatBox').classList.toggle('open',chatOpen);}
 document.getElementById('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter')sendChat();});
 function sendChat(){const input=document.getElementById('chatInput');const msg=input.value.trim();if(!msg)return;addChatMsg(msg,'user');input.value='';setTimeout(()=>addChatMsg(chatReplies[Math.floor(Math.random()*chatReplies.length)],'bot'),1200);}
-function addChatMsg(text,type){const msgs=document.getElementById('chatMsgs');const el=document.createElement('div');el.className=`chat-msg ${type}`;el.innerHTML=`<p>${text}</p>`;msgs.appendChild(el);msgs.scrollTop=msgs.scrollHeight;}
+function addChatMsg(text,type){const msgs=document.getElementById('chatMsgs');const el=document.createElement('div');el.className=`chat-msg ${type}`;el.innerHTML=`<p>${escHtml(text)}</p>`;msgs.appendChild(el);msgs.scrollTop=msgs.scrollHeight;}
 
 // ============================================
 // COOKIE
@@ -1269,18 +1354,6 @@ if(!localStorage.getItem('cookies')) setTimeout(()=>document.getElementById('coo
 // NOTIFICATION
 // ============================================
 function showNotif(msg,type='info'){const el=document.getElementById('notification');el.textContent=msg;el.className=`notification ${type} show`;setTimeout(()=>el.classList.remove('show'),4500);}
-
-// ============================================
-// UTILS
-// ============================================
-function escHtml(str){return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-
-// ============================================
-// INIT
-// ============================================
-loadSiteSettings();
-loadTestimonials();
-loadHomeBlog();
 </script>
 </body>
 </html>
